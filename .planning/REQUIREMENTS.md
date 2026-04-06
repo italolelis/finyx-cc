@@ -50,12 +50,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Pension Planning
 
-- [ ] **PENSION-01**: User receives Riester vs Rurup vs bAV comparison based on employment status, tax bracket, and family
-- [ ] **PENSION-02**: User receives Riester Zulagen calculation (Grundzulage + Kinderzulage) based on their family data
-- [ ] **PENSION-03**: User receives Rurup Sonderausgabenabzug estimate based on income and marginal rate
-- [ ] **PENSION-04**: User receives PGBL vs VGBL decision guide based on IR regime and 12% income threshold
-- [ ] **PENSION-05**: User receives progressive vs regressive IR regime explanation with time horizon examples
-- [ ] **PENSION-06**: User receives cross-country pension projection combining DE statutory + private + BR INSS
+- [x] **PENSION-01**: User receives Riester vs Rurup vs bAV comparison based on employment status, tax bracket, and family
+- [x] **PENSION-02**: User receives Riester Zulagen calculation (Grundzulage + Kinderzulage) based on their family data
+- [x] **PENSION-03**: User receives Rurup Sonderausgabenabzug estimate based on income and marginal rate
+- [x] **PENSION-04**: User receives PGBL vs VGBL decision guide based on IR regime and 12% income threshold
+- [x] **PENSION-05**: User receives progressive vs regressive IR regime explanation with time horizon examples
+- [x] **PENSION-06**: User receives cross-country pension projection combining DE statutory + private + BR INSS
 
 ### Foundation
 
@@ -144,12 +144,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BROKER-02 | Phase 3 | Complete |
 | BROKER-03 | Phase 3 | Complete |
 | BROKER-04 | Phase 3 | Complete |
-| PENSION-01 | Phase 4 | Pending |
-| PENSION-02 | Phase 4 | Pending |
-| PENSION-03 | Phase 4 | Pending |
-| PENSION-04 | Phase 4 | Pending |
-| PENSION-05 | Phase 4 | Pending |
-| PENSION-06 | Phase 4 | Pending |
+| PENSION-01 | Phase 4 | Complete |
+| PENSION-02 | Phase 4 | Complete |
+| PENSION-03 | Phase 4 | Complete |
+| PENSION-04 | Phase 4 | Complete |
+| PENSION-05 | Phase 4 | Complete |
+| PENSION-06 | Phase 4 | Complete |
 
 **Coverage:**
 - v1 requirements: 37 total

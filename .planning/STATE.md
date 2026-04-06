@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 4 context gathered
-last_updated: "2026-04-06T18:31:58.527Z"
+status: executing
+stopped_at: Completed 04-pension-planning-01-PLAN.md
+last_updated: "2026-04-06T19:00:41.989Z"
 last_activity: 2026-04-06
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 12
+  completed_plans: 11
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-06)
 
 **Core value:** A single AI-powered financial advisor that knows your full financial picture and gives integrated, country-aware advice
-**Current focus:** Phase 03 — investment-broker
+**Current focus:** Phase 04 — pension-planning
 
 ## Current Position
 
-Phase: 4
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: 04 (pension-planning) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
 Last activity: 2026-04-06
 
 Progress: [░░░░░░░░░░] 0%
@@ -61,6 +61,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 03-investment-broker P01 | 2min | 2 tasks | 3 files |
 | Phase 03-investment-broker P03 | 145s | 2 tasks | 2 files |
 | Phase 03-investment-broker P02 | 309s | 1 tasks | 1 files |
+| Phase 04-pension-planning P01 | 196s | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -91,6 +92,8 @@ Recent decisions affecting current work:
 - [Phase 03-investment-broker]: node -e for cross-platform date arithmetic in staleness check — avoids GNU vs macOS date flag incompatibility
 - [Phase 03-investment-broker]: VWCE as primary core ETF recommendation across all risk profiles — broadest diversification in single fund
 - [Phase 03-investment-broker]: .XETRA suffix required for European ETFs on Finnhub (e.g., VWCE.XETRA) — documented in invest.md Phase 7
+- [Phase 04-pension-planning]: Ruerup Hoechstbeitrag 2025 uses verified statutory figure 29344 EUR single (not D-11's 2024 value of 27566 EUR)
+- [Phase 04-pension-planning]: Law 14.803/24 deferral: BR regime choice advisory changes from 'choose upfront' to 'defer unless committed >10yr'
 
 ### Pending Todos
 
@@ -104,6 +107,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-06T18:31:58.518Z
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-pension-planning/04-CONTEXT.md
+Last session: 2026-04-06T19:00:41.986Z
+Stopped at: Completed 04-pension-planning-01-PLAN.md
+Resume file: None
