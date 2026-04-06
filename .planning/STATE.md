@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Financial Insights Dashboard
 status: verifying
-stopped_at: Completed 07-03-PLAN.md (finyx-projection-agent)
-last_updated: "2026-04-06T22:29:42.685Z"
+stopped_at: Completed 07-02-PLAN.md
+last_updated: "2026-04-06T22:29:50.866Z"
 last_activity: 2026-04-06
 progress:
   total_phases: 3
@@ -50,6 +50,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 06-reference-foundation P01 | 8 | 2 tasks | 2 files |
 | Phase 07-specialist-agents P01 | 5 | 1 tasks | 1 files |
 | Phase 07-specialist-agents P03 | 12 | 1 tasks | 1 files |
+| Phase 07-specialist-agents P02 | 15 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,8 @@ v1.1 decisions:
 - [Phase 07-specialist-agents]: Allocation agent tools locked to Read, Grep, Glob only — no Write, Bash, WebSearch (D-05)
 - [Phase 07-specialist-agents]: Portfolio value uses cost_basis x shares only; no live NAV lookups; labeled MEDIUM CONFIDENCE
 - [Phase 07-specialist-agents]: Projection agent: monthlyCommitments is obligations proxy only — not a balance sheet liability; explicit note required in every output
+- [Phase 07-specialist-agents]: Tax agent tools: Read, Grep, Glob only — no Write, Bash, WebSearch (D-05)
+- [Phase 07-specialist-agents]: Germany and Brazil tax scored independently — never combined (TAX-02 requirement)
 
 ### Pending Todos
 
@@ -80,6 +83,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-06T22:29:34.603Z
-Stopped at: Completed 07-03-PLAN.md (finyx-projection-agent)
+Last session: 2026-04-06T22:29:50.863Z
+Stopped at: Completed 07-02-PLAN.md
 Resume file: None

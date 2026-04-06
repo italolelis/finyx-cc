@@ -14,9 +14,9 @@ Requirements for the Financial Insights Dashboard milestone. Each maps to roadma
 
 ### Tax Efficiency
 
-- [ ] **TAX-01**: User can see Sparerpauschbetrag usage across all brokers with unused € amount highlighted
-- [ ] **TAX-02**: User can see per-country tax efficiency gaps (DE and BR scored separately) with € annual impact
-- [ ] **TAX-03**: User can see Vorabpauschale readiness check for upcoming debit sufficiency
+- [x] **TAX-01**: User can see Sparerpauschbetrag usage across all brokers with unused € amount highlighted
+- [x] **TAX-02**: User can see per-country tax efficiency gaps (DE and BR scored separately) with € annual impact
+- [x] **TAX-03**: User can see Vorabpauschale readiness check for upcoming debit sufficiency
 
 ### Projections & Goals
 
@@ -65,9 +65,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | ALLOC-01 | Phase 7 | Complete |
 | ALLOC-02 | Phase 7 | Complete |
-| TAX-01 | Phase 7 | Pending |
-| TAX-02 | Phase 7 | Pending |
-| TAX-03 | Phase 7 | Pending |
+| TAX-01 | Phase 7 | Complete |
+| TAX-02 | Phase 7 | Complete |
+| TAX-03 | Phase 7 | Complete |
 | PROJ-01 | Phase 7 | Complete |
 | PROJ-02 | Phase 7 | Complete |
 | REC-01 | Phase 8 | Pending |
