@@ -35,7 +35,7 @@ Plans:
 - [x] 01-01-PLAN.md — Rename project from immo-cc to finyx-cc (directories, files, references, installer)
 - [x] 01-02-PLAN.md — Create profile.json schema template and legal disclaimer template
 - [x] 01-03-PLAN.md — Build /finyx:profile interview command and wire disclaimer + gating into all commands
-- [ ] 01-04-PLAN.md — Gap closure: add disclaimer to help.md, fix agent profile path references
+- [x] 01-04-PLAN.md — Gap closure: add disclaimer to help.md, fix agent profile path references
 
 ### Phase 2: Tax Advisors
 **Goal**: Users receive country-appropriate tax guidance — Abgeltungssteuer mechanics and Sparerpauschbetrag tracking for Germany; IR obligations, DARF calculation, and FII exemption rules for Brazil — with all reference docs stamped with tax year metadata
