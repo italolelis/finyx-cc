@@ -32,7 +32,14 @@ A single AI-powered financial advisor that knows your full financial picture —
 
 ### Active
 
-(Next milestone — define via `/gsd:new-milestone`)
+#### v1.1 — Financial Insights Dashboard
+- [ ] `/fin:insights` command — unified financial health report from existing profile + advisor data
+- [ ] Income allocation analysis (needs/wants/savings/investments/debt breakdown with benchmarks)
+- [ ] Tax efficiency scoring (unused allowances, optimization gaps across DE + BR)
+- [ ] Net worth snapshot with forward projection based on current savings/investment rate
+- [ ] Goal pace tracking ("at current rate, target X reached in Y months")
+- [ ] Top-N actionable recommendations ranked by financial impact
+- [ ] Cross-advisor intelligence (pension gap affects tax, investment allocation affects risk)
 
 ### Out of Scope
 
@@ -44,6 +51,19 @@ A single AI-powered financial advisor that knows your full financial picture —
 - Countries beyond Germany and Brazil — expand after v1 validates multi-country pattern
 - Financial product affiliate links — destroys advisory trust
 - Budget tracking / expense categorization — different product, dilutes focus
+
+## Current Milestone: v1.1 Financial Insights Dashboard
+
+**Goal:** Generate actionable financial insights and recommendations by cross-referencing all existing advisor outputs and profile data.
+
+**Target features:**
+- `/fin:insights` command — unified financial health report
+- Income allocation analysis with benchmarks
+- Tax efficiency scoring across DE + BR
+- Net worth snapshot with forward projection
+- Goal pace tracking
+- Ranked actionable recommendations
+- Cross-advisor intelligence
 
 ## Context
 
@@ -95,4 +115,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-06 after v1.0 milestone*
+*Last updated: 2026-04-06 after v1.1 milestone start*
