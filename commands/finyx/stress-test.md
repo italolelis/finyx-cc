@@ -1,5 +1,5 @@
 ---
-name: immo:stress-test
+name: finyx:stress-test
 description: Run stress test scenarios on shortlisted properties
 allowed-tools:
   - Read
@@ -16,9 +16,9 @@ Run stress test scenarios on shortlisted properties:
 3. Vacancy scenario (extended periods without rent)
 4. Combined worst-case scenario
 
-**Creates:** `.immo/analysis/STRESS-TEST.md`
+**Creates:** `.finyx/analysis/STRESS-TEST.md`
 
-**After this command:** Run `/immo:report` to include stress test results in advisor briefing.
+**After this command:** Run `/finyx:report` to include stress test results in advisor briefing.
 
 </objective>
 
@@ -27,12 +27,12 @@ Run stress test scenarios on shortlisted properties:
 ## Phase 1: Load Data
 
 **Load config:**
-Read `.immo/config.json` for:
+Read `.finyx/config.json` for:
 - Investor profile
 - Current assumptions (interest rate, appreciation)
 
 **Load shortlists:**
-Read all `.immo/analysis/*/SHORTLIST.md`
+Read all `.finyx/analysis/*/SHORTLIST.md`
 
 **Extract baseline projections for each shortlisted unit:**
 - Total price
@@ -171,7 +171,7 @@ Assessment: [DESCRIPTION]
 
 ## Phase 7: Write STRESS-TEST.md
 
-Create `.immo/analysis/STRESS-TEST.md`:
+Create `.finyx/analysis/STRESS-TEST.md`:
 
 ```markdown
 # Stress Test Analysis
@@ -265,14 +265,14 @@ Factors that reduce actual risk:
 ```markdown
 ### Phase: STRESS-TESTED
 ### Last Action: Ran 4 stress scenarios on [N] units
-### Stress Test: .immo/analysis/STRESS-TEST.md
+### Stress Test: .finyx/analysis/STRESS-TEST.md
 ```
 
 ## Phase 9: Output Summary
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- IMMO ► STRESS TEST RESULTS
+ FINYX ► STRESS TEST RESULTS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Scenarios Tested:
@@ -294,11 +294,11 @@ Key Findings:
 Recommendation:
   [SUMMARY RECOMMENDATION]
 
-✅ Saved: .immo/analysis/STRESS-TEST.md
+✅ Saved: .finyx/analysis/STRESS-TEST.md
 
 📋 Next:
-   /immo:report          Generate advisor briefing
-   /immo:report --lang pt  Generate in Portuguese
+   /finyx:report          Generate advisor briefing
+   /finyx:report --lang pt  Generate in Portuguese
 ```
 
 </process>
@@ -309,13 +309,13 @@ Recommendation:
 
 Users can request additional scenarios:
 
-### `/immo:stress-test --rent-drop 10`
+### `/finyx:stress-test --rent-drop 10`
 Model 10% rent decrease scenario.
 
-### `/immo:stress-test --rate 5.5`
+### `/finyx:stress-test --rate 5.5`
 Model specific interest rate scenario.
 
-### `/immo:stress-test --vacancy 6`
+### `/finyx:stress-test --vacancy 6`
 Model 6 months vacancy per 2 years.
 
 </scenarios>

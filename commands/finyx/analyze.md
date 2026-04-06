@@ -1,5 +1,5 @@
 ---
-name: immo:analyze
+name: finyx:analyze
 description: Analyze all properties in a location - extract units, calculate metrics, rank by yield
 allowed-tools:
   - Read
@@ -19,17 +19,17 @@ Analyze all properties in a location folder:
 4. Rank by real metrics (not brochure IRR)
 
 **Creates:**
-- `.immo/analysis/[location]/UNITS.md` — All extracted units
-- `.immo/analysis/[location]/RANKED.md` — Sorted by metrics
+- `.finyx/analysis/[location]/UNITS.md` — All extracted units
+- `.finyx/analysis/[location]/RANKED.md` — Sorted by metrics
 
-**After this command:** Run `/immo:filter [location]` to apply criteria and create shortlist.
+**After this command:** Run `/finyx:filter [location]` to apply criteria and create shortlist.
 
 </objective>
 
 <execution_context>
 
-@~/.claude/immo/references/methodology.md
-@~/.claude/immo/references/germany/tax-rules.md
+@~/.claude/finyx/references/methodology.md
+@~/.claude/finyx/references/germany/tax-rules.md
 
 </execution_context>
 
@@ -39,12 +39,12 @@ Analyze all properties in a location folder:
 
 **Check project and location:**
 ```bash
-[ -f .immo/config.json ] || echo "NO_PROJECT"
+[ -f .finyx/config.json ] || echo "NO_PROJECT"
 [ -d "properties/$LOCATION" ] || echo "NO_LOCATION"
 ```
 
 **Load investor config:**
-Read `.immo/config.json` to get:
+Read `.finyx/config.json` to get:
 - `investor.marginalRate` — For tax benefit calculations
 - `investor.country` — For country-specific rules
 - `criteria.*` — For later filtering
@@ -177,7 +177,7 @@ ROE = Profit ÷ Total Cash Invested × 100
 
 ## Phase 5: Write UNITS.md
 
-Create `.immo/analysis/[location]/UNITS.md`:
+Create `.finyx/analysis/[location]/UNITS.md`:
 
 ```markdown
 # Units Analysis: [LOCATION]
@@ -217,7 +217,7 @@ Create `.immo/analysis/[location]/UNITS.md`:
 
 ## Phase 6: Write RANKED.md
 
-Create `.immo/analysis/[location]/RANKED.md`:
+Create `.finyx/analysis/[location]/RANKED.md`:
 
 ```markdown
 # Ranked Units: [LOCATION]
@@ -307,7 +307,7 @@ Update location status in STATE.md:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- IMMO ► ANALYZE: [LOCATION]
+ FINYX ► ANALYZE: [LOCATION]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📊 Extracted [COUNT] units from [PRICE_LIST]
@@ -326,10 +326,10 @@ Top 5 by Yield:
 Units with Parking: [COUNT]
 
 ✅ Analysis saved:
-   .immo/analysis/[location]/UNITS.md
-   .immo/analysis/[location]/RANKED.md
+   .finyx/analysis/[location]/UNITS.md
+   .finyx/analysis/[location]/RANKED.md
 
-📋 Next: /immo:filter [location] to apply criteria
+📋 Next: /finyx:filter [location] to apply criteria
 ```
 
 </process>

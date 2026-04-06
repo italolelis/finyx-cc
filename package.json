@@ -1,14 +1,14 @@
 {
-  "name": "immo-cc",
+  "name": "finyx-cc",
   "version": "0.1.7",
-  "description": "A meta-prompting and context engineering system for real estate investment analysis with Claude Code.",
+  "description": "A comprehensive AI-powered personal finance advisor for Claude Code — covering tax, investments, insurance, pensions, and real estate.",
   "bin": {
-    "immo-cc": "bin/install.js"
+    "finyx-cc": "bin/install.js"
   },
   "files": [
     "bin",
     "commands",
-    "immo",
+    "finyx",
     "agents",
     "scripts"
   ],
@@ -16,13 +16,14 @@
     "claude",
     "claude-code",
     "ai",
-    "real-estate",
+    "finance",
+    "personal-finance",
+    "tax",
     "investment",
-    "property",
-    "analysis",
+    "pension",
+    "real-estate",
     "germany",
-    "neubau",
-    "immobilien"
+    "brazil"
   ],
   "author": "Italo Vietro",
   "license": "MIT",

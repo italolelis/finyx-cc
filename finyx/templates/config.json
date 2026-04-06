@@ -7,7 +7,7 @@
   "project": {
     "name": "Investment Analysis 2024",
     "propertiesFolder": "properties",
-    "outputFolder": ".immo/output",
+    "outputFolder": ".finyx/output",
     "language": "en"
   },
 

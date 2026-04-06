@@ -1,5 +1,5 @@
 ---
-name: immo:compare
+name: finyx:compare
 description: Side-by-side comparison of shortlisted properties across all locations
 allowed-tools:
   - Read
@@ -16,9 +16,9 @@ Create comprehensive side-by-side comparison of all shortlisted properties:
 - Provide decision framework for each option
 - Highlight trade-offs
 
-**Output:** Display comparison and update `.immo/STATE.md` with comparison status.
+**Output:** Display comparison and update `.finyx/STATE.md` with comparison status.
 
-**After this command:** Run `/immo:stress-test` for scenarios, or `/immo:report` to generate advisor briefing.
+**After this command:** Run `/finyx:stress-test` for scenarios, or `/finyx:report` to generate advisor briefing.
 
 </objective>
 
@@ -28,7 +28,7 @@ Create comprehensive side-by-side comparison of all shortlisted properties:
 
 **Find all shortlist files:**
 ```bash
-find .immo/analysis -name "SHORTLIST.md" 2>/dev/null
+find .finyx/analysis -name "SHORTLIST.md" 2>/dev/null
 ```
 
 **For each shortlist, extract:**
@@ -36,11 +36,11 @@ find .immo/analysis -name "SHORTLIST.md" 2>/dev/null
 - Shortlisted units with all metrics
 
 **If no shortlists found:**
-"No shortlists created yet. Run `/immo:filter [location]` first."
+"No shortlists created yet. Run `/finyx:filter [location]` first."
 
 ## Phase 2: Load Investor Profile
 
-Read `.immo/config.json` for:
+Read `.finyx/config.json` for:
 - Liquid assets (for buffer calculation)
 - Criteria (for highlighting matches)
 - Preferences (parking, floor, etc.)
@@ -51,7 +51,7 @@ Read `.immo/config.json` for:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- IMMO ► COMPARE SHORTLIST
+ FINYX ► COMPARE SHORTLIST
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -200,9 +200,9 @@ Based on location research:
  NEXT STEPS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📊 /immo:stress-test    Run 0% appreciation & rate hike scenarios
-📝 /immo:report         Generate advisor briefing
-📝 /immo:report --lang pt  Generate in Portuguese
+📊 /finyx:stress-test    Run 0% appreciation & rate hike scenarios
+📝 /finyx:report         Generate advisor briefing
+📝 /finyx:report --lang pt  Generate in Portuguese
 
 When ready to decide:
 • Visit the development if possible

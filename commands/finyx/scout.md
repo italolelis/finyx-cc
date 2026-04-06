@@ -1,5 +1,5 @@
 ---
-name: immo:scout
+name: finyx:scout
 description: Research a location for investment viability (transport, Erbpacht, market)
 allowed-tools:
   - Read
@@ -21,17 +21,17 @@ Research a location for real estate investment, gathering critical data:
 - Parking necessity assessment
 - Market conditions
 
-**Creates:** `.immo/research/locations/[location].md`
+**Creates:** `.finyx/research/locations/[location].md`
 
-**After this command:** Run `/immo:analyze [location]` to calculate metrics.
+**After this command:** Run `/finyx:analyze [location]` to calculate metrics.
 
 </objective>
 
 <execution_context>
 
-@~/.claude/immo/references/erbpacht-detection.md
-@~/.claude/immo/references/transport-assessment.md
-@~/.claude/immo/templates/location-research.md
+@~/.claude/finyx/references/erbpacht-detection.md
+@~/.claude/finyx/references/transport-assessment.md
+@~/.claude/finyx/templates/location-research.md
 
 </execution_context>
 
@@ -41,13 +41,13 @@ Research a location for real estate investment, gathering critical data:
 
 **Check project exists:**
 ```bash
-[ -f .immo/config.json ] || echo "NO_PROJECT"
+[ -f .finyx/config.json ] || echo "NO_PROJECT"
 ```
 
-If NO_PROJECT: "Run /immo:init first to create project."
+If NO_PROJECT: "Run /finyx:init first to create project."
 
 **Parse location argument:**
-Extract location name from command (e.g., "kassel" from "/immo:scout kassel")
+Extract location name from command (e.g., "kassel" from "/finyx:scout kassel")
 
 **Check location folder:**
 ```bash
@@ -178,7 +178,7 @@ Web searches:
 
 ## Phase 8: Write Research File
 
-Create `.immo/research/locations/[location].md`:
+Create `.finyx/research/locations/[location].md`:
 
 ```markdown
 # Location Research: [LOCATION]
@@ -280,7 +280,7 @@ Add location to STATE.md:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- IMMO ► SCOUT: [LOCATION]
+ FINYX ► SCOUT: [LOCATION]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📍 Development: [NAME]
@@ -297,7 +297,7 @@ Add location to STATE.md:
 
 📊 Market: [SUMMARY]
 
-✅ Research saved: .immo/research/locations/[location].md
+✅ Research saved: .finyx/research/locations/[location].md
 
 📋 Next:
    [CONTEXTUAL - either analyze or exclude recommendation]

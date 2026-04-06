@@ -22,40 +22,40 @@ const hasUninstall = args.includes('--uninstall') || args.includes('-u');
 const hasHelp = args.includes('--help') || args.includes('-h');
 
 const banner = '\n' +
-  cyan + '  ██╗███╗   ███╗███╗   ███╗ ██████╗\n' +
-  '  ██║████╗ ████║████╗ ████║██╔═══██╗\n' +
-  '  ██║██╔████╔██║██╔████╔██║██║   ██║\n' +
-  '  ██║██║╚██╔╝██║██║╚██╔╝██║██║   ██║\n' +
-  '  ██║██║ ╚═╝ ██║██║ ╚═╝ ██║╚██████╔╝\n' +
-  '  ╚═╝╚═╝     ╚═╝╚═╝     ╚═╝ ╚═════╝' + reset + '\n' +
+  cyan + '  ███████╗██╗███╗   ██╗██╗   ██╗██╗  ██╗\n' +
+  '  ██╔════╝██║████╗  ██║╚██╗ ██╔╝╚██╗██╔╝\n' +
+  '  █████╗  ██║██╔██╗ ██║ ╚████╔╝  ╚███╔╝ \n' +
+  '  ██╔══╝  ██║██║╚██╗██║  ╚██╔╝   ██╔██╗ \n' +
+  '  ██║     ██║██║ ╚████║   ██║   ██╔╝ ██╗\n' +
+  '  ╚═╝     ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝' + reset + '\n' +
   '\n' +
-  '  IMMO ' + dim + 'v' + pkg.version + reset + '\n' +
-  '  Real estate investment analysis for Claude Code.\n';
+  '  FINYX ' + dim + 'v' + pkg.version + reset + '\n' +
+  '  AI-powered personal finance advisor for Claude Code.\n';
 
 console.log(banner);
 
 // Show help if requested
 if (hasHelp) {
-  console.log(`  ${yellow}Usage:${reset} npx immo-cc [options]
+  console.log(`  ${yellow}Usage:${reset} npx finyx-cc [options]
 
   ${yellow}Options:${reset}
     ${cyan}-g, --global${reset}     Install globally (to ~/.claude)
     ${cyan}-l, --local${reset}      Install locally (to current directory)
-    ${cyan}-u, --uninstall${reset}  Uninstall IMMO
+    ${cyan}-u, --uninstall${reset}  Uninstall FINYX
     ${cyan}-h, --help${reset}       Show this help message
 
   ${yellow}Examples:${reset}
     ${dim}# Install globally (recommended)${reset}
-    npx immo-cc --global
+    npx finyx-cc --global
 
     ${dim}# Install to current project only${reset}
-    npx immo-cc --local
+    npx finyx-cc --local
 
-    ${dim}# Uninstall IMMO globally${reset}
-    npx immo-cc --global --uninstall
+    ${dim}# Uninstall FINYX globally${reset}
+    npx finyx-cc --global --uninstall
 
   ${yellow}After Installation:${reset}
-    Run ${cyan}/immo:help${reset} in Claude Code to get started.
+    Run ${cyan}/finyx:help${reset} in Claude Code to get started.
 `);
   process.exit(0);
 }
@@ -99,7 +99,7 @@ function copyWithPathReplacement(srcDir, destDir, pathPrefix) {
 }
 
 /**
- * Uninstall IMMO
+ * Uninstall FINYX
  */
 function uninstall(isGlobal) {
   const targetDir = isGlobal
@@ -110,7 +110,7 @@ function uninstall(isGlobal) {
     ? targetDir.replace(os.homedir(), '~')
     : targetDir.replace(process.cwd(), '.');
 
-  console.log(`  Uninstalling IMMO from ${cyan}${locationLabel}${reset}\n`);
+  console.log(`  Uninstalling FINYX from ${cyan}${locationLabel}${reset}\n`);
 
   if (!fs.existsSync(targetDir)) {
     console.log(`  ${yellow}Directory does not exist: ${locationLabel}${reset}`);
@@ -120,50 +120,50 @@ function uninstall(isGlobal) {
 
   let removedCount = 0;
 
-  // Remove IMMO commands
-  const immoCommandsDir = path.join(targetDir, 'commands', 'immo');
-  if (fs.existsSync(immoCommandsDir)) {
-    fs.rmSync(immoCommandsDir, { recursive: true });
+  // Remove FINYX commands
+  const finyxCommandsDir = path.join(targetDir, 'commands', 'finyx');
+  if (fs.existsSync(finyxCommandsDir)) {
+    fs.rmSync(finyxCommandsDir, { recursive: true });
     removedCount++;
-    console.log(`  ${green}✓${reset} Removed commands/immo/`);
+    console.log(`  ${green}✓${reset} Removed commands/finyx/`);
   }
 
-  // Remove immo directory (references)
-  const immoDir = path.join(targetDir, 'immo');
-  if (fs.existsSync(immoDir)) {
-    fs.rmSync(immoDir, { recursive: true });
+  // Remove finyx directory (references)
+  const finyxDir = path.join(targetDir, 'finyx');
+  if (fs.existsSync(finyxDir)) {
+    fs.rmSync(finyxDir, { recursive: true });
     removedCount++;
-    console.log(`  ${green}✓${reset} Removed immo/`);
+    console.log(`  ${green}✓${reset} Removed finyx/`);
   }
 
-  // Remove IMMO agents
+  // Remove FINYX agents
   const agentsDir = path.join(targetDir, 'agents');
   if (fs.existsSync(agentsDir)) {
     const files = fs.readdirSync(agentsDir);
     let agentCount = 0;
     for (const file of files) {
-      if (file.startsWith('immo-') && file.endsWith('.md')) {
+      if (file.startsWith('finyx-') && file.endsWith('.md')) {
         fs.unlinkSync(path.join(agentsDir, file));
         agentCount++;
       }
     }
     if (agentCount > 0) {
       removedCount++;
-      console.log(`  ${green}✓${reset} Removed ${agentCount} IMMO agents`);
+      console.log(`  ${green}✓${reset} Removed ${agentCount} FINYX agents`);
     }
   }
 
   if (removedCount === 0) {
-    console.log(`  ${yellow}No IMMO files found to remove.${reset}`);
+    console.log(`  ${yellow}No FINYX files found to remove.${reset}`);
   }
 
   console.log(`
-  ${green}Done!${reset} IMMO has been uninstalled.
+  ${green}Done!${reset} FINYX has been uninstalled.
 `);
 }
 
 /**
- * Install IMMO
+ * Install FINYX
  */
 function install(isGlobal) {
   const src = path.join(__dirname, '..');
@@ -180,23 +180,23 @@ function install(isGlobal) {
     ? `${targetDir}/`
     : './.claude/';
 
-  console.log(`  Installing IMMO to ${cyan}${locationLabel}${reset}\n`);
+  console.log(`  Installing FINYX to ${cyan}${locationLabel}${reset}\n`);
 
   // Install commands
-  const commandsSrc = path.join(src, 'commands', 'immo');
-  const commandsDest = path.join(targetDir, 'commands', 'immo');
+  const commandsSrc = path.join(src, 'commands', 'finyx');
+  const commandsDest = path.join(targetDir, 'commands', 'finyx');
   if (fs.existsSync(commandsSrc)) {
     copyWithPathReplacement(commandsSrc, commandsDest, pathPrefix);
     const count = fs.readdirSync(commandsDest).filter(f => f.endsWith('.md')).length;
-    console.log(`  ${green}✓${reset} Installed ${count} commands to commands/immo/`);
+    console.log(`  ${green}✓${reset} Installed ${count} commands to commands/finyx/`);
   }
 
   // Install reference docs
-  const immoSrc = path.join(src, 'immo');
-  const immoDest = path.join(targetDir, 'immo');
-  if (fs.existsSync(immoSrc)) {
-    copyWithPathReplacement(immoSrc, immoDest, pathPrefix);
-    console.log(`  ${green}✓${reset} Installed immo/ (references & templates)`);
+  const finyxSrc = path.join(src, 'finyx');
+  const finyxDest = path.join(targetDir, 'finyx');
+  if (fs.existsSync(finyxSrc)) {
+    copyWithPathReplacement(finyxSrc, finyxDest, pathPrefix);
+    console.log(`  ${green}✓${reset} Installed finyx/ (references & templates)`);
   }
 
   // Install agents
@@ -220,20 +220,20 @@ function install(isGlobal) {
   }
 
   // Write VERSION file
-  const versionDest = path.join(targetDir, 'immo', 'VERSION');
+  const versionDest = path.join(targetDir, 'finyx', 'VERSION');
   fs.mkdirSync(path.dirname(versionDest), { recursive: true });
   fs.writeFileSync(versionDest, pkg.version);
   console.log(`  ${green}✓${reset} Wrote VERSION (${pkg.version})`);
 
   console.log(`
-  ${green}Done!${reset} Launch Claude Code and run ${cyan}/immo:help${reset} to get started.
+  ${green}Done!${reset} Launch Claude Code and run ${cyan}/finyx:help${reset} to get started.
 
   ${yellow}Quick Start:${reset}
-    1. Navigate to your investment project folder
-    2. Run ${cyan}/immo:init${reset} to set up investor profile
+    1. Navigate to your financial project folder
+    2. Run ${cyan}/finyx:profile${reset} to set up your financial profile
     3. Add property documents to ${cyan}properties/[location]/${reset}
-    4. Run ${cyan}/immo:scout [location]${reset} to research the location
-    5. Run ${cyan}/immo:analyze [location]${reset} to analyze units
+    4. Run ${cyan}/finyx:scout [location]${reset} to research the location
+    5. Run ${cyan}/finyx:analyze [location]${reset} to analyze units
 `);
 }
 

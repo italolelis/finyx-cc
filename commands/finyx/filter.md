@@ -1,5 +1,5 @@
 ---
-name: immo:filter
+name: finyx:filter
 description: Apply investment criteria to analyzed units and create shortlist
 allowed-tools:
   - Read
@@ -17,10 +17,10 @@ Apply investor's criteria to analyzed units and create a filtered shortlist:
 4. Create shortlist of qualifying units
 
 **Creates:**
-- `.immo/analysis/[location]/SHORTLIST.md` — Qualifying units
-- `.immo/analysis/[location]/EXCLUSIONS.md` — Excluded units with reasons
+- `.finyx/analysis/[location]/SHORTLIST.md` — Qualifying units
+- `.finyx/analysis/[location]/EXCLUSIONS.md` — Excluded units with reasons
 
-**After this command:** Run `/immo:compare` to compare across locations.
+**After this command:** Run `/finyx:compare` to compare across locations.
 
 </objective>
 
@@ -29,7 +29,7 @@ Apply investor's criteria to analyzed units and create a filtered shortlist:
 ## Phase 1: Load Data
 
 **Load config:**
-Read `.immo/config.json` for criteria:
+Read `.finyx/config.json` for criteria:
 - `criteria.minYield`
 - `criteria.maxPrice`
 - `criteria.minSize` / `criteria.maxSize`
@@ -39,7 +39,7 @@ Read `.immo/config.json` for criteria:
 - `criteria.excludeErbpacht`
 
 **Load analyzed units:**
-Read `.immo/analysis/[location]/UNITS.md`
+Read `.finyx/analysis/[location]/UNITS.md`
 
 ## Phase 2: Apply Filters
 
@@ -74,7 +74,7 @@ PASS/FAIL Criteria:
 
 ## Phase 4: Write SHORTLIST.md
 
-Create `.immo/analysis/[location]/SHORTLIST.md`:
+Create `.finyx/analysis/[location]/SHORTLIST.md`:
 
 ```markdown
 # Shortlist: [LOCATION]
@@ -122,7 +122,7 @@ Create `.immo/analysis/[location]/SHORTLIST.md`:
 
 ## Phase 5: Write EXCLUSIONS.md
 
-Create `.immo/analysis/[location]/EXCLUSIONS.md`:
+Create `.finyx/analysis/[location]/EXCLUSIONS.md`:
 
 ```markdown
 # Exclusions: [LOCATION]
@@ -166,7 +166,7 @@ Update location status:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- IMMO ► FILTER: [LOCATION]
+ FINYX ► FILTER: [LOCATION]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Criteria Applied:
@@ -187,12 +187,12 @@ Shortlist:
 3. [UNIT] - €[PRICE] - [YIELD]% - [SIZE]m² [PARKING]
 
 ✅ Saved:
-   .immo/analysis/[location]/SHORTLIST.md
-   .immo/analysis/[location]/EXCLUSIONS.md
+   .finyx/analysis/[location]/SHORTLIST.md
+   .finyx/analysis/[location]/EXCLUSIONS.md
 
 📋 Next:
-   /immo:filter [other-location]  Filter another location
-   /immo:compare                  Compare all shortlists
+   /finyx:filter [other-location]  Filter another location
+   /finyx:compare                  Compare all shortlists
 ```
 
 </process>
@@ -214,7 +214,7 @@ Consider:
 • Increasing maxPrice from €[X] to €[Y]
 • Adjusting size range
 
-To adjust: /immo:set minYield [new-value]
+To adjust: /finyx:set minYield [new-value]
 ```
 
 ## Very Few Units Qualify
@@ -223,7 +223,7 @@ If <3 units qualify, suggest relaxing least important criteria.
 
 ## Manual Exclusions
 
-If user has manually excluded units via `/immo:exclude`, respect those:
+If user has manually excluded units via `/finyx:exclude`, respect those:
 ```
 Additionally excluded by user:
 • [UNIT] - "[REASON]"

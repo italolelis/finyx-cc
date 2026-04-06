@@ -1,5 +1,5 @@
 ---
-name: immo:report
+name: finyx:report
 description: Generate professional financial advisor briefing from analysis
 allowed-tools:
   - Read
@@ -17,15 +17,15 @@ Generate a comprehensive financial advisor briefing document:
 3. Translate if language specified
 4. Save to output folder
 
-**Creates:** `.immo/output/BRIEFING-[DATE].md`
+**Creates:** `.finyx/output/BRIEFING-[DATE].md`
 
 **Usage:**
-- `/immo:report` — Full advisor briefing (Markdown)
-- `/immo:report --short` — 1-page executive summary
-- `/immo:report --pdf` — Generate PDF report
-- `/immo:report --short --pdf` — 1-page PDF summary
-- `/immo:report --lang pt` — Generate in Portuguese
-- `/immo:report --short --pdf --lang de` — Short PDF in German
+- `/finyx:report` — Full advisor briefing (Markdown)
+- `/finyx:report --short` — 1-page executive summary
+- `/finyx:report --pdf` — Generate PDF report
+- `/finyx:report --short --pdf` — 1-page PDF summary
+- `/finyx:report --lang pt` — Generate in Portuguese
+- `/finyx:report --short --pdf --lang de` — Short PDF in German
 
 </objective>
 
@@ -35,7 +35,7 @@ Generate a comprehensive financial advisor briefing document:
 
 When `--short` is specified, generate a **1-page executive summary** instead of the full briefing.
 
-**Creates:** `.immo/output/SUMMARY-[DATE].md`
+**Creates:** `.finyx/output/SUMMARY-[DATE].md`
 
 ### Template
 
@@ -114,7 +114,7 @@ Choose this if: [One sentence explaining when alternative is better]
 
 ---
 
-*Full analysis: Run `/immo:report` for detailed briefing*
+*Full analysis: Run `/finyx:report` for detailed briefing*
 ```
 
 ### Short Report Generation Logic
@@ -136,8 +136,8 @@ Choose this if: [One sentence explaining when alternative is better]
 
 <execution_context>
 
-@~/.claude/immo/templates/briefing.md
-@~/.claude/immo/references/methodology.md
+@~/.claude/finyx/templates/briefing.md
+@~/.claude/finyx/references/methodology.md
 
 </execution_context>
 
@@ -146,16 +146,16 @@ Choose this if: [One sentence explaining when alternative is better]
 ## Phase 1: Load All Data
 
 **Load investor profile:**
-Read `.immo/config.json`
+Read `.finyx/config.json`
 
 **Load location research:**
-Read all `.immo/research/locations/*.md`
+Read all `.finyx/research/locations/*.md`
 
 **Load market research:**
-Read `.immo/research/market/RATES-*.md` (latest)
+Read `.finyx/research/market/RATES-*.md` (latest)
 
 **Load shortlists:**
-Read all `.immo/analysis/*/SHORTLIST.md`
+Read all `.finyx/analysis/*/SHORTLIST.md`
 
 **Verify data completeness:**
 - Config exists ✓
@@ -189,7 +189,7 @@ Read all `.immo/analysis/*/SHORTLIST.md`
 ## Phase 3: Interest Rate Section
 
 **If rate research exists:**
-Use data from `.immo/research/market/RATES-*.md`
+Use data from `.finyx/research/market/RATES-*.md`
 
 **If no rate research:**
 Perform quick web search for current rates:
@@ -201,7 +201,7 @@ Calculate difference and potential savings.
 
 ## Phase 4: Load Template
 
-Read template from `~/.claude/immo/templates/briefing.md`
+Read template from `~/.claude/finyx/templates/briefing.md`
 
 ## Phase 5: Fill Template
 
@@ -308,7 +308,7 @@ Translate the entire filled document to requested language:
 If file exists, append counter: `BRIEFING-[DATE]-2.md`
 
 **Write to:**
-`.immo/output/BRIEFING-[DATE].md`
+`.finyx/output/BRIEFING-[DATE].md`
 
 ## Phase 8: PDF Generation (if --pdf specified)
 
@@ -370,8 +370,8 @@ mdpdf "[MARKDOWN_FILE]" "[PDF_FILE]"
 
 ### PDF Filenames
 
-- Full report: `.immo/output/BRIEFING-[DATE].pdf`
-- Short report: `.immo/output/SUMMARY-[DATE].pdf`
+- Full report: `.finyx/output/BRIEFING-[DATE].pdf`
+- Short report: `.finyx/output/SUMMARY-[DATE].pdf`
 
 ### If no converter available
 
@@ -402,19 +402,19 @@ Convert manually or install a converter and run again.
 ```markdown
 ### Phase: REPORTED
 ### Last Action: Generated advisor briefing
-### Report: .immo/output/BRIEFING-[DATE].md
-### PDF: .immo/output/BRIEFING-[DATE].pdf (if generated)
+### Report: .finyx/output/BRIEFING-[DATE].md
+### PDF: .finyx/output/BRIEFING-[DATE].pdf (if generated)
 ```
 
 ## Phase 10: Output Summary
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- IMMO ► REPORT GENERATED
+ FINYX ► REPORT GENERATED
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📝 Markdown: .immo/output/BRIEFING-[DATE].md
-📄 PDF:      .immo/output/BRIEFING-[DATE].pdf  (if --pdf)
+📝 Markdown: .finyx/output/BRIEFING-[DATE].md
+📄 PDF:      .finyx/output/BRIEFING-[DATE].pdf  (if --pdf)
 🌐 Language: [LANGUAGE]
 
 Contents:
@@ -438,7 +438,7 @@ Contents:
   2. Share with your financial advisor
   3. Schedule consultation to discuss
 
-  /immo:stress-test  For additional scenarios
+  /finyx:stress-test  For additional scenarios
 ```
 
 </process>

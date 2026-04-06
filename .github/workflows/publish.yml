@@ -67,11 +67,11 @@ jobs:
             ## Installation
 
             ```bash
-            npx immo-cc
+            npx finyx-cc
             ```
 
             Or install globally:
 
             ```bash
-            npm install -g immo-cc
+            npm install -g finyx-cc
             ```

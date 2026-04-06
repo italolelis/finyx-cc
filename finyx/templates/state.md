@@ -1,4 +1,4 @@
-# IMMO Analysis State
+# FINYX Analysis State
 
 ## Project: [PROJECT_NAME]
 ## Phase: INIT
@@ -63,5 +63,5 @@ No properties shortlisted yet.
 
 Add property folders to `properties/` then run:
 ```
-/immo:scout [location-name]
+/finyx:scout [location-name]
 ```

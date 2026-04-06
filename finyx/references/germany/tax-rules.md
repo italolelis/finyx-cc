@@ -167,7 +167,7 @@ Tax benefit: €8,610 × 44.31% = €3,814/year = €318/month
 - Can be offset against losses from other sales
 
 ### Strategy Implication
-- Standard IMMO strategy: Hold ≥10 years, sell tax-free
+- Standard FINYX strategy: Hold ≥10 years, sell tax-free
 - Exit value projections assume tax-free sale
 
 ## Nebenkosten (Acquisition Costs)

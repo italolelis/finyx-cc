@@ -1,5 +1,5 @@
 ---
-name: immo:status
+name: finyx:status
 description: Show current analysis state and recommended next action
 allowed-tools:
   - Read
@@ -9,7 +9,7 @@ allowed-tools:
 
 <objective>
 
-Display current IMMO project status including:
+Display current FINYX project status including:
 - Workflow phase
 - Locations and their analysis status
 - Current shortlist
@@ -24,26 +24,26 @@ This is the "where am I?" command for orientation.
 ## Step 1: Check Project Exists
 
 ```bash
-[ -f .immo/config.json ] || echo "NO_PROJECT"
+[ -f .finyx/config.json ] || echo "NO_PROJECT"
 ```
 
 **If NO_PROJECT:**
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- IMMO ► NO PROJECT FOUND
+ FINYX ► NO PROJECT FOUND
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-No IMMO project in current directory.
+No FINYX project in current directory.
 
-To start: /immo:init
+To start: /finyx:init
 ```
 Exit.
 
 ## Step 2: Read State Files
 
 Read:
-- `.immo/config.json` - Investor profile
-- `.immo/STATE.md` - Current state
+- `.finyx/config.json` - Investor profile
+- `.finyx/STATE.md` - Current state
 
 ## Step 3: Scan Locations
 
@@ -52,15 +52,15 @@ ls -d properties/*/ 2>/dev/null | xargs -I {} basename {}
 ```
 
 For each location, check:
-- `.immo/research/locations/[location].md` exists → SCOUTED
-- `.immo/analysis/[location]/UNITS.md` exists → ANALYZED
-- `.immo/analysis/[location]/SHORTLIST.md` exists → FILTERED
+- `.finyx/research/locations/[location].md` exists → SCOUTED
+- `.finyx/analysis/[location]/UNITS.md` exists → ANALYZED
+- `.finyx/analysis/[location]/SHORTLIST.md` exists → FILTERED
 
 ## Step 4: Display Status
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- IMMO ► STATUS
+ FINYX ► STATUS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Project: [PROJECT_NAME]
@@ -101,21 +101,21 @@ Criteria:     ≥[YIELD]% yield, ≤€[PRICE], [SIZE]m²
 [CONTEXTUAL RECOMMENDATION]
 
 Examples:
-- "Run /immo:scout munich to research Munich location"
-- "Run /immo:analyze kassel to calculate metrics"
-- "Run /immo:compare to compare shortlisted units"
-- "Run /immo:report to generate advisor briefing"
+- "Run /finyx:scout munich to research Munich location"
+- "Run /finyx:analyze kassel to calculate metrics"
+- "Run /finyx:compare to compare shortlisted units"
+- "Run /finyx:report to generate advisor briefing"
 ```
 
 ## Step 5: Determine Next Action
 
 Logic:
 1. If no locations in properties/ → "Add property folders to properties/"
-2. If locations exist but none scouted → "/immo:scout [first-location]"
-3. If scouted but not analyzed → "/immo:analyze [location]"
-4. If analyzed but not filtered → "/immo:filter [location]"
-5. If multiple locations filtered → "/immo:compare"
-6. If compared but no report → "/immo:report"
-7. If report exists → "Ready to decide. Review report or /immo:stress-test"
+2. If locations exist but none scouted → "/finyx:scout [first-location]"
+3. If scouted but not analyzed → "/finyx:analyze [location]"
+4. If analyzed but not filtered → "/finyx:filter [location]"
+5. If multiple locations filtered → "/finyx:compare"
+6. If compared but no report → "/finyx:report"
+7. If report exists → "Ready to decide. Review report or /finyx:stress-test"
 
 </process>

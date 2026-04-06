@@ -1,6 +1,6 @@
 ---
-name: immo:update
-description: Update IMMO to the latest version
+name: finyx:update
+description: Update FINYX to the latest version
 allowed-tools:
   - Bash
   - Read
@@ -9,7 +9,7 @@ allowed-tools:
 
 <objective>
 
-Update IMMO to the latest version from npm and display changelog.
+Update FINYX to the latest version from npm and display changelog.
 
 </objective>
 
@@ -18,19 +18,19 @@ Update IMMO to the latest version from npm and display changelog.
 ## Step 1: Check Current Version
 
 ```bash
-CURRENT=$(npm list -g immo-cc --depth=0 2>/dev/null | grep immo-cc | sed 's/.*@//')
+CURRENT=$(npm list -g finyx-cc --depth=0 2>/dev/null | grep finyx-cc | sed 's/.*@//')
 echo "Current version: ${CURRENT:-not installed globally}"
 ```
 
 Also check local installation:
 ```bash
-[ -f ~/.claude/immo/package.json ] && cat ~/.claude/immo/package.json | grep '"version"'
+[ -f ~/.claude/finyx/package.json ] && cat ~/.claude/finyx/package.json | grep '"version"'
 ```
 
 ## Step 2: Check Latest Version
 
 ```bash
-LATEST=$(npm view immo-cc version)
+LATEST=$(npm view finyx-cc version)
 echo "Latest version: $LATEST"
 ```
 
@@ -39,7 +39,7 @@ echo "Latest version: $LATEST"
 If current equals latest:
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- IMMO ► ALREADY UP TO DATE
+ FINYX ► ALREADY UP TO DATE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 You're running the latest version: v[VERSION]
@@ -63,19 +63,19 @@ Extract and display:
 
 Run the installer to update:
 ```bash
-npx immo-cc@latest
+npx finyx-cc@latest
 ```
 
 ## Step 6: Confirm Update
 
 ```bash
-NEW_VERSION=$(npm list -g immo-cc --depth=0 2>/dev/null | grep immo-cc | sed 's/.*@//')
+NEW_VERSION=$(npm list -g finyx-cc --depth=0 2>/dev/null | grep finyx-cc | sed 's/.*@//')
 ```
 
 Display:
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- IMMO ► UPDATED SUCCESSFULLY
+ FINYX ► UPDATED SUCCESSFULLY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Updated: v[OLD] → v[NEW]
@@ -85,7 +85,7 @@ What's New in v[NEW]:
 [CHANGELOG CONTENT]
 ─────────────────────────────────────────────────────
 
-Run /immo:help to see available commands.
+Run /finyx:help to see available commands.
 ```
 
 </process>

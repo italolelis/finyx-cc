@@ -158,7 +158,7 @@
 
 ### If PROCEED
 
-Next step: `/immo:analyze [location]`
+Next step: `/finyx:analyze [location]`
 
 Key considerations for analysis:
 - [Consideration 1]

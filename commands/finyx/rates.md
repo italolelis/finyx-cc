@@ -1,5 +1,5 @@
 ---
-name: immo:rates
+name: finyx:rates
 description: Research current mortgage interest rates and compare with developer rates
 allowed-tools:
   - Read
@@ -17,7 +17,7 @@ Research current mortgage interest rates in Germany:
 3. Calculate potential savings
 4. Provide negotiation recommendations
 
-**Creates:** `.immo/research/market/RATES-[DATE].md`
+**Creates:** `.finyx/research/market/RATES-[DATE].md`
 
 </objective>
 
@@ -54,7 +54,7 @@ Queries:
 ## Phase 3: Compare with Developer Rate
 
 **Load developer rate from analysis:**
-- Check `.immo/analysis/*/RANKED.md` for assumed rate
+- Check `.finyx/analysis/*/RANKED.md` for assumed rate
 - Or from config assumptions
 
 **Calculate difference:**
@@ -90,7 +90,7 @@ Annual savings: Monthly × 12
 
 ## Phase 6: Write Research File
 
-Create `.immo/research/market/RATES-[DATE].md`:
+Create `.finyx/research/market/RATES-[DATE].md`:
 
 ```markdown
 # Interest Rate Research
@@ -169,7 +169,7 @@ Create `.immo/research/market/RATES-[DATE].md`:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- IMMO ► INTEREST RATE RESEARCH
+ FINYX ► INTEREST RATE RESEARCH
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📊 Current Market Rates (10-year fixed):
@@ -185,7 +185,7 @@ Create `.immo/research/market/RATES-[DATE].md`:
 
 🎯 Target Rate: X.XX% - X.XX%
 
-✅ Research saved: .immo/research/market/RATES-[DATE].md
+✅ Research saved: .finyx/research/market/RATES-[DATE].md
 
 📋 Recommendation:
    Quote Interhyp, Dr. Klein, and your bank before accepting

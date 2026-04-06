@@ -1,8 +1,8 @@
-# IMMO Analysis Methodology
+# FINYX Analysis Methodology
 
 ## Core Philosophy
 
-IMMO rejects marketing-driven analysis in favor of systematic, investor-focused evaluation.
+FINYX rejects marketing-driven analysis in favor of systematic, investor-focused evaluation.
 
 **Principles:**
 1. Never trust developer calculations as source of truth
