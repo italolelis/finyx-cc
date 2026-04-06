@@ -113,49 +113,49 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PROF-01 | — | Pending |
-| PROF-02 | — | Pending |
-| PROF-03 | — | Pending |
-| PROF-04 | — | Pending |
-| PROF-05 | — | Pending |
-| DETAX-01 | — | Pending |
-| DETAX-02 | — | Pending |
-| DETAX-03 | — | Pending |
-| DETAX-04 | — | Pending |
-| DETAX-05 | — | Pending |
-| DETAX-06 | — | Pending |
-| BRTAX-01 | — | Pending |
-| BRTAX-02 | — | Pending |
-| BRTAX-03 | — | Pending |
-| BRTAX-04 | — | Pending |
-| BRTAX-05 | — | Pending |
-| BRTAX-06 | — | Pending |
-| INVEST-01 | — | Pending |
-| INVEST-02 | — | Pending |
-| INVEST-03 | — | Pending |
-| INVEST-04 | — | Pending |
-| INVEST-05 | — | Pending |
-| BROKER-01 | — | Pending |
-| BROKER-02 | — | Pending |
-| BROKER-03 | — | Pending |
-| BROKER-04 | — | Pending |
-| PENSION-01 | — | Pending |
-| PENSION-02 | — | Pending |
-| PENSION-03 | — | Pending |
-| PENSION-04 | — | Pending |
-| PENSION-05 | — | Pending |
-| PENSION-06 | — | Pending |
-| FOUND-01 | — | Pending |
-| FOUND-02 | — | Pending |
-| FOUND-03 | — | Pending |
-| FOUND-04 | — | Pending |
-| FOUND-05 | — | Pending |
+| PROF-01 | Phase 1 | Pending |
+| PROF-02 | Phase 1 | Pending |
+| PROF-03 | Phase 1 | Pending |
+| PROF-04 | Phase 1 | Pending |
+| PROF-05 | Phase 1 | Pending |
+| FOUND-01 | Phase 1 | Pending |
+| FOUND-02 | Phase 1 | Pending |
+| FOUND-03 | Phase 1 | Pending |
+| FOUND-04 | Phase 1 | Pending |
+| FOUND-05 | Phase 1 | Pending |
+| DETAX-01 | Phase 2 | Pending |
+| DETAX-02 | Phase 2 | Pending |
+| DETAX-03 | Phase 2 | Pending |
+| DETAX-04 | Phase 2 | Pending |
+| DETAX-05 | Phase 2 | Pending |
+| DETAX-06 | Phase 2 | Pending |
+| BRTAX-01 | Phase 2 | Pending |
+| BRTAX-02 | Phase 2 | Pending |
+| BRTAX-03 | Phase 2 | Pending |
+| BRTAX-04 | Phase 2 | Pending |
+| BRTAX-05 | Phase 2 | Pending |
+| BRTAX-06 | Phase 2 | Pending |
+| INVEST-01 | Phase 3 | Pending |
+| INVEST-02 | Phase 3 | Pending |
+| INVEST-03 | Phase 3 | Pending |
+| INVEST-04 | Phase 3 | Pending |
+| INVEST-05 | Phase 3 | Pending |
+| BROKER-01 | Phase 3 | Pending |
+| BROKER-02 | Phase 3 | Pending |
+| BROKER-03 | Phase 3 | Pending |
+| BROKER-04 | Phase 3 | Pending |
+| PENSION-01 | Phase 4 | Pending |
+| PENSION-02 | Phase 4 | Pending |
+| PENSION-03 | Phase 4 | Pending |
+| PENSION-04 | Phase 4 | Pending |
+| PENSION-05 | Phase 4 | Pending |
+| PENSION-06 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 37 total
-- Mapped to phases: 0
-- Unmapped: 37
+- Mapped to phases: 37
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-06*
-*Last updated: 2026-04-06 after initial definition*
+*Last updated: 2026-04-06 after roadmap creation*
