@@ -25,14 +25,14 @@ Requirements for the Financial Insights Dashboard milestone. Each maps to roadma
 
 ### Recommendations
 
-- [ ] **REC-01**: User can see top-5 actionable recommendations ranked by € annual impact
-- [ ] **REC-02**: User can see cross-advisor intelligence linking insights across domains (tax ↔ pension ↔ investment)
+- [x] **REC-01**: User can see top-5 actionable recommendations ranked by € annual impact
+- [x] **REC-02**: User can see cross-advisor intelligence linking insights across domains (tax ↔ pension ↔ investment)
 
 ### Infrastructure
 
-- [ ] **INFRA-01**: `/fin:insights` command exists with data-completeness gate (flags missing profile sections)
+- [x] **INFRA-01**: `/fin:insights` command exists with data-completeness gate (flags missing profile sections)
 - [x] **INFRA-02**: Reference docs for country-aware benchmarks and scoring rules exist
-- [ ] **INFRA-03**: All insights output includes legal disclaimer via shared disclaimer.md
+- [x] **INFRA-03**: All insights output includes legal disclaimer via shared disclaimer.md
 
 ## v1.2 Requirements
 
@@ -70,11 +70,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TAX-03 | Phase 7 | Complete |
 | PROJ-01 | Phase 7 | Complete |
 | PROJ-02 | Phase 7 | Complete |
-| REC-01 | Phase 8 | Pending |
-| REC-02 | Phase 8 | Pending |
-| INFRA-01 | Phase 8 | Pending |
+| REC-01 | Phase 8 | Complete |
+| REC-02 | Phase 8 | Complete |
+| INFRA-01 | Phase 8 | Complete |
 | INFRA-02 | Phase 6 | Complete |
-| INFRA-03 | Phase 8 | Pending |
+| INFRA-03 | Phase 8 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 12 total

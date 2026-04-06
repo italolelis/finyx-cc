@@ -24,7 +24,7 @@
 
 - [x] **Phase 6: Reference Foundation** — Country-aware benchmark and scoring reference docs that unblock all specialist agents (completed 2026-04-06)
 - [x] **Phase 7: Specialist Agents** — Three parallel agents computing allocation analysis, tax efficiency scoring, and net worth projections (completed 2026-04-06)
-- [ ] **Phase 8: Orchestrator Command** — `/fin:insights` wires all agents, enforces completeness gate, synthesizes ranked recommendations with legal disclaimers
+- [x] **Phase 8: Orchestrator Command** — `/fin:insights` wires all agents, enforces completeness gate, synthesizes ranked recommendations with legal disclaimers (completed 2026-04-06)
 
 ## Phase Details
 
@@ -65,9 +65,9 @@ Plans:
   3. The report surfaces at least one cross-advisor intelligence link (e.g., pension gap affecting tax allowance, investment allocation affecting risk exposure)
   4. All output includes the legal disclaimer via `disclaimer.md` — no advisory content is emitted without it
   5. `bin/install.js` deploys the new command and agents alongside existing ones
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 Plans:
-- [ ] 08-01-PLAN.md — Create /fin:insights orchestrator command and verify install.js deployment
+- [x] 08-01-PLAN.md — Create /fin:insights orchestrator command and verify install.js deployment
 
 ## Progress
 
@@ -80,4 +80,4 @@ Plans:
 | 5. Profile Schema Sync | v1.0 | 1/1 | Complete | 2026-04-06 |
 | 6. Reference Foundation | v1.1 | 1/1 | Complete   | 2026-04-06 |
 | 7. Specialist Agents | v1.1 | 3/3 | Complete   | 2026-04-06 |
-| 8. Orchestrator Command | v1.1 | 0/1 | Planning | - |
+| 8. Orchestrator Command | v1.1 | 1/1 | Complete   | 2026-04-06 |
