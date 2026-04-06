@@ -1,232 +1,320 @@
-# Architecture Patterns
+# Architecture Research
 
-**Domain:** Multi-domain personal finance advisor CLI (Claude Code slash-command plugin)
+**Domain:** Financial insights command — `/fin:insights` integration into Finyx slash-command architecture
 **Researched:** 2026-04-06
-**Confidence:** HIGH (based on official Claude Code docs + existing codebase analysis)
+**Confidence:** HIGH (based on direct codebase inspection)
 
 ---
 
-## Recommended Architecture
+## Standard Architecture
 
-Extend the existing meta-prompting system. Do not introduce an application framework. The proven pattern — Markdown prompts + sub-agent `.md` files + JSON profile + reference docs — scales directly to new financial domains without structural change.
+### System Overview
 
-The core addition is a **shared user financial profile** (`.finyx/profile.json`) that all specialist agents read, and a **country-scoped reference doc tree** that makes multi-country rules a file layout concern, not a logic concern.
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    User: /fin:insights                        │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+┌──────────────────────────▼──────────────────────────────────┐
+│              commands/finyx/insights.md                      │
+│  Orchestrator: validates profile, loads refs, spawns agents  │
+│                                                              │
+│  <execution_context>                                         │
+│    @.finyx/profile.json                                      │
+│    @~/.claude/finyx/references/insights/benchmarks.md        │
+│    @~/.claude/finyx/references/insights/scoring-rules.md     │
+│    @~/.claude/finyx/references/disclaimer.md                 │
+│  </execution_context>                                        │
+└──────────────────────────┬──────────────────────────────────┘
+                           │  Task tool (parallel)
+        ┌──────────────────┼──────────────────┐
+        │                  │                  │
+┌───────▼───────┐ ┌────────▼──────┐ ┌────────▼──────────┐
+│ insights-     │ │ insights-     │ │ insights-          │
+│ allocation-   │ │ tax-scoring-  │ │ projection-        │
+│ agent.md      │ │ agent.md      │ │ agent.md           │
+│               │ │               │ │                    │
+│ Income split  │ │ Unused allow- │ │ Net worth snap-    │
+│ needs/wants/  │ │ ances, gaps   │ │ shot, goal pace,   │
+│ savings bench │ │ across DE+BR  │ │ forward model      │
+└───────┬───────┘ └────────┬──────┘ └────────┬──────────┘
+        │                  │                  │
+        └──────────────────▼──────────────────┘
+                           │
+        ┌──────────────────▼──────────────────┐
+        │  insights.md synthesis phase         │
+        │  - Merge FLAGS from all agents       │
+        │  - Sort RECOMMENDATIONS by EUR impact│
+        │  - Surface cross-domain links        │
+        │  - Emit unified report               │
+        └─────────────────────────────────────┘
+```
+
+### Component Responsibilities
+
+| Component | Responsibility | Implementation |
+|-----------|----------------|----------------|
+| `commands/finyx/insights.md` | Orchestrator — validate profile, spawn 3 agents in parallel, synthesize unified report | Slash-command `.md`, `Task` in `allowed-tools` |
+| `agents/insights-allocation-agent.md` | Classify income into needs/wants/savings/investments/debt; benchmark against country-aware norms | Agent `.md`, reads profile + benchmarks ref via injected context |
+| `agents/insights-tax-scoring-agent.md` | Score tax efficiency 0-100; identify unused Sparerpauschbetrag, missed Riester/Rürup windows, BR DARF gaps | Agent `.md`, reads profile + existing DE/BR tax refs via injected context |
+| `agents/insights-projection-agent.md` | Net worth snapshot; compound savings/investment rate to goal targets; calculate months-to-target | Agent `.md`, reads profile + scoring-rules ref via injected context |
+| `finyx/references/insights/benchmarks.md` | Country-aware allocation benchmarks (50/30/20 adapted for DE/BR tax burden); net worth targets by age bracket | New reference doc, versioned with `tax_year` header |
+| `finyx/references/insights/scoring-rules.md` | Tax efficiency rubric (0-100); allocation health scoring; goal pace thresholds; recommendation ranking formulas | New reference doc, versioned |
 
 ---
 
-## Component Boundaries
+## Recommended Project Structure
 
-| Component | Responsibility | Communicates With |
-|-----------|---------------|-------------------|
-| `commands/fin/` | User-facing slash-commands (`/fin:*`). Orchestrate workflows, spawn agents, read/write state | Agents (via `Agent` tool), `finyx/references/`, `.finyx/profile.json` |
-| `agents/` | Specialist sub-agents (tax-de, tax-br, investment, portfolio, pension, real-estate) | Read `.finyx/profile.json` + country references injected by orchestrating command; return structured output |
-| `finyx/references/<country>/` | Country-specific tax rules, investment rules, pension rules as versioned Markdown knowledge docs | Injected into command context via `@path`; passed to agents in task prompt |
-| `finyx/references/global/` | Country-agnostic rules: ETF concepts, broker comparison criteria, risk frameworks | Same injection pattern |
-| `finyx/skills/` | Reusable domain knowledge blocks (e.g., `de-tax-math.md`, `br-ir-rules.md`) loaded into agents via `skills:` frontmatter field | Agents that declare them in frontmatter |
-| `.finyx/profile.json` | Runtime user financial profile — single source of truth for all agents | Written by `/fin:profile`; read by every subsequent command and agent |
-| `.finyx/STATE.md` | Progress/session tracker, updated by each command | All commands |
-| `.finyx/portfolio/` | User's holdings, transactions, allocation snapshots written by portfolio commands | Portfolio agent, rebalance command |
-| `bin/install.js` (extended) | Copies `commands/fin/`, `agents/`, `finyx/` into `~/.claude/` alongside existing `immo/` | End users via `npx finyx` |
+New files only — no modifications to existing commands or agents.
 
-**Boundary rule:** Agents never write to profile or state directly. Only orchestrating commands do. Agents receive their inputs in the Task prompt and return structured Markdown output. This keeps agents stateless and re-invocable.
+```
+commands/finyx/
+└── insights.md                          # new orchestrator command
+
+agents/
+├── insights-allocation-agent.md         # new
+├── insights-tax-scoring-agent.md        # new
+└── insights-projection-agent.md         # new
+
+finyx/references/
+└── insights/
+    ├── benchmarks.md                    # new — allocation benchmarks DE+BR
+    └── scoring-rules.md                 # new — scoring thresholds and ranking logic
+```
+
+Existing files untouched: `tax.md`, `invest.md`, `pension.md`, `broker.md`, all existing agents, all existing reference docs.
+
+---
+
+## Architectural Patterns
+
+### Pattern 1: Profile-Only Data Sourcing
+
+**What:** `insights` reads `.finyx/profile.json` directly. It does not invoke or parse output from `tax`, `invest`, `pension`, or `broker`.
+
+**When to use:** Always for `insights`. The advisor commands are interactive — they ask questions and fetch live data. `insights` must be non-interactive to produce a complete snapshot in one shot. The profile already contains the structured inputs all advisors use.
+
+**Trade-offs:** Profile data may lag a fresh `/fin:invest` run. This is acceptable — `insights` is a health dashboard, not a live feed. If holdings are missing, emit a callout rather than failing.
+
+**Key profile fields consumed by agents:**
+```json
+identity.cross_border
+identity.family_status
+countries.germany.gross_income
+countries.germany.marginal_rate
+countries.germany.tax_class
+countries.germany.brokers[].holdings[]
+countries.brazil.gross_income
+countries.brazil.ir_regime
+investor.liquidAssets
+investor.monthlyCommitments
+goals.risk_tolerance
+goals.investment_horizon
+goals.primary_goals
+```
+
+Holdings (`brokers[].holdings[]`) and pension contribution fields must be present for full insights. When absent, agents emit `FLAGS: INCOMPLETE — run /fin:invest to add holdings` and proceed with partial analysis.
+
+### Pattern 2: Parallel Agent Decomposition
+
+**What:** Three analytic concerns — allocation, tax efficiency, projection — are independently solvable from the same profile data. Spawn them in parallel via `Task`, collect structured outputs, synthesize in the orchestrator.
+
+**When to use:** When agents have no inter-agent dependency and can work from the same inputs. All three insights agents qualify.
+
+**Trade-offs:** Adds 3 agent files to maintain. The alternative (monolithic `insights.md`) degrades analysis quality as the prompt becomes too long. This split mirrors how `analyze.md` delegates to `finyx-analyzer-agent.md`.
+
+**Synthesis contract — each agent returns this structure:**
+```
+SECTION: allocation|tax|projection
+SCORE: 0-100 or N/A
+FLAGS:
+- [issue description] | IMPACT: €X/year | PRIORITY: high|medium|low
+RECOMMENDATIONS:
+1. [Action] | IMPACT: €X/year | EFFORT: low|medium|high
+```
+The orchestrator merges all FLAGS, sorts RECOMMENDATIONS descending by EUR impact, and surfaces cross-domain links where one recommendation affects multiple sections.
+
+### Pattern 3: Reference Doc Injection via execution_context
+
+**What:** Benchmarks and scoring rules live in versioned reference docs loaded via `@` includes in `<execution_context>`. Agents receive them as injected context from the orchestrator — they do not use `@` includes themselves.
+
+**When to use:** Any knowledge that is country-specific, time-varying, or needs versioning. Tax benchmarks (Sparerpauschbetrag amount, pension contribution limits) change yearly.
+
+**Trade-offs:** Docs must be kept current. Use same `tax_year: YYYY` metadata pattern as `germany/tax-investment.md` so commands can surface staleness warnings.
 
 ---
 
 ## Data Flow
 
-### Profile Bootstrap (one-time)
+### Request Flow
 
 ```
-/fin:profile
-  → AskUserQuestion: country, income, tax class, family status, risk tolerance, goals
-  → AskUserQuestion: current holdings, broker, pension status
-  → Write .finyx/profile.json
-  → Write .finyx/STATE.md (profile: complete)
+User: /fin:insights
+    |
+    v
+Phase 1: Validate .finyx/profile.json exists
+    bash: [ -f .finyx/profile.json ] || abort with "Run /fin:profile first"
+    |
+    v
+Phase 2: Detect active countries
+    Germany active if: countries.germany.tax_class != null
+    Brazil active if:  countries.brazil.ir_regime != null
+    Cross-border if:   identity.cross_border == true
+    |
+    v
+Phase 3: Spawn agents in parallel via Task
+    Task(insights-allocation-agent)  ─┐
+    Task(insights-tax-scoring-agent) ─┼─ parallel, same profile context
+    Task(insights-projection-agent)  ─┘
+    |
+    v
+Phase 4: Collect agent outputs
+    Parse SECTION / SCORE / FLAGS / RECOMMENDATIONS from each
+    |
+    v
+Phase 5: Cross-advisor synthesis
+    - Merge all FLAGS into unified list
+    - Sort all RECOMMENDATIONS by EUR impact descending
+    - Identify cross-domain links:
+        e.g., "Increasing Rürup saves €X in tax AND closes pension gap"
+        e.g., "Equity overweight increases risk beyond risk_tolerance"
+    - Compute composite Financial Health Score (weighted average of agent scores)
+    |
+    v
+Phase 6: Emit unified report
+    ┌─────────────────────────────────────┐
+    │  FINYX ► FINANCIAL INSIGHTS         │
+    ├─────────────────────────────────────┤
+    │  Financial Health Score: XX/100     │
+    │  Income Allocation breakdown        │
+    │  Tax Efficiency: XX/100 + gaps      │
+    │  Net Worth: €X → Goal in Y months   │
+    │  ─────────────────────────────────  │
+    │  Top Recommendations (ranked)       │
+    │  1. [action] | €X/year impact       │
+    │  2. ...                             │
+    ├─────────────────────────────────────┤
+    │  [legal disclaimer]                 │
+    └─────────────────────────────────────┘
 ```
 
-### Domain Command (e.g., /fin:tax)
+### Key Data Flows
 
-```
-/fin:tax
-  → Phase 1: Read .finyx/profile.json (detect country)
-  → Phase 2: Load country references via @path
-      Germany: @~/.claude/finyx/references/germany/income-tax.md
-               @~/.claude/finyx/references/germany/investment-tax.md
-      Brazil:  @~/.claude/finyx/references/brazil/ir-investments.md
-               @~/.claude/finyx/references/brazil/darf-rules.md
-  → Phase 3: Spawn specialist agent via Agent tool
-      Task prompt includes: profile JSON + reference doc content
-      Agent: finyx-tax-de-agent OR finyx-tax-br-agent (selected by command based on profile.country)
-  → Phase 4: Receive agent output, format, write .finyx/output/TAX-ADVICE-[DATE].md
-```
+1. **Profile → Agents.** Profile is passed as context when spawning each Task. Agents do not issue Bash reads of `.finyx/profile.json` autonomously — they receive the full profile via the orchestrator's injected context. This is how `finyx-analyzer-agent` and `finyx-reporter-agent` already work.
 
-### Market Data Command (e.g., /fin:market)
+2. **Recommendations ranking.** Each agent emits recommendations with estimated EUR impact. Orchestrator sorts the merged list descending by impact. Cross-domain links are identified by the orchestrator in Phase 5 — not by individual agents — because agents lack visibility into each other's output.
 
-```
-/fin:market [ticker]
-  → Phase 1: WebSearch "[ticker] price site:finance.yahoo.com OR site:tradingview.com"
-             WebFetch structured data from result
-  → Phase 2: WebSearch "[ticker] news last 7 days"
-  → Phase 3: Spawn finyx-investment-agent with market data + profile in prompt
-  → Phase 4: Return analysis
-```
+3. **Missing data path.** When a profile section is absent (no holdings, no pension data), the relevant agent emits `FLAGS: INCOMPLETE`. Orchestrator converts this to a callout block in the report: "Add your holdings by running `/fin:invest` for full portfolio analysis." Analysis proceeds with available data; the report clearly marks which sections are partial.
 
-**Market data decision:** No runtime npm dependency. Use WebSearch + WebFetch as primary. This preserves zero-dependency architecture. If a user has an API key (Alpha Vantage, FMP), it goes in `.finyx/profile.json` under `apiKeys` and commands check for it as an enhancement path. Web search is the guaranteed fallback.
-
-### Cross-Agent Shared Context Pattern
-
-Sub-agents do not share a live context. Shared state is via files. The pattern:
-
-1. Command reads `.finyx/profile.json` at start of every invocation
-2. Command selects which reference docs to inject (based on `profile.country`)
-3. Command builds a structured task prompt containing: profile summary + relevant reference sections + specific question
-4. Agent runs in isolated context window with that task prompt as its full context
-5. Agent returns Markdown output; command writes it to `.finyx/output/`
-
-This is the correct pattern for this architecture. Sub-agents cannot access files autonomously unless the command grants them the task prompt — inject what each agent needs explicitly.
-
-**Persistent memory for agents** (optional, Phase 2+): Claude Code's `memory: project` field on agent frontmatter gives each specialist agent a `MEMORY.md` at `.claude/agent-memory/<agent-name>/`. Use this for agents that accumulate user-specific insights across sessions (e.g., the tax agent remembering the user's deduction history). Configure `memory: local` so it doesn't commit to version control.
+4. **Country scoping.** Tax-scoring agent runs DE logic only if Germany active, BR logic only if Brazil active, both if `cross_border: true`. Same pattern used by `tax.md`, `invest.md`, `pension.md`.
 
 ---
 
-## Multi-Country Reference Doc Organization
+## Integration Points
 
-Organize strictly by country code. Each domain under each country mirrors the same file names — commands select the right path based on `profile.country`.
+### Existing Commands — No Modification Required
 
-```
-finyx/references/
-  germany/
-    income-tax.md          # Einkommensteuer brackets, Soli, Kirchensteuer
-    investment-tax.md      # Sparerpauschbetrag, Vorabpauschale, Teilfreistellung
-    real-estate-tax.md     # AfA, Grunderwerbsteuer (extracted from immo)
-    pension.md             # Riester, Rürup, bAV rules
-    brokers.md             # TR, Scalable, ING, comdirect comparison matrix
-  brazil/
-    income-tax.md          # IR brackets, deductions
-    investment-tax.md      # IR on stocks/ETFs/FIIs, come-cotas, isenção R$20k
-    real-estate-tax.md     # ITBI, IRPF on ganho de capital
-    pension.md             # INSS, previdência privada, PGBL vs VGBL
-    brokers.md             # XP, NuInvest, BTG comparison matrix
-    darf.md                # DARF calculation rules, due dates
-  global/
-    etf-fundamentals.md    # How ETFs work, TER, tracking error
-    risk-frameworks.md     # Risk tolerance definitions used in profile
-    portfolio-theory.md    # Diversification, rebalancing concepts
-```
+| Command | Data Available in Profile | What insights Consumes |
+|---------|--------------------------|------------------------|
+| `finyx:tax` | `countries.*.marginal_rate`, `countries.*.tax_class` | Tax efficiency scoring inputs |
+| `finyx:invest` | `countries.*.brokers[].holdings[]`, `goals.risk_tolerance` | Allocation analysis, rebalancing gap detection |
+| `finyx:pension` | Pension contributions (if written back to profile on consent) | Pension gap in projection |
+| `finyx:broker` | `countries.*.brokers[]` | Tax-reporting quality contribution to score |
+| `finyx:profile` | Writes `.finyx/profile.json` | Primary data source for all three agents |
 
-**Country selection in commands:** Commands use a single conditional block:
+No existing command needs modification. `insights` is purely additive.
 
-```
-IF profile.country == "DE" → inject finyx/references/germany/* relevant files
-IF profile.country == "BR" → inject finyx/references/brazil/* relevant files
-IF profile.country == "BOTH" → inject both (expat case)
-```
+### New Reference Docs Needed
 
-This is a file-path switch, not a rule engine. The "rule engine" is the LLM reading the injected docs. No code needed.
+| File | Content | Versioning |
+|------|---------|------------|
+| `finyx/references/insights/benchmarks.md` | Income split benchmarks by country + family status; net worth targets by age/income bracket; savings rate norms; ETF allocation targets | `tax_year: 2025` header |
+| `finyx/references/insights/scoring-rules.md` | Tax efficiency score rubric; allocation health scoring; goal pace thresholds (on-track/at-risk/off-track); cross-domain link detection rules; recommendation impact estimation guidance | `version: 1.0` header |
 
-**Versioning:** Each reference file carries a `Tax Year: YYYY` header. When tax rules change, update the file and bump the year. Commands can surface this to the user ("Using 2025 German investment tax rules").
+### Internal Boundaries
+
+| Boundary | Communication | Notes |
+|----------|---------------|-------|
+| `insights.md` ↔ agents | Task tool with injected profile + refs | Same pattern as `analyze.md` ↔ `finyx-analyzer-agent` |
+| Agents ↔ reference docs | Injected via orchestrator's `<execution_context>` | Agents do not issue `@` includes directly |
+| `insights.md` ↔ `.finyx/profile.json` | Bash existence check + Claude context load | Read-only — `insights` never writes to profile |
+| `insights-tax-scoring-agent` ↔ existing tax refs | Reuse `germany/tax-investment.md` and `brazil/tax-investment.md` via context injection | No duplication needed; these docs already have the allowance/rate data |
 
 ---
 
-## Extending Slash-Command Architecture for New Domains
+## Build Order
 
-Follow the existing pattern exactly. Each new domain requires:
+Dependencies drive this order. Each step unblocks the next.
 
-1. **Command file:** `commands/fin/[domain].md` — orchestrates the workflow, handles profile loading, selects country references, spawns agent(s)
-2. **Agent file(s):** `agents/finyx-[domain]-[country]-agent.md` — specialist prompt, tools restricted to what it needs, `skills:` list for preloaded domain knowledge
-3. **Reference docs:** `finyx/references/[country]/[domain].md` — knowledge that changes (tax rates, rules); put stable concepts in `finyx/skills/`
-4. **Profile extension:** If the new domain needs new profile fields (e.g., pension contributions for pension domain), extend `.finyx/profile.json` schema and add questions to `/fin:profile`
+1. **`finyx/references/insights/benchmarks.md`**
+   - No dependencies. Define DE+BR income allocation benchmarks and net worth targets.
+   - Unblocks allocation agent and sets reference baseline for scoring agent.
 
-No installer changes needed for new domains — `bin/install.js` already copies the entire `finyx/` tree.
+2. **`finyx/references/insights/scoring-rules.md`**
+   - Depends on benchmarks existing (scoring references benchmark thresholds).
+   - Defines rubrics used by all three agents.
 
----
+3. **`agents/insights-allocation-agent.md`**
+   - Depends on benchmarks ref. Independently testable: feed profile + benchmarks, verify SECTION/SCORE/FLAGS/RECOMMENDATIONS output format.
 
-## Component Interaction Map
+4. **`agents/insights-tax-scoring-agent.md`**
+   - Depends on scoring-rules ref. Reuses existing `germany/tax-investment.md` and `brazil/tax-investment.md` — no new tax refs needed.
+   - Independently testable with a profile that has `marginal_rate` and `tax_class`.
 
-```
-User types /fin:tax
-      |
-      v
-commands/fin/tax.md (orchestrator)
-  reads: .finyx/profile.json
-  injects: @finyx/references/germany/income-tax.md
-           @finyx/references/germany/investment-tax.md
-  spawns: Agent(finyx-tax-de-agent)
-             |
-             v
-         agents/finyx-tax-de-agent.md
-           skills: [de-tax-math, sparerpauschbetrag-rules]
-           tools: [Read, WebSearch]
-           memory: local
-           returns: structured tax analysis Markdown
-      |
-      v
-commands/fin/tax.md writes: .finyx/output/TAX-ADVICE-[DATE].md
-                    prints: formatted advice to user
-```
+5. **`agents/insights-projection-agent.md`**
+   - Depends on scoring-rules ref for on-track/at-risk thresholds. Can run with minimal profile (income + liquidAssets + goals).
+
+6. **`commands/finyx/insights.md`**
+   - Depends on all three agents and both reference docs existing.
+   - Wire agents, define synthesis logic, add to `bin/install.js` copy paths.
+   - This is the only file that touches `bin/install.js` (to ensure `finyx/references/insights/` gets copied on install).
 
 ---
 
-## Build Order Implications
+## Anti-Patterns
 
-1. **Profile first.** `.finyx/profile.json` is the dependency for everything else. `/fin:profile` command must exist before any specialist command can function. Build this in Phase 1.
+### Anti-Pattern 1: Calling Other Commands from insights
 
-2. **Country references before agents.** Agents are only useful when their reference docs exist. Write Germany tax reference docs before building the German tax agent. Same for Brazil.
+**What people do:** Invoke `/fin:tax`, `/fin:invest` from inside `insights` to get "fresh" data.
 
-3. **One country before two.** Build Germany end-to-end (profile → references → agent → command) then add Brazil as a parallel path. Do not build both simultaneously — country-specific bugs are easier to isolate one at a time.
+**Why it's wrong:** Those commands are interactive — they ask questions and fetch live API data. Chaining them makes `insights` non-deterministic, slow, and unrunnable without a live session. The profile already contains the structured inputs they use.
 
-4. **Real estate reuse before expansion.** The existing `immo/references/germany/tax-rules.md` can be imported into the new finyx structure. Extract and reorganize rather than rewrite. This is Phase 1 work.
+**Do this instead:** Read `.finyx/profile.json` directly. When data is stale or missing, emit a prompt to run the relevant advisor before re-running insights.
 
-5. **Market data last.** WebSearch-based market data adds no new structural patterns — it's just a command with WebSearch/WebFetch tools. Build after the specialist agents are stable, since it depends on the investment agent for analysis.
+### Anti-Pattern 2: Monolithic insights.md Without Agents
 
-6. **Agent persistent memory is additive.** Add `memory: local` to agents after their core behavior is validated. Do not start with memory enabled — it complicates debugging during development.
+**What people do:** Put all three analytic concerns (allocation, tax, projection) in a single prompt with no agent decomposition.
 
----
+**Why it's wrong:** A single prompt covering DE+BR tax rules, allocation benchmarks, scoring rubrics, and projection math will exceed the quality threshold where Claude reasons well. Three distinct analytic frames need focused contexts.
 
-## Scalability Considerations
+**Do this instead:** Three agents, each with one responsibility. The orchestrator synthesizes — it does not compute.
 
-| Concern | Current Scale (1 user) | Multi-contributor Scale | Country Expansion |
-|---------|----------------------|------------------------|-------------------|
-| Reference doc maintenance | One person updates manually | Each contributor owns a country dir; PRs per tax year | Add `countries/XX/` dir, no core changes |
-| Agent proliferation | 6-8 agents, manageable | Name convention `finyx-[domain]-[country]` prevents collision | New country = new set of country-specific agents |
-| Profile schema evolution | Add fields freely | Schema version field in profile.json | Backward compat: commands check field existence before using |
-| Context window size | 5-6 reference docs per invocation, well within limits | Prune `@path` includes per command to only what's needed | Per-country scope keeps injection focused |
+### Anti-Pattern 3: Hardcoding Benchmarks in Agent Prompts
 
----
+**What people do:** Embed `50% needs / 30% wants / 20% savings` directly in agent prompt text.
 
-## Anti-Patterns to Avoid
+**Why it's wrong:** Benchmarks are country-specific (DE/BR tax burden shifts the ratios), age-adjusted, and change over time. Hardcoded values are invisible and unversioned.
 
-### Anti-Pattern 1: God Profile Command
-**What:** A single `/fin:profile` command that tries to gather every field for every domain and every country upfront.
-**Why bad:** 20+ questions at init time creates friction; most fields won't be needed in early sessions.
-**Instead:** Gather core fields at init (country, income, tax class, risk). Add domain-specific fields lazily when a user first invokes that domain's command — "To give you pension advice, I need a few more details."
+**Do this instead:** `finyx/references/insights/benchmarks.md` with `tax_year` metadata, loaded via `<execution_context>`. Same pattern as `germany/tax-investment.md`.
 
-### Anti-Pattern 2: Agent-to-Agent Communication
-**What:** Having the tax agent call the investment agent directly.
-**Why bad:** Sub-agents cannot spawn other sub-agents in Claude Code. Attempting this silently fails.
-**Instead:** The orchestrating command is the hub. If a workflow needs output from two agents, the command runs them sequentially, collects both outputs, and synthesizes.
+### Anti-Pattern 4: Writing insights Output to Profile
 
-### Anti-Pattern 3: Embedding Country Logic in Command Code
-**What:** `if country == DE: use_rate(0.25) else: use_rate(0.15)` in command prompts.
-**Why bad:** Tax rates change yearly; hardcoded values require command edits, not just reference doc updates.
-**Instead:** All rates live in reference docs. Command injects the doc. Agent reads the doc. Zero rate literals in command files.
+**What people do:** Have `insights` update `profile.json` with scores or recommendations.
 
-### Anti-Pattern 4: One Fat Reference File Per Country
-**What:** `germany.md` containing all German rules — tax, pension, brokers, real estate — in one file.
-**Why bad:** Entire file gets injected even when only pension rules are needed, bloating context.
-**Instead:** One file per domain per country. Commands inject only the files relevant to the current task.
+**Why it's wrong:** Scores are computed artifacts, not source data. Writing them into the profile creates stale computed state that could corrupt future analyses.
 
-### Anti-Pattern 5: Runtime npm Dependencies for Market Data
-**What:** Adding `yahoo-finance2` or `node-fetch` as production dependencies.
-**Why bad:** Breaks zero-dependency architecture; creates install-time failures and maintenance burden.
-**Instead:** WebSearch + WebFetch for all market data. Store optional API keys in profile.json and use Bash `curl` calls if keys exist — this keeps Node.js out of the data path entirely.
+**Do this instead:** Output is conversational only — no files written. If users want to save a report, add an optional `Write .finyx/output/INSIGHTS-[DATE].md` with explicit user consent, same pattern as other advisor commands.
 
 ---
 
 ## Sources
 
-- Claude Code Sub-Agents official docs (HIGH confidence): https://code.claude.com/docs/en/sub-agents
-- Existing IMMO codebase analysis (`agents/`, `commands/immo/`, `immo/references/`) — direct inspection (HIGH confidence)
-- `.planning/PROJECT.md` and `.planning/codebase/ARCHITECTURE.md` — project context (HIGH confidence)
-- Multi-agent orchestration patterns: https://shipyard.build/blog/claude-code-multi-agent/ (MEDIUM confidence)
-- yahoo-finance2 npm: https://www.npmjs.com/package/yahoo-finance2 (MEDIUM confidence — unofficial API, stability risk)
+- Direct inspection: `commands/finyx/tax.md`, `invest.md`, `pension.md`, `broker.md`, `profile.md`
+- Direct inspection: `agents/finyx-analyzer-agent.md`, `finyx-reporter-agent.md`
+- Direct inspection: `.finyx/profile.json` schema (full field inventory)
+- Direct inspection: `finyx/references/` structure (germany/, brazil/, disclaimer.md)
+- Pattern reference: orchestrator→agent delegation in `analyze.md` → `finyx-analyzer-agent`
+
+---
+*Architecture research for: Finyx /fin:insights command — v1.1 milestone*
+*Researched: 2026-04-06*

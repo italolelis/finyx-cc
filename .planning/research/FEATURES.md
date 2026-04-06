@@ -1,180 +1,183 @@
 # Feature Landscape
 
-**Domain:** Personal finance advisor — tax optimization, investment advisory, portfolio management, broker comparison, pension planning (Germany + Brazil)
+**Domain:** Financial insights dashboard — `/fin:insights` command for Finyx personal finance CLI
 **Researched:** 2026-04-06
-**Confidence:** MEDIUM-HIGH (German tax ecosystem well-documented; Brazilian ecosystem sourced from Portuguese-language financial press + official sources)
+**Confidence:** HIGH (financial health scoring patterns are well-established; CLI-specific adaptations are medium confidence based on domain reasoning)
 
 ---
 
-## Table Stakes
+## Feature Landscape
 
-Features users expect. Missing = product feels incomplete or untrustworthy.
+### Table Stakes (Users Expect These)
 
-### Tax Advisory
-
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| Tax class explanation (Germany) | Every German employee faces Steuerklassen; confusion is universal | Low | Static reference + profile-aware mapping |
-| Sparerpauschbetrag tracking | €1,000/€2,000 exemption is universally applicable; users want to know how much they've used | Low | Requires user to input holdings/dividends |
-| Vorabpauschale calculation | Applies annually to all accumulating ETFs; most users don't know how to calculate it | Medium | Requires Basiszins (published by Bundesbank) + fund type |
-| Teilfreistellung awareness | Affects how ETF income is taxed; wrong calculation = wrong DARF/Anlage KAP | Low | Reference table by fund type |
-| Abgeltungssteuer summary | 25% + Soli + KiSt is baseline German capital gains tax; users must understand it | Low | Explain with user's marginal rate context |
-| Brazilian IR filing guidance | Filing season complexity; users need step-by-step for investment types | Medium | Stocks, FIIs, CDB, LCI/LCA, previdência all have different rules |
-| DARF calculation and reminder | Monthly obligation for stock/FII gains; common compliance failure | Medium | Calculate monthly taxable gains, remind before last business day |
-| Come-cotas explanation | Biannual tax on investment funds confuses users; often discovered at redemption | Low | Explain mechanism + timing |
-| FII dividend tax exemption rules | Exempt but must be declared; common misconception they're invisible to Receita | Low | Explain declaration requirement |
-| Legal disclaimer on all advice | Advisory-only tool; must not imply professional tax advice | Low | Mandatory for all outputs |
-
-### Investment Advisory
+Features a "financial health" or "insights" command must have. Missing these = output feels like a status dump, not an advisor.
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| Portfolio allocation overview | Users want to know where their money is (geography, sector, asset class) | Medium | Requires user to input holdings |
-| Risk profile assessment | Underpins all investment recommendations; robo-advisors all do this | Low | Questionnaire + mapping to risk tolerance |
-| ETF recommendation by goal | ETF investing is dominant in Germany (Sparplan culture); users expect suggestions | Medium | Must be profile-aware, not generic |
-| Asset class explanation | Stocks vs ETFs vs futures vs FIIs vs CDBs — users often conflate them | Low | Reference content per asset type |
-| Rebalancing suggestion | Drift alerts (e.g., equity % too high) are expected by any portfolio tool | Medium | Requires target allocation baseline |
-| Market data for queried assets | Users asking about a stock/ETF expect current price, basic metrics | Medium | Yahoo Finance / web search fallback |
+| Income allocation snapshot | Users expect to see how their income is distributed (needs/savings/investments/debt) vs a benchmark like 50/30/20 | LOW | Read from `profile.json`; no new data required; compare to configurable benchmark |
+| Tax efficiency summary | Show used vs unused tax allowances (Sparerpauschbetrag, PGBL 12% limit) with explicit gap and action | LOW | All data already in profile + tax advisor outputs; pure synthesis |
+| Net worth snapshot | Current assets minus liabilities — the single most important financial health number | LOW | Profile already captures assets/liabilities; computation is arithmetic |
+| Top-N actionable recommendations | Must end with a ranked list of concrete next steps, not just observations | LOW | Synthesis across all advisor domains; ranking by financial impact |
+| Goal pace indicator | "At current savings rate, you reach €X target in Y months/years" | MEDIUM | Requires savings rate + target from profile; simple compound projection |
+| Emergency fund check | 3–6 months expenses check is a universal table-stakes insight; users expect it | LOW | Profile has monthly expenses + liquid savings |
+| Debt-to-income ratio | Benchmark against the <35% healthy threshold; flag if over | LOW | Profile already has debt obligations and income |
 
-### Broker Comparison
+### Differentiators (Competitive Advantage)
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| Fee comparison (Germany) | Trade Republic vs Scalable vs ING vs comdirect — every expat/investor asks this | Low | Structured reference data, updated per year |
-| Fee comparison (Brazil) | NuInvest zero-fee vs XP vs BTG is a common decision point | Low | Structured reference data |
-| Profile-based recommendation | Not "here are all brokers" but "given your situation, use X" | Medium | Depends on user profile (country, trade frequency, asset types) |
-| Tax reporting quality note | German brokers differ significantly on Anlage KAP auto-generation; critical for expats using foreign brokers | Low | Key factor: IBKR/DEGIRO users must calculate manually |
-| Cross-border account guidance | IBKR is common for DE+BR users; Schwab for US; needs explanation | Medium | Regulatory, tax, and reporting implications |
-
-### Pension Planning
-
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| Riester vs Rürup vs bAV comparison | Every German employee/freelancer faces this choice; no intuitive right answer | Medium | Must factor employment status, tax bracket, family subsidies |
-| Riester Zulagen calculator | State subsidies (Grundzulage + Kinderzulage) are a core Riester selling point | Medium | Requires family data from user profile |
-| Rürup tax deduction estimate | Primary benefit is Sonderausgabenabzug; users want to see the savings | Medium | Requires income and marginal tax rate |
-| bAV basics explanation | Entgeltumwandlung reduces gross income; misunderstood by most employees | Low | Explanation + rule of thumb |
-| PGBL vs VGBL decision guide | Most-asked Brazilian pension question; wrong choice costs significant tax | Medium | Depends on IR regime and 12% income threshold |
-| PGBL 12% contribution limit guidance | PGBL deduction cap is 12% of annual taxable income; common source of errors | Low | Calculate from user income |
-| Progressive vs regressive IR regime for previdência | Regime choice is irrevocable per contract; high stakes | Low | Explain with time horizon examples |
-| Pension gap estimate | "How much do I need vs what I'll have" is the core planning question | High | Requires projection model with inflation and contribution assumptions |
-
----
-
-## Differentiators
-
-Features that set the product apart. Not expected, but valued.
+Features that make `/fin:insights` meaningfully better than generic finance dashboards — enabled by Finyx's cross-domain knowledge and shared profile.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| Integrated cross-country profile | Advise someone who lives in Germany but invests in Brazil simultaneously — no other tool does this | High | Core differentiator of Finyx; requires shared memory system |
-| German+Brazilian tax interaction | E.g., Brazilian PGBL deduction + German Anlage AUS for foreign income — truly rare advisory capability | High | Needs both reference systems loaded simultaneously |
-| Tax-loss harvesting guidance (Germany) | Identify unrealized losses in portfolio to offset gains before year-end; not common in DE tools | High | Requires holdings data + current prices |
-| Tax-loss harvesting guidance (Brazil) | Isenção de R$20k/month for stocks — help users plan sells to stay under threshold | Medium | High value; commonly missed |
-| Vorabpauschale pre-calculation for year | Run before Jan 2 to know cash needed for auto-debit; prevents account shortfall | Medium | Differentiating — most users are caught off guard |
-| Sparerpauschbetrag optimization across brokers | If user has multiple brokers, help distribute Freistellungsauftrag optimally | Medium | Common pain point for multi-broker investors |
-| PFOF ban impact analysis (June 2026) | EU PFOF ban changes neo-broker economics; advisory content on what changes for users | Low | Timely, relevant, rare in tools |
-| Real estate + investment integration | Advise on Eigennutzung vs Vermietung tax implications alongside investment portfolio | High | Unique because of IMMO lineage |
-| Broker migration guide | Help user understand tax and reporting consequences of switching brokers | Medium | Practical, avoids painful surprises |
-| Brazil Bolsa de Valores isenção planning | Month-by-month sell planning to stay under R$20k exemption ceiling | Medium | High value for active Brazilian investors |
-| DARF reminder + calculation workflow | End-to-end monthly flow: calculate gain → confirm DARF amount → remind before deadline | Medium | Removes compliance anxiety |
-| Country-specific pension projection | Show retirement income simulation with DE statutory pension + private + BR INSS | High | Requires actuarial assumptions, but powerful for expats |
+| Cross-advisor intelligence synthesis | Surfaces interactions between domains: "pension gap means you're under-utilizing Rürup deduction which would also reduce your marginal tax rate on investments" — no siloed tool does this | HIGH | Must read outputs from tax + pension + invest advisors and reason across them |
+| Country-aware benchmarks | 50/30/20 breaks down in Germany (52%+ mandatory deductions); use country-specific benchmarks based on net income, not gross | MEDIUM | German benchmark: 30% savings feasible on net, not gross. Brazilian benchmark: different due to previdência and cost of living |
+| Tax optimization gap score | Express unused German/Brazilian tax allowances as a single "X% of potential tax savings unrealized" metric | MEDIUM | Aggregate Sparerpauschbetrag unused + Rürup under-contribution + PGBL under-contribution into one score |
+| Net worth forward projection | "At current rate: €X in 5 years, €Y in 10 years" — uses actual savings rate and risk-adjusted return from profile | MEDIUM | Not just current snapshot; show trajectory with current behavior vs optimized behavior |
+| Portfolio-vs-pension gap warning | Compare total projected retirement income (statutory + private pension) against a replacement income target | HIGH | Requires pension planning data + investment data; unique because Finyx has both |
+| DE/BR interaction flag | Warn if Brazilian PGBL deduction is not being declared in German Anlage AUS / vice versa when relevant for expats | HIGH | Cross-border advisory is core Finyx differentiator; insights must surface the cross-country tax interactions |
+| Recommendation impact ranking | Each recommendation shows estimated annual financial impact in € (or BRL) — e.g., "Using full Sparerpauschbetrag saves ~€263/year at 26.375% Abgeltungssteuer" | MEDIUM | Makes prioritization concrete; forces advisor to quantify, not just flag |
+| Year-end tax action list | Insight run in Q4 triggers "actions to take before Dec 31" section: harvest losses, top up Rürup, check Vorabpauschale cash position | MEDIUM | Date-aware output; very high value for annual planning context |
 
----
+### Anti-Features (Commonly Requested, Often Problematic)
 
-## Anti-Features
-
-Features to deliberately NOT build.
-
-| Anti-Feature | Why Avoid | What to Do Instead |
-|--------------|-----------|-------------------|
-| Tax return filing automation | Legal liability; errors cause penalties; out of scope in PROJECT.md | Guide users step-by-step; link to ELSTER / Receita Federal tools |
-| Automated trade execution | Securities law in both countries; advisory-only is the explicit constraint | Provide recommendations; user executes at broker |
-| Real-time portfolio sync via broker APIs | High complexity, OAuth maintenance, API instability, out of scope v1 | User inputs holdings manually or pastes CSV |
-| Insurance comparison engine | Data sourcing complexity (acknowledged in PROJECT.md as v2) | Mention insurance as a consideration; don't build comparison |
-| Budget tracking / expense categorization | Check24/Mint-style feature; different product; would dilute focus | Refer users to dedicated tools (YNAB, etc.) |
-| Robo-advisor / automated rebalancing | Requires broker integration + execution + regulatory licensing | Provide rebalancing analysis + instructions; user acts |
-| Countries beyond Germany and Brazil | Architecture bloat; v1 scope is clear in PROJECT.md | Keep reference system modular so community can add countries |
-| Financial product selling / affiliate links | Destroys trust; conflicts with advisory-only positioning | Pure advisory, never recommend products for commercial reasons |
-| Chat history / conversation persistence between sessions | Claude Code handles context naturally; building custom persistence is over-engineering | Use Claude's native context; GSD memory system for profile |
-| Push notifications / alerting system | Requires infrastructure (backend, scheduler); CLI tool, not a service | User runs commands; no daemon/scheduler in v1 |
-| Social features / community portfolios | Off-brand for a private financial advisor | Stay single-user, private-by-design |
+| Feature | Why Requested | Why Problematic | Alternative |
+|---------|---------------|-----------------|-------------|
+| Budget tracking / expense categorization | "Show me where my money goes" sounds like insights | Different product (transaction-level tracking); requires bank feed or manual entry; dilutes the advisory focus | Acknowledge the gap; direct to YNAB/MoneyMoney; insights work from declared income allocation, not transaction history |
+| Historical trend charts / graphs | "Show me my net worth over time" is a natural ask | CLI has no charting capability; storing historical snapshots adds state management complexity; v1.1 is a point-in-time advisor | Give a projected forward trend instead; historical tracking is a v2 feature after persistent state is validated |
+| Financial health score as a single number | Score feels objective and gameable (users want to "hit 100") | A single number hides the composition; users optimize the score, not their finances; creates false precision | Show component ratings (emergency fund: GOOD, savings rate: NEEDS IMPROVEMENT) without aggregating to one number |
+| Comparison to other users / benchmarks by age | "Am I doing better than average for my age?" is compelling | Demographic benchmarking requires maintaining population data; DE/BR datasets differ; creates envy, not action | Compare to standards (e.g., "3–6 months emergency fund") not to "people like you"; avoids data maintenance burden |
+| Spending advice / frugality tips | Generic "cut your coffee" advice feels like insights | Patronizing for a user who hasn't declared spending; Finyx has no transaction data to base this on | Only recommend reducing a category if profile data explicitly shows it above benchmark; never speculate |
+| Insurance recommendations | Insurance is part of financial health; users will expect it | Explicitly deferred to v2 in PROJECT.md; data sourcing is unsolved | Flag insurance as "not assessed — run `/fin:insurance` when available" |
+| Auto-refresh / scheduled runs | "Run weekly insights automatically" sounds useful | Requires a daemon/scheduler; CLI tool, not a service; outside architecture constraints | Users run `/fin:insights` on demand; document recommended cadence (monthly, or before major decisions) |
 
 ---
 
 ## Feature Dependencies
 
 ```
-User Financial Profile
-  → German Tax Advisor (needs: income, Steuerklasse, employment type, Kirchensteuer)
-  → Brazilian Tax Advisor (needs: residency status, income, investment types held)
-  → Investment Advisor (needs: risk profile, goals, current holdings)
-  → Broker Comparison (needs: country, trading frequency, asset types, tax complexity)
-  → Pension Planning (needs: employment status, income, age, family status, country)
+/fin:insights (synthesis command)
+    └──reads──> .finyx/profile.json (income, goals, assets, liabilities, emergency fund, debt)
+    └──reads──> last tax advisor output or re-derives from profile (tax allowances used/available)
+    └──reads──> last investment advisor output or re-derives (portfolio allocation, risk profile)
+    └──reads──> last pension advisor output or re-derives (pension gap estimate, contribution levels)
 
-German Tax-Aware Investing
-  → Requires: Sparerpauschbetrag allocation + current holdings + broker setup
-  → Requires: Vorabpauschale reference data (Basiszins published annually by Bundesbank)
+Income Allocation Analysis
+    └──requires──> net income from profile.json
+    └──requires──> expense breakdown from profile.json (housing, savings %, debt payments)
 
-Brazilian Tax-Aware Investing
-  → Requires: Monthly trade history (for isenção calculation)
-  → Requires: Asset type breakdown (stocks vs FIIs vs funds have different rules)
+Tax Efficiency Score
+    └──requires──> German: Sparerpauschbetrag used/limit, Rürup contribution vs max, Vorabpauschale status
+    └──requires──> Brazilian: PGBL contribution vs 12% limit, DARF compliance flag
+    └──requires──> Both from profile.json (present without running individual advisors)
 
-Pension Planning (Germany)
-  → Riester: needs family status + income + employment type (not for Selbständige)
-  → Rürup: needs income + tax bracket (primary benefit is Sonderausgabenabzug)
-  → bAV: needs employer + employment status
+Net Worth Snapshot + Projection
+    └──requires──> Assets list from profile.json
+    └──requires──> Liabilities list from profile.json
+    └──requires──> Monthly savings rate from profile.json
+    └──enhances with──> Expected return assumption (from investment advisor risk profile)
 
-Pension Planning (Brazil)
-  → PGBL/VGBL: needs IR regime (progressive vs regressive) + investment horizon + income
-  → INSS: needs contribution history (user-provided)
+Goal Pace Tracking
+    └──requires──> Financial goals with target amount + date from profile.json
+    └──requires──> Current monthly savings rate
+    └──depends on──> Net worth snapshot (baseline)
 
-Portfolio Tracker
-  → Rebalancing: requires target allocation (set in profile or per-session)
-  → Tax-loss harvesting: requires current prices + cost basis
+Cross-Advisor Intelligence
+    └──requires──> All domain outputs above computed first
+    └──surfaces──> Interactions: pension gap → under-utilized Rürup → higher tax bill on investments
+    └──surfaces──> DE/BR cross-border: PGBL foreign income declaration in German Anlage AUS
 
-Broker Comparison
-  → Germany: profile must know if user uses foreign broker (IBKR, DEGIRO) — different tax reporting burden
-  → Brazil: profile must know if user needs BDRs, mini-contracts, or only basic assets
+Recommendation Ranking
+    └──requires──> All analysis sections completed
+    └──requires──> Impact quantification in € or BRL
+    └──outputs──> Ranked list sorted by estimated annual financial impact
 ```
+
+### Dependency Notes
+
+- **All features require `profile.json` to be populated:** `/fin:insights` must gate on profile completeness. If profile is missing key fields (income, goals, assets), prompt user to run `/fin:profile` first.
+- **Tax efficiency is derivable from profile alone:** The tax advisor outputs are helpful context but insights can re-derive allowance gaps directly from profile data — no hard dependency on prior advisor runs.
+- **Cross-advisor intelligence is the hardest feature:** It requires reasoning across 3+ domains simultaneously. Implemented as a late synthesis step after all individual analyses are computed in the same command run.
+- **Projection accuracy depends on assumptions:** Net worth forward projection uses declared savings rate + risk-adjusted return from profile. Must show assumptions inline so users can validate, not treat as oracle output.
 
 ---
 
-## MVP Recommendation
+## MVP Definition
 
-Build in this order to deliver integrated value incrementally:
+### Launch With (v1.1)
 
-1. **User Financial Profile** — shared memory system; gates all other features
-2. **German Tax Advisor** — highest-demand, well-documented rules, existing IMMO tax knowledge to build on
-3. **Brazilian Tax Advisor** — second country; validates multi-country architecture
-4. **Investment Advisor + Portfolio Tracker** — core value for investors; builds on profile
-5. **German Tax-Aware Investing** — differentiator; high value once portfolio data exists
-6. **Brazilian Tax-Aware Investing** — isenção planning + DARF workflow; high practical value
-7. **Broker Comparison** — relatively static reference data; build as reference command
-8. **Pension Planning** — highest complexity; requires all profile data to be meaningful
+Minimum viable `/fin:insights` command that delivers real value.
 
-**Defer:**
-- Tax-loss harvesting guidance: requires accurate cost basis + current prices — build after portfolio tracker is solid
-- Pension gap projection: actuarial complexity; build after basic pension planning is validated
-- DARF automation workflow: build after Brazilian tax advisor is working
+- [ ] Income allocation vs benchmark — read net income + expense breakdown from profile; compare to 50/30/20 adjusted for German net income reality
+- [ ] Tax efficiency gaps — unused Sparerpauschbetrag, under-utilized Rürup, PGBL under-contribution; show in € terms
+- [ ] Net worth snapshot — current assets minus liabilities from profile; no projection yet
+- [ ] Emergency fund check — months covered vs 3–6 target
+- [ ] Goal pace indicator — for each declared goal: "on track / off track / months to target at current rate"
+- [ ] Top-5 ranked recommendations — each with estimated annual financial impact in € or BRL
+- [ ] Cross-advisor intelligence — at least flag the most impactful cross-domain interaction detected
+
+### Add After Validation (v1.x)
+
+- [ ] Net worth forward projection (5-year + 10-year) — needs validated savings rate data from real user runs
+- [ ] Year-end tax action list — date-aware section; add when seasonal utility is confirmed
+- [ ] Recommendation impact quantification refinement — initial estimates will be rough; calibrate from user feedback
+- [ ] DE/BR cross-border interaction detection — complex logic; validate single-country flow first
+
+### Future Consideration (v2+)
+
+- [ ] Historical net worth tracking — requires persistent state beyond current profile.json
+- [ ] Portfolio-vs-pension gap warning — needs pension projection model to be solid
+- [ ] Insurance gap detection — blocked on insurance advisor (v2 scope per PROJECT.md)
+
+---
+
+## Feature Prioritization Matrix
+
+| Feature | User Value | Implementation Cost | Priority |
+|---------|------------|---------------------|----------|
+| Income allocation vs benchmark | HIGH | LOW | P1 |
+| Tax efficiency gaps (DE + BR) | HIGH | LOW | P1 |
+| Net worth snapshot | HIGH | LOW | P1 |
+| Emergency fund check | HIGH | LOW | P1 |
+| Goal pace indicator | HIGH | MEDIUM | P1 |
+| Top-N ranked recommendations | HIGH | MEDIUM | P1 |
+| Cross-advisor intelligence (basic) | HIGH | HIGH | P1 |
+| Net worth forward projection | HIGH | MEDIUM | P2 |
+| Year-end tax action list | MEDIUM | MEDIUM | P2 |
+| Recommendation impact in € | MEDIUM | MEDIUM | P2 |
+| DE/BR cross-border interactions | MEDIUM | HIGH | P2 |
+| Portfolio-vs-pension gap | HIGH | HIGH | P3 |
+
+**Priority key:**
+- P1: Must have for v1.1 launch
+- P2: Should have, add in v1.1 or v1.2
+- P3: Future milestone
+
+---
+
+## Competitor Feature Analysis
+
+| Feature | Mint / YNAB | Finanzguru (DE) | PortfolioPilot | Our Approach |
+|---------|-------------|-----------------|----------------|--------------|
+| Income allocation | Transaction-derived, automatic | Transaction-derived via bank sync | Not applicable | Declared income + manual allocation from profile; no bank sync needed |
+| Tax efficiency | None (US-only Mint) | German tax tips (generic) | Portfolio-level only | Country-specific gap calculation with exact € amounts |
+| Net worth | Tracked over time via account sync | Tracked via bank sync | Investment accounts only | Point-in-time from profile; forward projection without sync |
+| Cross-domain advice | None | None | None | Core differentiator — pension gap → tax gap → investment gap |
+| Goal pacing | Basic (savings goal trackers) | None | None | Profile-declared goals with projection |
+| CLI / no sync | None (UI-only, requires sync) | None (UI-only, requires sync) | None | Privacy-first; no external data required; all derived from profile |
 
 ---
 
 ## Sources
 
-- [Best Broker for Expats in Germany 2026](https://perfinex.de/best-broker-expats-germany-2026-guide/)
-- [Investing Taxes Germany: Vorabpauschale, CGT & ETF Guide 2026](https://quantroutine.com/learn/investing-taxes-germany/)
-- [German Tax Tracker — Vorabpauschale Calculator](https://www.germantaxtracker.de/)
-- [Capital Gains Tax Germany 2026: Abgeltungssteuer Guide](https://www.allinvestview.com/articles/capital-gains-tax-germany/)
-- [Germany's Vorabpauschale 2026: Basiszins, ETFs & tax](https://hexn.io/local-updates/vorabpauschale-2026-the-cost-of-a-passive-portfolio-in-germany-rp9h14bpv3epm9ch19mspw3a)
-- [PGBL and VGBL: differences explained](https://www.dpc.com.br/pgbl-and-vgbl-understanding-the-differences-between-these-private-pension-plans/?lang=en)
-- [Brazilian IR 2026: como declarar investimentos](https://www.idinheiro.com.br/investimentos/como-declarar-investimentos-no-imposto-de-renda/)
-- [Como emitir e pagar DARF 2026](https://blog.nubank.com.br/como-emitir-darf-investimentos/)
-- [XP Investimentos vs BTG Pactual 2026](https://arevista.com.br/mercados/ibovespa/xp-investimentos-ou-btg-pactual-qual-e-a-melhor-corretora-para-investir-em-2026/)
-- [NuInvest vs BTG Pactual comparison](https://rankia.com.br/nuinvest-vs-btg-pactual-corretoras/)
-- [Scalable Capital vs Trade Republic 2026](https://northern.finance/en/review/scalable-capital-vs-trade-republic/)
-- [Riester vs Rürup: differences and suitability](https://xpert.digital/en/pension-differences/)
-- [Rentenrechner Deutschland 2026](https://www.securefuturecalculator.com/retirement-calculator-germany)
-- [AI Tools for Tax-Loss Harvesting](https://www.mezzi.com/blog/ai-tools-for-tax-loss-harvesting-in-portfolios)
-- [PFOF ban June 2026: Commission-Free Brokers](https://www.bankeronwheels.com/pfof-and-quote-driven-reviews/)
-- [Fintech UX Anti-Patterns 2026](https://theuxda.com/blog/top-20-financial-ux-dos-and-donts-to-boost-customer-experience)
+- [Financial Health Pulse 2025 U.S. Trends Report — Financial Health Network](https://finhealthnetwork.org/research/financial-health-pulse-2025-u-s-trends-report/)
+- [Top Personal Finance Metrics 2025 — The Gild Group](https://thegildgroup.com/financial-health-metrics/)
+- [Financial Health Score components — FasterCapital](https://fastercapital.com/content/Harnessing-the-Power-of-the-Financial-Health-Score.html)
+- [50/30/20 Rule — Chase](https://www.chase.com/personal/banking/education/budgeting-saving/50-20-30-budget-rule)
+- [8 Personal Finance Ratios — U.S. News](https://money.usnews.com/money/personal-finance/family-finance/articles/personal-finance-ratios-to-know-at-all-times)
+- [Net Worth Projection — ProjectionLab](https://projectionlab.com/net-worth)
+- [AI Financial Advisor cross-domain patterns — useorigin.com](https://useorigin.com/resources/blog/technical-overview)
+- [AI Financial Advisors with built-in tax features — Oreate AI](https://www.oreateai.com/blog/ai-financial-advisors-with-builtin-tax-features/77c9bbfb2ad31e873e507e3bcb1a0edb)
+- [Financial Dashboard Customization for Advisors 2025 — RightCapital](https://www.rightcapital.com/blog/financial-dashboard/)
+
+---
+*Feature research for: Finyx /fin:insights command*
+*Researched: 2026-04-06*

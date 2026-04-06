@@ -1,224 +1,242 @@
 # Technology Stack
 
 **Project:** Finyx — Personal Finance Advisor CLI
-**Milestone:** Adding financial advisory capabilities (tax, investment, pension) to existing IMMO slash-command architecture
+**Milestone:** v1.1 Financial Insights Dashboard — `/fin:insights` command
 **Researched:** 2026-04-06
+**Confidence:** HIGH
 
 ---
 
-## Architecture Constraint
+## Architecture Constraint (unchanged from v1.0)
 
-This is NOT a traditional application stack. The existing system is a **meta-prompting architecture**: all logic lives in Markdown prompts, a single Node.js installer handles distribution, and agents are spawned via Claude Code's Task tool. New financial domains extend this pattern exactly — no application framework, no new runtime, no dependency additions.
+This is NOT a traditional application stack. All logic lives in Markdown prompts. A single Node.js installer handles distribution. Agents spawn via Claude Code's Task tool. **The zero-runtime-dependency constraint is absolute** — no `npm install` additions.
 
-The "stack" question for this project is therefore: **what external data sources and reference materials feed the agents?**
-
----
-
-## Market Data APIs
-
-### Primary: Finnhub
-
-| Property | Value |
-|----------|-------|
-| URL | https://finnhub.io |
-| Free tier | 60 API calls/minute, no credit card required |
-| Coverage | 60+ exchanges, US real-time, international 15-min delay |
-| ETF support | Global ETF holdings data |
-| Node.js SDK | Official: `npm install finnhub` (v2.0.13, maintained) |
-| Confidence | HIGH — verified against official docs and npm |
-
-**Why Finnhub:** The only major financial API with an official, maintained Node.js SDK, free tier with no rate daily cap (60/min is sufficient for advisory use, not HFT), and institutional-grade data including earnings surprises and insider sentiment relevant to investment advice. Covers both US and European markets on the free tier.
-
-**What Finnhub does NOT cover well:** Brazilian B3 stocks/FIIs. Use brapi.dev for that.
-
-**Access pattern for slash-command architecture:** Agents invoke via `curl` or `node -e` inline scripts in command prompts, or instruct the user to set `FINNHUB_API_KEY` in their environment. The key is user-supplied — Finyx never bundles credentials.
-
-### Brazil-specific: brapi.dev
-
-| Property | Value |
-|----------|-------|
-| URL | https://brapi.dev |
-| Free tier | Unlimited queries for popular B3 assets (PETR4, VALE3, etc.) |
-| Coverage | B3 stocks, FIIs, BDRs, ETFs, IBOVESPA, economic indicators |
-| Node.js | REST API, no official SDK — direct HTTP calls |
-| Confidence | HIGH — official docs verified, active in 2025/2026 |
-
-**Why brapi.dev:** Only purpose-built free API for B3 data with FII support. Finnhub covers Brazilian stocks via ticker but lacks FII-specific data (dividend yields, patrimony, P/VP ratios) which are critical for Brazilian real estate investment fund analysis.
-
-**No API key required** for basic usage. Paid plans unlock higher rate limits and historical depth.
-
-### Symbol Mapping: OpenFIGI
-
-| Property | Value |
-|----------|-------|
-| URL | https://www.openfigi.com |
-| Free tier | Free, no daily/monthly limit (rate-limited without key) |
-| Purpose | Map ISINs to tradeable tickers across exchanges |
-| Confidence | HIGH — official Bloomberg-backed open standard |
-
-**Why needed:** European ETF positions (e.g., MSCI World accumulating ETFs traded on XETRA) use ISIN identifiers, not Yahoo-style tickers. OpenFIGI resolves ISINs to exchange-specific symbols that Finnhub can query.
-
-**Not needed for MVP.** Include in portfolio tracker phase when users input holdings by ISIN.
+The "stack" question for v1.1 is: what **patterns and reference structures** enable a cross-advisor aggregation and scoring layer without touching the runtime?
 
 ---
 
-## Tax Rule Data Sources
+## What v1.1 Adds vs v1.0
 
-### German Tax Rules: Static Reference Docs + Official Sources
+v1.0 established: data APIs, country tax reference docs, agent command pattern.
 
-There is **no tax rule API** for Germany. This is by design: the agent pattern uses versioned reference Markdown files (already proven in IMMO for AfA, Grunderwerbsteuer). The same pattern applies here.
+v1.1 needs four new capabilities:
 
-| Source | Data | Update frequency | Confidence |
-|--------|------|-----------------|------------|
-| Bundesministerium der Finanzen (BMF) | Sparerpauschbetrag, Abgeltungssteuer rates, Teilfreistellung | Annual | HIGH |
-| Bundesbank SDMX API | Basiszins (for Vorabpauschale calculation) | Semi-annual | HIGH |
-| §18 InvStG (Investmentsteuergesetz) | Vorabpauschale formula | Annual | HIGH |
-
-**Bundesbank SDMX API endpoint (free, no auth required):**
-`https://api.statistiken.bundesbank.de/rest/data/BBK/...`
-
-Agents can call this endpoint to retrieve the current Basiszins programmatically. The 2025 Basiszins is 2.53% (Ministry of Finance), with the Bundesbank civil code Basiszins (§247 BGB) at 2.27% (Jan 2025) and 1.27% (Jul 2025) — these are different rates used for different calculations.
-
-**Key German tax parameters to encode in reference docs:**
-- Abgeltungssteuer: 25% flat + Soli (5.5% of tax) + Kirchensteuer (8-9% if applicable)
-- Sparerpauschbetrag: EUR 1,000 (single) / EUR 2,000 (married)
-- Teilfreistellung: 30% for equity ETFs, 15% for mixed funds, 60% for real estate funds
-- Vorabpauschale formula: `Basisertrag = Rücknahmepreis_Jan1 × 0.7 × Basiszins_BMF`
-
-### Brazilian Tax Rules: Static Reference Docs
-
-No developer API exists for Brazilian tax rules. Same pattern: versioned reference Markdown files updated per tax year.
-
-| Topic | Key rules to encode | Confidence |
-|-------|-------------------|------------|
-| IR on stocks | Day-trade: 20%, Swing-trade exempt up to R$20k/month sales | HIGH |
-| IR on ETFs | 15% on gains (no monthly exemption, unlike stocks) | HIGH |
-| FII dividends | Exempt for individuals if FII listed on exchange with 50+ shareholders | HIGH |
-| FII capital gains | 20% for all individuals | HIGH |
-| Come-cotas | Applies to funds (not FIIs): semi-annual IRRF in May and Nov | HIGH |
-| DARF | Self-assessed, due by last business day of following month | HIGH |
-| PGBL | Contributions deductible up to 12% of taxable income; tax on total withdrawal | HIGH |
-| VGBL | No deduction; tax only on earnings at withdrawal | HIGH |
-| PGBL/VGBL regimes | Progressive vs regressive — since Law 14,803/2024, choosable at withdrawal | HIGH |
-| IOF on PGBL/VGBL | 5% on contributions >R$300k/CPF at same insurer (2025); >R$600k/year from 2026 | MEDIUM |
-
-**Note on Law 15,270/2025 (enacted Dec 2025):** Introduces dividend taxation and a minimum IRPFM for incomes >R$600k/year. This is a significant change. Reference docs must be versioned and this law's effective date (largely 2026) noted clearly.
+| Capability | Need | Solution |
+|------------|------|---------|
+| Cross-advisor data aggregation | Read outputs from tax, invest, pension commands | Read `.finyx/profile.json` + cached advisor outputs via `@` includes |
+| Financial health scoring | Score income allocation, savings rate, tax efficiency | Scoring rubric encoded in reference doc + inline Claude arithmetic |
+| Net worth projection | FV calculations with compound growth | Formula constants in reference doc, calculation by Claude in-prompt |
+| CLI visualization | Progress bars, allocation charts in terminal | Unicode block characters in Markdown output — no library needed |
 
 ---
 
-## Pension Planning
+## v1.1 Stack Additions
 
-### Germany: Static Reference + Calculator Logic in Prompts
+### 1. Advisor Output Cache (new file: `.finyx/insights-cache.json`)
 
-No open-source German pension API exists. Calculations are deterministic given inputs — they belong in agent prompt logic, not external APIs.
+**Purpose:** Avoid re-running 4 specialist commands each time `/fin:insights` is called. Each advisor command writes a structured summary block to a shared cache file on consent.
 
-| Product | Key calculation inputs to encode |
-|---------|----------------------------------|
-| Riester | Eigenbeitrag (4% gross income), Grundzulage (EUR 175/yr), Kinderzulage (EUR 185-300/yr), tax deduction ceiling (EUR 2,100) |
-| Rürup (Basis-Rente) | Max deductible 2025: EUR 29,344 (single) / EUR 58,688 (married), 100% deductible |
-| bAV (Direktversicherung) | Steuer- und SV-freier Anteil: 4% × BBG (Beitragsbemessungsgrenze) |
-| GRV (Gesetzliche RV) | Beitragssatz 18.6%, hälftig (employer/employee), Rentenformel |
+**Pattern:** Same pattern as `.finyx/profile.json` — plain JSON, written by commands, read by insights command via `@.finyx/insights-cache.json`.
 
-**BBG West 2025:** EUR 90,600/year — needed for bAV calculations.
+**Schema (new, to be implemented):**
 
-### Brazil: Static Reference + Calculator Logic
+```json
+{
+  "version": "1.0.0",
+  "updated": "2026-04-06T12:00:00Z",
+  "tax": {
+    "cached_at": "ISO date",
+    "country": "germany",
+    "sparerpauschbetrag_used": 0,
+    "sparerpauschbetrag_remaining": 2000,
+    "tax_efficiency_score": null,
+    "optimization_gaps": []
+  },
+  "invest": {
+    "cached_at": "ISO date",
+    "total_portfolio_eur": null,
+    "allocation_by_class": {},
+    "drift_from_target": {},
+    "rebalancing_needed": false
+  },
+  "pension": {
+    "cached_at": "ISO date",
+    "projected_monthly_income_eur": null,
+    "pension_gap_eur": null,
+    "riester_zulagen_unclaimed": false
+  }
+}
+```
 
-| Product | Key rules to encode |
-|---------|-------------------|
-| INSS | Contribuição: 7.5–14% depending on salary bracket (tabela progressiva) |
-| PGBL vs VGBL choice | PGBL for formal employees using IRPF simplified deduction → wrong; PGBL only if filing full deductions |
-| Fator previdenciário | Formula: Tc × a × (1 + (Id + Tc × a) / 100) — complex, encode as calculator |
-| Previdência privada regimes | Regressivo: 35% at year 0, down to 10% after 10 years |
+**Why not re-read advisor outputs inline:** Advisor commands produce conversational text, not machine-readable JSON. The cache schema forces structured output. This is the correct separation: advisors give advice, the cache extracts the key numbers.
+
+**Confidence:** HIGH — follows established `.finyx/profile.json` pattern exactly.
+
+### 2. Financial Health Scoring Reference Doc (new: `finyx/references/insights/scoring-methodology.md`)
+
+**Purpose:** The `/fin:insights` command needs a rubric for scoring. Rather than hardcoding benchmarks into the command prompt (fragile, hard to maintain), encode them in a versioned reference doc.
+
+**Content to encode:**
+
+| Dimension | Benchmark | Source | Confidence |
+|-----------|-----------|--------|------------|
+| Savings rate | 20% of net income (50/30/20 rule) | CFPB, NerdWallet, Bloomberg WealthScore | HIGH |
+| Emergency fund | 3–6 months of expenses | Standard personal finance guidance | HIGH |
+| Debt-to-income | Below 36% considered healthy | Bloomberg WealthScore, FHN methodology | HIGH |
+| Investment rate | 10–15% of gross income as a floor | Standard wealth-building guidance | MEDIUM |
+| Tax efficiency (DE) | Sparerpauschbetrag utilization ≥ 80% | Derived from German tax rules | HIGH |
+| Pension gap | Target 70–80% of final salary in retirement | Standard replacement rate guidance | MEDIUM |
+
+**Scoring scale:** 1–10, following Bloomberg WealthScore's unweighted average of benchmark sub-scores. Each dimension scores independently; insights command averages them with narrative context.
+
+**Why a reference doc, not hardcoded:** Tax thresholds change annually. The 50/30/20 benchmarks differ for high-income earners in high-cost cities (relevant for a €210k income in Germany where housing costs alone exceed 30%). The reference doc gets the same annual review treatment as tax-rules.md.
+
+### 3. Net Worth Projection Formula (encoded in reference doc)
+
+**No library needed.** The two required formulas are:
+
+```
+FV of current net worth:
+  NW_future = NW_now × (1 + r)^t
+
+FV of recurring monthly contributions:
+  FV_annuity = C × [((1 + r)^t - 1) / r]
+
+Total projected net worth = NW_future + FV_annuity
+```
+
+Where `r` = monthly return rate, `t` = months to horizon, `C` = monthly savings + investment contributions.
+
+Claude performs this arithmetic inline given profile data. No `financejs` or external library is needed. The formula is deterministic and simple — adding a dependency for two equations would violate the zero-dependency constraint for no benefit.
+
+**Confidence:** HIGH — standard time-value-of-money formulas, verified against Finance.js source and compound interest references.
+
+**Default return rate assumptions (to encode in reference doc):**
+
+| Asset mix | Annual return assumption | Rationale |
+|-----------|-------------------------|-----------|
+| Conservative (bonds/cash heavy) | 3.5% | Aligned with current EUR risk-free + small equity premium |
+| Moderate (balanced) | 5.5% | MSCI World historical real return minus inflation |
+| Aggressive (equity-heavy) | 7.5% | MSCI World 30-year nominal average |
+
+These map to `goals.risk_tolerance` from `profile.json`.
+
+### 4. CLI Visualization — Unicode Block Characters (no library)
+
+**Purpose:** Display income allocation breakdown and net worth projections visually in terminal output.
+
+**Approach:** Claude outputs Unicode block characters directly in Markdown. No library, no rendering engine.
+
+**Patterns to encode in command prompt:**
+
+Horizontal bar (allocation):
+```
+Savings    ████████████░░░░░░░░  18% (target: 20%)
+Needs      ██████████████████░░  45% (target: 50%)
+Wants      ████████░░░░░░░░░░░░  22% (target: 30%)
+```
+
+Sparkline (goal progress over time):
+```
+Net worth trajectory (5yr): ▁▂▃▄▅▅▆▇█
+```
+
+Unicode blocks used: `▁▂▃▄▅▆▇█` (U+2581–U+2588) for sparklines, `█` + `░` for bar fills.
+
+**Why no library:** The existing architecture has zero runtime dependencies. The `sparklines` Python library and similar tools require a runtime. Claude can generate these characters natively from numeric data — it is an LLM, not a dumb formatter. This is the correct approach for a prompt-based system.
+
+**Confidence:** HIGH — Unicode block character rendering is supported in all modern terminals. Verified in existing Finyx command output patterns.
 
 ---
 
-## Broker Comparison
+## Integration Points with Existing Commands
 
-No API. This is static reference data maintained as structured Markdown tables, updated manually when broker pricing changes. The comparison matrix covers:
+| Existing command | What insights reads from it | Integration mechanism |
+|-----------------|----------------------------|-----------------------|
+| `/finyx:profile` | `profile.json`: income, goals, risk tolerance, liquid assets | `@.finyx/profile.json` include (already established) |
+| `/finyx:tax` | Sparerpauschbetrag remaining, optimization gaps | New `insights-cache.json` (written by tax command on consent) |
+| `/finyx:invest` | Portfolio total, allocation drift, rebalancing status | New `insights-cache.json` (written by invest command on consent) |
+| `/finyx:pension` | Pension gap, unclaimed Zulagen | New `insights-cache.json` (written by pension command on consent) |
 
-| Market | Brokers |
-|--------|---------|
-| Germany/EU | Trade Republic, Scalable Capital, ING, comdirect, DKB |
-| US | Interactive Brokers, Charles Schwab |
-| Brazil | XP Investimentos, NuInvest, BTG Pactual, Rico |
-
-**Data points per broker to maintain:** custody fee, trade fee (ETF, stock, options), available markets, tax reporting quality, API/CSV export support, minimum account.
-
-**Confidence:** MEDIUM — broker fees change frequently, requires human review quarterly.
+The insights command reads all four sources. If cache entries are absent (user hasn't run an advisor command yet), insights degrades gracefully: it performs partial analysis on profile data alone and flags which advisors to run for fuller picture.
 
 ---
 
-## Data Access Pattern for Slash-Command Architecture
+## Existing Stack (unchanged from v1.0)
 
-Since all logic is Markdown prompts with no runtime dependencies:
+### Market Data APIs
 
-| Data type | Access method | Key decision |
-|-----------|--------------|--------------|
-| Live stock/ETF quotes | Agent instructs Claude to use `WebFetch` or `Bash(curl)` against Finnhub REST | No SDK needed — raw REST via curl |
-| B3/FII quotes | Agent uses `Bash(curl)` against brapi.dev REST | No auth needed for free tier |
-| Bundesbank Basiszins | Agent uses `Bash(curl)` against Bundesbank SDMX API | Free, no auth, JSON/XML output |
-| Tax rules | Embedded in `.claude/finyx/references/{country}/tax-*.md` | Updated annually by maintainers |
-| Pension parameters | Embedded in `.claude/finyx/references/{country}/pension-*.md` | Updated annually |
-| Broker data | Embedded in `.claude/finyx/references/brokers/*.md` | Reviewed quarterly |
-| Market news | Claude's WebSearch tool directly | No API key required |
-| ISIN mapping | Agent uses `Bash(curl)` against OpenFIGI REST | Free, no auth for basic usage |
+| API | Purpose | Auth | Confidence |
+|-----|---------|------|------------|
+| Finnhub | EU/US quotes, ETF data | `FINNHUB_API_KEY` env var | HIGH |
+| brapi.dev | B3, FIIs, Brazilian equities | None (free tier) | HIGH |
+| Bundesbank SDMX | Basiszins for Vorabpauschale | None | HIGH |
+| OpenFIGI | ISIN → ticker mapping | None (rate-limited) | HIGH |
 
-**API key management:** Agents prompt users to set environment variables (`FINNHUB_API_KEY`, optionally `BRAPI_TOKEN` for higher limits). Keys stored in user's shell environment, never in the repository.
+### Reference Doc Architecture
+
+```
+finyx/references/
+  germany/
+    tax-investment.md          # Abgeltungssteuer, Sparerpauschbetrag, Vorabpauschale
+    tax-rules.md               # Real estate tax rules (from IMMO)
+    pension.md                 # Riester/Rürup/bAV
+    brokers.md                 # DE broker comparison
+  brazil/
+    tax-investment.md          # IR, DARF, FII exemptions
+    pension.md                 # PGBL/VGBL/INSS
+    brokers.md                 # BR broker comparison
+  insights/                    # NEW for v1.1
+    scoring-methodology.md     # Health score rubric + benchmarks
+    projection-formulas.md     # FV formulas + return rate assumptions
+  disclaimer.md
+```
 
 ---
 
-## What NOT to Use
+## What NOT to Add
 
 | Option | Why not |
 |--------|---------|
-| Yahoo Finance (unofficial) | No official API, scrapes Yahoo endpoints, violates ToS, breaks regularly — confirmed by multiple sources |
-| Alpha Vantage | Free tier degraded (25 req/day confirmed in some sources vs 500 claimed in others — contradictory), unreliable for production |
-| yfinance Python library | Python-specific, not usable in this Node.js/Markdown architecture |
-| Financial Modeling Prep (FMP) | US-focused, weak EU/Brazilian coverage, paid for most useful endpoints |
-| Any server-side financial middleware | Contradicts the zero-runtime-dependency constraint |
-| npm financial calculation libraries | Adds dependency surface area; arithmetic in prompts or inline node -e is sufficient for advisory calculations |
+| `financejs` npm package | Two formulas don't justify a dependency; Claude computes them inline |
+| `cli-progress`, `progress`, or any bar-chart npm library | Requires runtime; Unicode characters in prompt output achieve the same result |
+| Chart.js / terminal-kit / blessed | Web/full-TUI frameworks — wrong layer entirely for a prompt-based system |
+| SQLite or any database | Profile + cache are small JSON files; DB adds installation complexity for no benefit |
+| `lodash` or data manipulation libraries | JSON aggregation is trivial at this scale; Claude handles it |
+| Any web framework | Hard no — CLI-first, slash-command architecture |
+| Yahoo Finance / Alpha Vantage | Established in v1.0 stack as explicitly excluded |
 
 ---
 
-## Reference File Structure
-
-Following the existing IMMO pattern, extend to:
+## Data Flow for `/fin:insights`
 
 ```
-.claude/finyx/references/
-  germany/
-    tax-capital-gains-{year}.md      # Abgeltungssteuer, Sparerpauschbetrag
-    tax-etf-{year}.md                # Vorabpauschale, Teilfreistellung
-    tax-real-estate-{year}.md        # Existing AfA, GrESt (already exists in IMMO)
-    pension-state-{year}.md          # GRV, BBG, Rentenformel
-    pension-riester-{year}.md        # Zulagen, Grenzen
-    pension-ruerup-{year}.md         # Absetzbarkeit, Maximalbeträge
-    pension-bav-{year}.md            # bAV vehicles, steuerfreie Beträge
-    brokers-germany-eu-{year}.md     # TR, Scalable, ING, comdirect
-  brazil/
-    tax-stocks-{year}.md             # IR stocks/ETFs, DARF, exemptions
-    tax-fii-{year}.md                # FII dividends, capital gains
-    tax-previdencia-{year}.md        # PGBL/VGBL, IOF, Law 15270/2025
-    pension-inss-{year}.md           # Tabela INSS, fator previdenciário
-    pension-private-{year}.md        # PGBL vs VGBL decision framework
-    brokers-brazil-{year}.md         # XP, NuInvest, BTG, Rico
-  global/
-    brokers-us-{year}.md             # IBKR, Schwab
+profile.json          → income, goals, risk tolerance, liquid assets
+insights-cache.json   → structured numbers from previous advisor runs
+scoring-methodology.md → rubric + benchmarks
+projection-formulas.md → FV formulas + return rate lookup
+
+Claude aggregates all four → generates:
+  1. Income allocation bar chart (Unicode)
+  2. Financial health score (1-10 per dimension)
+  3. Net worth projection (FV calculation inline)
+  4. Goal pace tracking (months-to-target arithmetic)
+  5. Ranked recommendations (sorted by estimated EUR impact)
 ```
 
 ---
 
 ## Sources
 
-- Finnhub official docs: https://finnhub.io/docs/api
-- Finnhub npm package: https://www.npmjs.com/package/finnhub
-- brapi.dev docs: https://brapi.dev/docs
-- OpenFIGI API: https://www.openfigi.com/api/documentation
-- Bundesbank SDMX API: https://www.bundesbank.de/en/statistics/time-series-databases/help-for-sdmx-web-service
-- Bundesbank Basiszins 2025: https://www.bundesbank.de/en/press/press-releases/announcement-of-the-basic-rate-of-interest-as-of-1-january-2025-adjustment-to-2-27--948660
-- ECB Data Portal API: https://data.ecb.europa.eu/help/api/data
-- German Vorabpauschale 2025 (Basiszins 2.53%): https://quantroutine.com/learn/investing-taxes-germany/
-- Brazilian Law 15,270/2025 (dividend tax reform): https://www.mayerbrown.com/en/insights/publications/2025/12/enactment-of-law-no-15270-2025-which-establishes-dividend-taxation-expands-the-exemption-threshold-and-introduces-a-minimum-tax-on-high-incomes
-- Brazilian PGBL/VGBL IOF changes 2025: https://investnews.com.br/investimentos/pgbl-vgbl-previdencia-privada/
-- Free API comparison 2025: https://noteapiconnector.com/best-free-finance-apis
-- Twelve Data review: https://medium.com/coinmonks/the-7-best-financial-apis-for-investors-and-developers-in-2025-in-depth-analysis-and-comparison-adbc22024f68
+- Finance.js (zero-dependency JS financial library): https://financejs.org/
+- Bloomberg WealthScore methodology (1-10 scoring, 7 benchmarks): https://www.bloomberg.com/wealthscore-financial-health-calculator
+- Financial Health Network — Spend/Save/Borrow/Plan pillars: https://finhealthnetwork.org/tools/financial-health-score/
+- CFPB financial well-being scoring: https://www.consumerfinance.gov/consumer-tools/educator-tools/financial-well-being-resources/measure-and-score/
+- 50/30/20 rule benchmark (2025 feasibility): https://247wallst.com/personal-finance/2025/02/15/is-the-50-30-20-budget-rule-still-even-possible-in-2025/
+- Unicode sparkline characters (U+2581–U+2588): https://rosettacode.org/wiki/Sparkline_in_unicode
+- Anthropic financial services skills pattern: https://github.com/anthropics/financial-services-plugins
+- Existing v1.0 STACK.md findings (Finnhub, brapi.dev, Bundesbank SDMX, OpenFIGI) — all HIGH confidence, verified in prior research round
+
+---
+*Stack research for: Finyx v1.1 Financial Insights Dashboard*
+*Researched: 2026-04-06*
