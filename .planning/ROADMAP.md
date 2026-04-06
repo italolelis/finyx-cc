@@ -23,7 +23,7 @@
 **Milestone Goal:** Generate actionable financial insights and recommendations by cross-referencing all existing advisor outputs and profile data via `/fin:insights`.
 
 - [x] **Phase 6: Reference Foundation** — Country-aware benchmark and scoring reference docs that unblock all specialist agents (completed 2026-04-06)
-- [ ] **Phase 7: Specialist Agents** — Three parallel agents computing allocation analysis, tax efficiency scoring, and net worth projections
+- [x] **Phase 7: Specialist Agents** — Three parallel agents computing allocation analysis, tax efficiency scoring, and net worth projections (completed 2026-04-06)
 - [ ] **Phase 8: Orchestrator Command** — `/fin:insights` wires all agents, enforces completeness gate, synthesizes ranked recommendations with legal disclaimers
 
 ## Phase Details
@@ -49,10 +49,10 @@ Plans:
   2. Tax-scoring agent produces per-country efficiency gaps in € for DE (Sparerpauschbetrag unused amount, Vorabpauschale readiness) and BR (IR optimization gaps), scored separately — never combined
   3. Projection agent produces net worth snapshot (assets vs liabilities) and goal pace indicator ("at current rate, target X reached in Y months")
   4. Each agent reads `.finyx/profile.json` directly and emits a structured output consumable by the orchestrator
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 Plans:
 - [x] 07-01-PLAN.md — Allocation specialist agent (ALLOC-01, ALLOC-02)
-- [ ] 07-02-PLAN.md — Tax-scoring specialist agent (TAX-01, TAX-02, TAX-03)
+- [x] 07-02-PLAN.md — Tax-scoring specialist agent (TAX-01, TAX-02, TAX-03)
 - [x] 07-03-PLAN.md — Projection specialist agent (PROJ-01, PROJ-02)
 
 ### Phase 8: Orchestrator Command
@@ -77,5 +77,5 @@ Plans:
 | 4. Pension Planning | v1.0 | 2/2 | Complete | 2026-04-06 |
 | 5. Profile Schema Sync | v1.0 | 1/1 | Complete | 2026-04-06 |
 | 6. Reference Foundation | v1.1 | 1/1 | Complete   | 2026-04-06 |
-| 7. Specialist Agents | v1.1 | 2/3 | In Progress|  |
+| 7. Specialist Agents | v1.1 | 3/3 | Complete   | 2026-04-06 |
 | 8. Orchestrator Command | v1.1 | 0/? | Not started | - |

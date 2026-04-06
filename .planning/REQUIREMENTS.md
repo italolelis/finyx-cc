@@ -20,8 +20,8 @@ Requirements for the Financial Insights Dashboard milestone. Each maps to roadma
 
 ### Projections & Goals
 
-- [ ] **PROJ-01**: User can see net worth snapshot (assets vs liabilities summary from profile data)
-- [ ] **PROJ-02**: User can see goal pace tracking ("at current rate, target X reached in Y months")
+- [x] **PROJ-01**: User can see net worth snapshot (assets vs liabilities summary from profile data)
+- [x] **PROJ-02**: User can see goal pace tracking ("at current rate, target X reached in Y months")
 
 ### Recommendations
 
@@ -68,8 +68,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TAX-01 | Phase 7 | Pending |
 | TAX-02 | Phase 7 | Pending |
 | TAX-03 | Phase 7 | Pending |
-| PROJ-01 | Phase 7 | Pending |
-| PROJ-02 | Phase 7 | Pending |
+| PROJ-01 | Phase 7 | Complete |
+| PROJ-02 | Phase 7 | Complete |
 | REC-01 | Phase 8 | Pending |
 | REC-02 | Phase 8 | Pending |
 | INFRA-01 | Phase 8 | Pending |
