@@ -19,7 +19,8 @@
       "tax_class": null,
       "church_tax": false,
       "gross_income": 0,
-      "marginal_rate": 0
+      "marginal_rate": 0,
+      "brokers": []
     },
     "brazil": {
       "ir_regime": null,
