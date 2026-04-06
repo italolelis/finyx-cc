@@ -36,7 +36,9 @@
   1. `benchmarks.md` exists with income allocation benchmarks adjusted per country (DE net-income basis, BR gross-income basis)
   2. `scoring-rules.md` exists with per-country tax efficiency scoring criteria for DE (Sparerpauschbetrag, Vorabpauschale) and BR (IR/DARF thresholds)
   3. Both docs carry tax-year metadata matching the staleness-detection convention used by existing reference docs
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 06-01-PLAN.md — Country-aware benchmarks and scoring reference docs
 
 ### Phase 7: Specialist Agents
 **Goal**: Three specialist agents can independently analyze allocation, tax efficiency, and projections from profile data and return structured outputs
@@ -70,6 +72,6 @@
 | 3. Investment + Broker | v1.0 | 3/3 | Complete | 2026-04-06 |
 | 4. Pension Planning | v1.0 | 2/2 | Complete | 2026-04-06 |
 | 5. Profile Schema Sync | v1.0 | 1/1 | Complete | 2026-04-06 |
-| 6. Reference Foundation | v1.1 | 0/? | Not started | - |
+| 6. Reference Foundation | v1.1 | 0/1 | Planning | - |
 | 7. Specialist Agents | v1.1 | 0/? | Not started | - |
 | 8. Orchestrator Command | v1.1 | 0/? | Not started | - |
