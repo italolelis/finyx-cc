@@ -47,8 +47,12 @@ Plans:
   3. Brazilian user receives IR filing guidance for their investment types and a DARF calculation with monthly deadline reminder
   4. Brazilian user receives come-cotas explanation with liquidity timing and FII dividend exemption rules reflecting Law 15,270/2025
   5. All tax reference docs expose `tax_year` metadata and the system warns when a doc year does not match the current year
-**Plans**: TBD
-**UI hint**: no
+**Plans:** 3 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — German investment tax reference doc + profile schema extension (brokers[])
+- [ ] 02-02-PLAN.md — Brazilian investment tax reference doc
+- [ ] 02-03-PLAN.md — /finyx:tax command + help.md registration
 
 ### Phase 3: Investment + Broker
 **Goal**: Users can analyse their portfolio allocation, receive ETF recommendations matched to their risk profile, query live market data for specific assets, and get a profile-based broker recommendation across German, EU, and Brazilian brokers
@@ -74,11 +78,11 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation + Profile | 3/4 | In Progress|  |
-| 2. Tax Advisors | 0/? | Not started | - |
+| 1. Foundation + Profile | 4/4 | Complete |  |
+| 2. Tax Advisors | 0/3 | Planned | - |
 | 3. Investment + Broker | 0/? | Not started | - |
 | 4. Pension Planning | 0/? | Not started | - |
