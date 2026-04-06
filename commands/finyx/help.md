@@ -19,7 +19,7 @@ Output ONLY the reference content below. Do NOT add:
 <reference>
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- FINYX — Real Estate Investment Analysis System
+ FINYX — Personal Finance Advisor
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -35,6 +35,14 @@ workflows, consistent methodology, and professional reporting.
      │              │              │              │              │              │
  Financial      Research       Calculate       Apply        Side-by-side    Advisor
   Profile       Location       Metrics       Criteria      Comparison      Briefing
+     │
+     ▼
+┌─────────┐
+│   TAX   │
+└─────────┘
+     │
+Investment
+Tax Advisor
 ```
 
 ## Quick Start
@@ -42,6 +50,9 @@ workflows, consistent methodology, and professional reporting.
 ```bash
 # 1. Complete your financial profile (required first step)
 /finyx:profile
+
+# 1b. Get personalized investment tax guidance (optional, any time after profile)
+/finyx:tax
 
 # 2. Add property documents to properties/[location]/
 #    (price lists, exposés, calculation docs)
@@ -75,6 +86,12 @@ workflows, consistent methodology, and professional reporting.
 | `/finyx:status` | Show current state and next action |
 | `/finyx:update` | Update FINYX to the latest version |
 | `/finyx:help` | This reference |
+
+### Tax Advisory
+
+| Command | Description |
+|---------|-------------|
+| `/finyx:tax` | Investment tax advisor — German and Brazilian tax guidance |
 
 ### Research
 
@@ -120,6 +137,30 @@ Complete a financial profile interview through interactive flow. This is the man
 - `.finyx/STATE.md` — Analysis state tracking
 - `properties/` — Folder for property documents
 - `FINYX.md` — Project summary
+
+---
+
+### `/finyx:tax`
+
+Get personalized investment tax guidance based on your financial profile.
+
+**Routes by country (auto-detected from profile):**
+- Germany active → Steuerklasse, Abgeltungssteuer, Sparerpauschbetrag, Vorabpauschale, Teilfreistellung
+- Brazil active → IR rates by asset type, DARF calculation, come-cotas, FII dividend exemption
+- Cross-border → Both country sections plus DBA (DE–BR double taxation agreement) guidance
+
+**Covers:**
+- Steuerklassen I–VI explanation and recommendation
+- Abgeltungssteuer breakdown (25% + Soli) with Günstigerprüfung eligibility check
+- Sparerpauschbetrag (1,000/2,000 EUR allowance) tracking across brokers
+- Vorabpauschale calculation for accumulating ETFs using current Basiszins
+- Teilfreistellung rates by fund type (equity 30%, mixed 15%, real estate 60–80%)
+- Brazilian IR rates, DARF codes 6015/3317, monthly deadlines
+- Come-cotas for open-end funds (not FIIs, not ETFs)
+- FII dividend exemption (Law 8,668/1993 + Law 15,270/2025 update)
+- DBA residency tiebreaker and withholding credit for cross-border users
+
+**Requires:** Completed financial profile (run `/finyx:profile` first)
 
 ---
 
