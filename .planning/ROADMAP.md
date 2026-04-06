@@ -78,7 +78,11 @@ Plans:
   1. German user receives a Riester vs Rürup vs bAV comparison with a Zulagen calculation (Grundzulage + Kinderzulage) and a Rürup Sonderausgabenabzug estimate based on their income and marginal rate
   2. Brazilian user receives a PGBL vs VGBL decision guide based on their IR regime and 12% income threshold, plus a progressive vs regressive regime comparison with time horizon examples
   3. User with obligations in both countries receives a combined cross-country pension projection merging German statutory + private + Brazilian INSS
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — DE + BR pension reference docs and profile.json pension block extension
+- [ ] 04-02-PLAN.md — /finyx:pension command + help.md registration
 
 ## Progress
 
@@ -90,4 +94,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | 1. Foundation + Profile | 4/4 | Complete |  |
 | 2. Tax Advisors | 3/3 | Complete   | 2026-04-06 |
 | 3. Investment + Broker | 3/3 | Complete   | 2026-04-06 |
-| 4. Pension Planning | 0/? | Not started | - |
+| 4. Pension Planning | 0/2 | Planning complete | - |
