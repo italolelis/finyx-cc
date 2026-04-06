@@ -43,6 +43,22 @@ workflows, consistent methodology, and professional reporting.
      │
 Investment
 Tax Advisor
+     │
+     ▼
+┌─────────┐
+│ INVEST  │
+└─────────┘
+     │
+Portfolio
+ Advisor
+     │
+     ▼
+┌─────────┐
+│ BROKER  │
+└─────────┘
+     │
+  Broker
+Comparison
 ```
 
 ## Quick Start
@@ -53,6 +69,12 @@ Tax Advisor
 
 # 1b. Get personalized investment tax guidance (optional, any time after profile)
 /finyx:tax
+
+# 1c. Get portfolio analysis and ETF recommendations (optional, any time after profile)
+/finyx:invest
+
+# 1d. Compare brokers and get a profile-based recommendation (optional, any time after profile)
+/finyx:broker
 
 # 2. Add property documents to properties/[location]/
 #    (price lists, exposés, calculation docs)
@@ -92,6 +114,13 @@ Tax Advisor
 | Command | Description |
 |---------|-------------|
 | `/finyx:tax` | Investment tax advisor — German and Brazilian tax guidance |
+
+### Investment Advisory
+
+| Command | Description |
+|---------|-------------|
+| `/finyx:invest` | Portfolio analysis, ETF recommendations, rebalancing, and live market data |
+| `/finyx:broker` | Broker fee comparison and profile-based recommendation for German and Brazilian brokers |
 
 ### Research
 
@@ -159,6 +188,35 @@ Get personalized investment tax guidance based on your financial profile.
 - Come-cotas for open-end funds (not FIIs, not ETFs)
 - FII dividend exemption (Law 8,668/1993 + Law 15,270/2025 update)
 - DBA residency tiebreaker and withholding credit for cross-border users
+
+**Requires:** Completed financial profile (run `/finyx:profile` first)
+
+---
+
+### `/finyx:invest`
+
+Get portfolio analysis and ETF recommendations based on your financial profile.
+
+**Covers:**
+- Portfolio allocation by asset class, geography, and broker
+- Risk profile assessment (Conservative / Moderate / Aggressive) based on your profile
+- ETF recommendations with ISINs and TERs for your target allocation
+- Rebalancing suggestions when drift exceeds 5 percentage points from target
+- Live market data lookup (Finnhub for EU/US equities, brapi.dev for B3/FIIs)
+
+**Requires:** Completed financial profile (run `/finyx:profile` first)
+
+---
+
+### `/finyx:broker`
+
+Compare broker fees and get a profile-based broker recommendation.
+
+**Covers:**
+- German broker fee comparison (Trade Republic, Scalable Capital FREE and PRIME+, ING, comdirect)
+- Brazilian broker fee comparison (NuInvest, XP Investimentos, BTG Pactual)
+- Profile-based recommendation considering trading frequency, investment strategy, and tax simplicity preference
+- Tax reporting quality: German brokers (automatic Abgeltungssteuer withholding, Freistellungsauftrag, Jahressteuerbescheinigung) vs foreign brokers (manual Anlage KAP + Anlage KAP-INV)
 
 **Requires:** Completed financial profile (run `/finyx:profile` first)
 
