@@ -36,10 +36,10 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Investment Advisor
 
 - [x] **INVEST-01**: User can view portfolio allocation breakdown by geography, sector, and asset class
-- [ ] **INVEST-02**: User completes risk profile assessment mapped to investment recommendations
-- [ ] **INVEST-03**: User receives ETF recommendations based on their goals and risk profile
-- [ ] **INVEST-04**: User receives rebalancing suggestions when portfolio drifts from target allocation
-- [ ] **INVEST-05**: User can query market data for specific assets (price, basic metrics) via live APIs/web search
+- [x] **INVEST-02**: User completes risk profile assessment mapped to investment recommendations
+- [x] **INVEST-03**: User receives ETF recommendations based on their goals and risk profile
+- [x] **INVEST-04**: User receives rebalancing suggestions when portfolio drifts from target allocation
+- [x] **INVEST-05**: User can query market data for specific assets (price, basic metrics) via live APIs/web search
 
 ### Broker Comparison
 
@@ -136,10 +136,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BRTAX-05 | Phase 2 | Complete |
 | BRTAX-06 | Phase 2 | Complete |
 | INVEST-01 | Phase 3 | Complete |
-| INVEST-02 | Phase 3 | Pending |
-| INVEST-03 | Phase 3 | Pending |
-| INVEST-04 | Phase 3 | Pending |
-| INVEST-05 | Phase 3 | Pending |
+| INVEST-02 | Phase 3 | Complete |
+| INVEST-03 | Phase 3 | Complete |
+| INVEST-04 | Phase 3 | Complete |
+| INVEST-05 | Phase 3 | Complete |
 | BROKER-01 | Phase 3 | Complete |
 | BROKER-02 | Phase 3 | Complete |
 | BROKER-03 | Phase 3 | Complete |

@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Foundation + Profile** - Rename to Finyx, establish shared memory, and build the financial profile that gates all specialist commands
 - [x] **Phase 2: Tax Advisors** - German and Brazilian tax advisory covering capital gains, fund taxation, and compliance obligations (completed 2026-04-06)
-- [ ] **Phase 3: Investment + Broker** - Portfolio analysis, ETF recommendations, live market data, and broker comparison for DE/EU/BR
+- [x] **Phase 3: Investment + Broker** - Portfolio analysis, ETF recommendations, live market data, and broker comparison for DE/EU/BR (completed 2026-04-06)
 - [ ] **Phase 4: Pension Planning** - German (Riester/Rürup/bAV) and Brazilian (PGBL/VGBL/INSS) pension analysis with cross-country projection
 
 ## Phase Details
@@ -63,11 +63,11 @@ Plans:
   2. User completes a risk profile assessment and receives ETF recommendations matched to their stated goals
   3. User can query live price and basic metrics for a specific stock or ETF via Finnhub (EU/US) or brapi.dev (B3/FIIs)
   4. User receives fee comparison for relevant German and Brazilian brokers and a profile-based recommendation that notes tax reporting quality differences (e.g., Anlage KAP auto-generation vs manual calculation)
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] 03-01-PLAN.md — Broker reference docs (DE + BR) and profile.json holdings[] extension
-- [ ] 03-02-PLAN.md — /finyx:invest command (portfolio analysis, risk profiling, ETF recs, rebalancing, market data)
+- [x] 03-02-PLAN.md — /finyx:invest command (portfolio analysis, risk profiling, ETF recs, rebalancing, market data)
 - [x] 03-03-PLAN.md — /finyx:broker command + help.md registration
 
 ### Phase 4: Pension Planning
@@ -89,5 +89,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 |-------|----------------|--------|-----------|
 | 1. Foundation + Profile | 4/4 | Complete |  |
 | 2. Tax Advisors | 3/3 | Complete   | 2026-04-06 |
-| 3. Investment + Broker | 2/3 | In Progress|  |
+| 3. Investment + Broker | 3/3 | Complete   | 2026-04-06 |
 | 4. Pension Planning | 0/? | Not started | - |
