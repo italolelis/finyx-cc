@@ -63,10 +63,10 @@ Plans:
   2. User completes a risk profile assessment and receives ETF recommendations matched to their stated goals
   3. User can query live price and basic metrics for a specific stock or ETF via Finnhub (EU/US) or brapi.dev (B3/FIIs)
   4. User receives fee comparison for relevant German and Brazilian brokers and a profile-based recommendation that notes tax reporting quality differences (e.g., Anlage KAP auto-generation vs manual calculation)
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 
 Plans:
-- [ ] 03-01-PLAN.md — Broker reference docs (DE + BR) and profile.json holdings[] extension
+- [x] 03-01-PLAN.md — Broker reference docs (DE + BR) and profile.json holdings[] extension
 - [ ] 03-02-PLAN.md — /finyx:invest command (portfolio analysis, risk profiling, ETF recs, rebalancing, market data)
 - [ ] 03-03-PLAN.md — /finyx:broker command + help.md registration
 
@@ -89,5 +89,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 |-------|----------------|--------|-----------|
 | 1. Foundation + Profile | 4/4 | Complete |  |
 | 2. Tax Advisors | 3/3 | Complete   | 2026-04-06 |
-| 3. Investment + Broker | 0/3 | Planning complete | - |
+| 3. Investment + Broker | 1/3 | In Progress|  |
 | 4. Pension Planning | 0/? | Not started | - |

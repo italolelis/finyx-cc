@@ -35,7 +35,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Investment Advisor
 
-- [ ] **INVEST-01**: User can view portfolio allocation breakdown by geography, sector, and asset class
+- [x] **INVEST-01**: User can view portfolio allocation breakdown by geography, sector, and asset class
 - [ ] **INVEST-02**: User completes risk profile assessment mapped to investment recommendations
 - [ ] **INVEST-03**: User receives ETF recommendations based on their goals and risk profile
 - [ ] **INVEST-04**: User receives rebalancing suggestions when portfolio drifts from target allocation
@@ -43,10 +43,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Broker Comparison
 
-- [ ] **BROKER-01**: User receives fee comparison for German brokers (Trade Republic, Scalable, ING, comdirect)
-- [ ] **BROKER-02**: User receives fee comparison for Brazilian brokers (XP, NuInvest, BTG)
+- [x] **BROKER-01**: User receives fee comparison for German brokers (Trade Republic, Scalable, ING, comdirect)
+- [x] **BROKER-02**: User receives fee comparison for Brazilian brokers (XP, NuInvest, BTG)
 - [ ] **BROKER-03**: User receives profile-based broker recommendation considering their trading frequency, asset types, and tax complexity
-- [ ] **BROKER-04**: User is informed about tax reporting quality differences (e.g., German brokers auto-generate Anlage KAP vs foreign brokers requiring manual calculation)
+- [x] **BROKER-04**: User is informed about tax reporting quality differences (e.g., German brokers auto-generate Anlage KAP vs foreign brokers requiring manual calculation)
 
 ### Pension Planning
 
@@ -135,15 +135,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BRTAX-04 | Phase 2 | Complete |
 | BRTAX-05 | Phase 2 | Complete |
 | BRTAX-06 | Phase 2 | Complete |
-| INVEST-01 | Phase 3 | Pending |
+| INVEST-01 | Phase 3 | Complete |
 | INVEST-02 | Phase 3 | Pending |
 | INVEST-03 | Phase 3 | Pending |
 | INVEST-04 | Phase 3 | Pending |
 | INVEST-05 | Phase 3 | Pending |
-| BROKER-01 | Phase 3 | Pending |
-| BROKER-02 | Phase 3 | Pending |
+| BROKER-01 | Phase 3 | Complete |
+| BROKER-02 | Phase 3 | Complete |
 | BROKER-03 | Phase 3 | Pending |
-| BROKER-04 | Phase 3 | Pending |
+| BROKER-04 | Phase 3 | Complete |
 | PENSION-01 | Phase 4 | Pending |
 | PENSION-02 | Phase 4 | Pending |
 | PENSION-03 | Phase 4 | Pending |
