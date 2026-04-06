@@ -4,6 +4,18 @@
   "created": "ISO_DATE",
   "updated": "ISO_DATE",
 
+  "_holdings_schema": {
+    "description": "Each broker in countries.{country}.brokers[] can contain a holdings[] array",
+    "holding_fields": {
+      "ticker": "Exchange ticker symbol (e.g., VWCE, BOVA11)",
+      "isin": "ISIN if available (e.g., IE00BK5BQT80), null for B3 assets",
+      "shares": "Number of shares/units held (decimal)",
+      "cost_basis": "Average cost per share in local currency",
+      "asset_class": "One of: equity-etf, bond-etf, reit-etf, stock, fii, fixed-income",
+      "geography": "One of: global, us, europe, emerging-markets, brazil, germany"
+    }
+  },
+
   "identity": {
     "residence_country": null,
     "nationality": null,
@@ -25,7 +37,8 @@
     "brazil": {
       "ir_regime": null,
       "gross_income": 0,
-      "cpf": null
+      "cpf": null,
+      "brokers": []
     }
   },
 
