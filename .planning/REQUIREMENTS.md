@@ -12,7 +12,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **PROF-01**: User can complete interactive financial interview covering income, tax class, family status, goals, and risk tolerance
 - [ ] **PROF-02**: Profile supports Germany and Brazil as country contexts simultaneously
 - [ ] **PROF-03**: System detects cross-border/expat situations (e.g., living in DE, investing in BR) and flags jurisdiction implications
-- [ ] **PROF-04**: Profile stored as structured `.finyx/profile.json` accessible by all specialist agents
+- [x] **PROF-04**: Profile stored as structured `.finyx/profile.json` accessible by all specialist agents
 - [ ] **PROF-05**: Legal disclaimer displayed on all advisory outputs
 
 ### German Tax Advisor
@@ -59,11 +59,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Foundation
 
-- [ ] **FOUND-01**: Project renamed from immo-cc to finyx across package.json, commands, agents, docs
-- [ ] **FOUND-02**: Existing real estate capabilities preserved and accessible via `/fin:immo:*` or equivalent namespace
-- [ ] **FOUND-03**: Shared memory system — global user profile accessible across all specialist agents
-- [ ] **FOUND-04**: Multi-country reference doc architecture with `finyx/references/germany/` and `finyx/references/brazil/` structure
-- [ ] **FOUND-05**: Disclaimer template established as cross-cutting concern for all agent outputs
+- [x] **FOUND-01**: Project renamed from immo-cc to finyx across package.json, commands, agents, docs
+- [x] **FOUND-02**: Existing real estate capabilities preserved and accessible via `/fin:immo:*` or equivalent namespace
+- [x] **FOUND-03**: Shared memory system — global user profile accessible across all specialist agents
+- [x] **FOUND-04**: Multi-country reference doc architecture with `finyx/references/germany/` and `finyx/references/brazil/` structure
+- [x] **FOUND-05**: Disclaimer template established as cross-cutting concern for all agent outputs
 
 ## v2 Requirements
 
@@ -116,13 +116,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PROF-01 | Phase 1 | Pending |
 | PROF-02 | Phase 1 | Pending |
 | PROF-03 | Phase 1 | Pending |
-| PROF-04 | Phase 1 | Pending |
+| PROF-04 | Phase 1 | Complete |
 | PROF-05 | Phase 1 | Pending |
-| FOUND-01 | Phase 1 | Pending |
-| FOUND-02 | Phase 1 | Pending |
-| FOUND-03 | Phase 1 | Pending |
-| FOUND-04 | Phase 1 | Pending |
-| FOUND-05 | Phase 1 | Pending |
+| FOUND-01 | Phase 1 | Complete |
+| FOUND-02 | Phase 1 | Complete |
+| FOUND-03 | Phase 1 | Complete |
+| FOUND-04 | Phase 1 | Complete |
+| FOUND-05 | Phase 1 | Complete |
 | DETAX-01 | Phase 2 | Pending |
 | DETAX-02 | Phase 2 | Pending |
 | DETAX-03 | Phase 2 | Pending |
