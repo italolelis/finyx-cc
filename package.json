@@ -29,11 +29,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/italolelis/finyx-cc.git"
+    "url": "git+https://github.com/italolelis/finyx.git"
   },
-  "homepage": "https://github.com/italolelis/finyx-cc",
+  "homepage": "https://github.com/italolelis/finyx",
   "bugs": {
-    "url": "https://github.com/italolelis/finyx-cc/issues"
+    "url": "https://github.com/italolelis/finyx/issues"
   },
   "engines": {
     "node": ">=16.7.0"
