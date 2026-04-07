@@ -29,11 +29,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/italolelis/immo.git"
+    "url": "git+https://github.com/italolelis/finyx-cc.git"
   },
-  "homepage": "https://github.com/italolelis/immo",
+  "homepage": "https://github.com/italolelis/finyx-cc",
   "bugs": {
-    "url": "https://github.com/italolelis/immo/issues"
+    "url": "https://github.com/italolelis/finyx-cc/issues"
   },
   "engines": {
     "node": ">=16.7.0"

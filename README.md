@@ -1,185 +1,157 @@
-# IMMO
+# Finyx
 
-A meta-prompting and context engineering system for **real estate investment analysis** with Claude Code.
-
-IMMO brings the same systematic approach that [GSD](https://github.com/glittercowboy/get-shit-done) brings to software development — but for analyzing real estate investments.
+An AI-powered personal finance advisor for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Tax optimization, investment portfolio analysis, pension planning, real estate investment analysis, and a unified financial insights dashboard — all through slash commands backed by specialist AI agents.
 
 ```
-/immo:init          # Initialize project with investor profile
-/immo:scout kassel  # Research a location
-/immo:analyze       # Analyze all properties
-/immo:compare       # Compare shortlisted units
-/immo:report        # Generate advisor briefing
+/finyx:profile     # Set up your financial profile
+/finyx:tax         # Investment tax guidance (Germany + Brazil)
+/finyx:invest      # Portfolio analysis, ETF recommendations, rebalancing
+/finyx:broker      # Broker comparison with fee analysis
+/finyx:pension     # Pension planning (Riester/Rürup/bAV + PGBL/VGBL)
+/finyx:insights    # Unified financial health report with recommendations
 ```
 
-## Why IMMO?
+## What it does
 
-Real estate investment analysis is complex:
-- Multiple locations, dozens of units to compare
-- Country-specific tax rules (Sonder-AfA, Spekulationsfrist, Nebenkosten...)
-- Financing calculations with construction phase interest
-- Cashflow projections across 10+ year horizons
-- Stress testing for various scenarios
+Finyx is a collection of Claude Code slash-commands and specialist AI agents that give integrated financial advice. Unlike siloed tools that only know one domain, Finyx knows your full financial picture — tax situation, investments, pensions, and real estate — and gives cross-domain recommendations.
 
-IMMO provides:
-- **Consistent methodology** - 18+ rules applied to every property
-- **Tax-aware calculations** - Country-specific benefits modeled correctly
-- **Structured workflow** - From research to advisor-ready reports
-- **Context management** - No more losing track across analysis sessions
+**Key capabilities:**
+
+- **Tax advisor** — German (Abgeltungssteuer, Sparerpauschbetrag, Vorabpauschale, Teilfreistellung) and Brazilian (IR, DARF, come-cotas, FII exemptions) investment tax guidance
+- **Investment advisor** — Portfolio analysis, risk profiling, ETF recommendations, rebalancing suggestions with live market data (Finnhub, brapi.dev)
+- **Broker comparison** — DE + BR brokers with fee comparison and tax-reporting quality
+- **Pension planning** — Riester/Rürup/bAV (Germany), PGBL/VGBL/INSS (Brazil), cross-country projection
+- **Financial insights** — Unified health report with income allocation analysis, tax efficiency scoring, net worth snapshot, goal pace tracking, and ranked recommendations
+- **Real estate analysis** — Location research, property analysis, comparison, stress testing, and advisor-ready reports
+- **Cross-border support** — Built for expats with obligations in multiple jurisdictions (Germany + Brazil)
 
 ## Installation
 
 ```bash
 # Install globally (recommended)
-npx immo-cc --global
+npx finyx-cc --global
 
 # Or install to current project only
-npx immo-cc --local
+npx finyx-cc --local
+
+# Uninstall
+npx finyx-cc --uninstall
 ```
 
-## Quick Start
+Requires [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed on your machine.
+
+## Quick start
 
 ```bash
-# 1. Initialize your investor profile
-/immo:init
+# 1. Set up your financial profile
+/finyx:profile
 
-# 2. Add property documents to properties/[location]/
-#    (price lists, exposés, calculation examples)
+# 2. Get your financial health report
+/finyx:insights
 
-# 3. Research locations
-/immo:scout kassel
-/immo:scout munich
-
-# 4. Analyze properties
-/immo:analyze kassel
-
-# 5. Compare shortlist
-/immo:compare
-
-# 6. Generate advisor briefing
-/immo:report --lang pt
-```
-
-## Workflow
-
-```
-┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
-│   INIT   │───▶│  SCOUT   │───▶│ ANALYZE  │───▶│  FILTER  │
-│          │    │          │    │          │    │          │
-│ Profile  │    │ Research │    │ Calculate│    │ Exclude  │
-│ Goals    │    │ Locations│    │ Metrics  │    │ Shortlist│
-└──────────┘    └──────────┘    └──────────┘    └──────────┘
-                                                      │
-┌──────────┐    ┌──────────┐    ┌──────────┐         │
-│  DECIDE  │◀───│  REPORT  │◀───│ COMPARE  │◀────────┘
-│          │    │          │    │          │
-│ Framework│    │ Generate │    │ Side-by  │
-│ Support  │    │ Briefing │    │ Side     │
-└──────────┘    └──────────┘    └──────────┘
-```
-
-## Project Structure
-
-When you run `/immo:init`, IMMO creates:
-
-```
-your-project/
-├── .immo/                      # IMMO system folder
-│   ├── config.json             # Investor profile + preferences
-│   ├── STATE.md                # Current workflow state
-│   ├── research/
-│   │   ├── market/             # Interest rate research
-│   │   └── locations/          # Per-location research
-│   ├── analysis/
-│   │   └── [location]/         # Per-location analysis
-│   └── output/                 # Generated reports
-│
-├── properties/                  # Your property documents
-│   ├── kassel/
-│   ├── munich/
-│   └── [location]/
-│
-└── IMMO.md                     # Project summary
+# 3. Dive into specific domains
+/finyx:tax          # Tax optimization advice
+/finyx:invest       # Portfolio recommendations
+/finyx:pension      # Pension planning
+/finyx:broker       # Broker comparison
 ```
 
 ## Commands
 
-### Setup & Status
+### Financial advisors
+
 | Command | Description |
 |---------|-------------|
-| `/immo:init` | Initialize project with investor profile |
-| `/immo:status` | Show current state and next actions |
-| `/immo:help` | Show command reference |
-| `/immo:profile` | View/edit investor profile |
+| `/finyx:profile` | Interactive financial profile setup (income, tax, family, goals, risk tolerance) |
+| `/finyx:tax` | Investment tax advisor — German and Brazilian tax guidance |
+| `/finyx:invest` | Portfolio analysis, risk profiling, ETF recommendations, rebalancing |
+| `/finyx:broker` | Broker comparison with fee analysis for DE + BR markets |
+| `/finyx:pension` | Pension planning — Riester/Rürup/bAV (DE), PGBL/VGBL/INSS (BR) |
+| `/finyx:insights` | Unified financial health report with ranked recommendations |
 
-### Research
+### Real estate analysis
+
 | Command | Description |
 |---------|-------------|
-| `/immo:scout [location]` | Research location (transport, market, Erbpacht) |
-| `/immo:rates` | Research current mortgage interest rates |
-| `/immo:add-location [name]` | Add new location to analyze |
+| `/finyx:scout [location]` | Research location (transport, market, Erbpacht) |
+| `/finyx:analyze [location]` | Analyze properties — extract units, calculate metrics, rank |
+| `/finyx:filter [location]` | Apply investment criteria and create shortlist |
+| `/finyx:compare` | Side-by-side comparison of shortlisted properties |
+| `/finyx:stress-test` | Run stress test scenarios on shortlisted properties |
+| `/finyx:report` | Generate professional financial advisor briefing |
+| `/finyx:rates` | Research current mortgage interest rates |
 
-### Analysis
+### Utility
+
 | Command | Description |
 |---------|-------------|
-| `/immo:analyze [location]` | Analyze properties in location |
-| `/immo:analyze-all` | Analyze all locations |
-| `/immo:extract [file]` | Extract units from price list |
+| `/finyx:status` | Show current analysis state and next actions |
+| `/finyx:help` | Show command reference |
+| `/finyx:update` | Update to latest version |
 
-### Comparison
-| Command | Description |
-|---------|-------------|
-| `/immo:filter [location]` | Apply rules, create shortlist |
-| `/immo:exclude [unit] [reason]` | Exclude a unit with reason |
-| `/immo:compare` | Side-by-side shortlist comparison |
-| `/immo:stress-test` | Run stress scenarios |
+## How it works
 
-### Reporting
-| Command | Description |
-|---------|-------------|
-| `/immo:report [--lang XX]` | Generate advisor briefing |
-| `/immo:summary` | Quick shortlist summary |
+Finyx is not an application — it's a set of Markdown prompt files that Claude Code interprets as slash commands. All "business logic" is encoded in structured prompts, not executable code.
 
-## Supported Countries
+```
+finyx-cc/
+├── bin/install.js              # CLI installer (the only JS file)
+├── commands/finyx/             # Slash-command prompt files
+│   ├── profile.md              # /finyx:profile
+│   ├── tax.md                  # /finyx:tax
+│   ├── invest.md               # /finyx:invest
+│   ├── insights.md             # /finyx:insights
+│   └── ...
+├── agents/                     # Specialist AI sub-agents
+│   ├── finyx-allocation-agent.md
+│   ├── finyx-tax-scoring-agent.md
+│   ├── finyx-projection-agent.md
+│   └── ...
+└── finyx/
+    ├── references/             # Domain knowledge (tax rules, benchmarks)
+    │   ├── germany/
+    │   ├── brazil/
+    │   ├── insights/
+    │   └── disclaimer.md
+    └── templates/              # Config and output templates
+```
 
-- 🇩🇪 **Germany** - Full support
-  - Sonder-AfA §7b (special depreciation)
-  - Spekulationsfrist (10-year tax-free sale)
-  - Nebenkosten by state
-  - Erbpacht detection
+**Zero runtime dependencies.** The only code is the installer. Everything else is Markdown consumed by Claude Code.
 
-- 🇵🇹 **Portugal** - Planned
-- 🇪🇸 **Spain** - Planned
-- 🇳🇱 **Netherlands** - Planned
+## Country support
 
-## Core Principles
+| Country | Tax | Investment | Pension | Real Estate | Broker |
+|---------|-----|-----------|---------|-------------|--------|
+| Germany | Abgeltungssteuer, Sparerpauschbetrag, Vorabpauschale, Teilfreistellung | ETF/stock analysis, live Finnhub data | Riester, Rürup, bAV | Full pipeline | Interactive Brokers, Trade Republic, Scalable, etc. |
+| Brazil | IR, DARF, come-cotas, FII exemptions | B3 analysis, live brapi.dev data | PGBL, VGBL, INSS | Location research | XP, Rico, NuInvest, etc. |
 
-1. **Never trust developer calculations** - Always verify independently from price lists
-2. **Rank by real metrics** - Yield, price/m², not brochure IRR
-3. **Include all costs** - Kitchen, parking, Nebenkosten, construction interest
-4. **Show both phases** - Years 1-4 (with Sonder-AfA) AND Years 5-10
-5. **Stress test everything** - What if appreciation is 0%?
-6. **Research before recommending** - Check Erbpacht, transport, market
+Cross-border users get integrated advice across both jurisdictions with DBA residency tiebreaker and withholding credit mechanics.
 
-## Philosophy
+## Financial insights dashboard
 
-IMMO rejects spreadsheet chaos in favor of systematic analysis:
+The `/finyx:insights` command synthesizes all your financial data into a single report:
 
-- **Context is preserved** - STATE.md tracks where you are in analysis
-- **Methodology is consistent** - Same rules applied to every property
-- **Reports are professional** - Advisor-ready briefings from templates
-- **Decisions are informed** - Clear frameworks for choosing between options
+- **Income allocation** — Needs/wants/savings/investments/debt breakdown vs country-adjusted benchmarks (net-after-mandatory income, not gross)
+- **Tax efficiency** — Per-country traffic-light scoring with € gap amounts (Sparerpauschbetrag usage, Vorabpauschale readiness, PGBL optimization)
+- **Net worth snapshot** — Assets vs liabilities from your profile
+- **Goal tracking** — "At current rate, target X reached in Y months"
+- **Top-5 recommendations** — Ranked by estimated € annual impact
+- **Cross-advisor intelligence** — Detects links across domains (unused tax allowance + low investment = double gap)
+
+## Legal disclaimer
+
+Finyx provides financial information for educational and planning purposes only. This tool does not constitute financial, tax, legal, or investment advice. Always consult qualified professionals before making financial decisions.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
-MIT - See [LICENSE](LICENSE) for details.
+MIT — See [LICENSE](LICENSE) for details.
 
 ---
 
-*IMMO: Making real estate investment analysis systematic.*
+*Finyx: Your AI financial advisor that sees the full picture.*
 
-**Inspired by [GSD](https://github.com/glittercowboy/get-shit-done)** - the meta-prompting system for software development.
+Built with [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Workflow powered by [GSD](https://github.com/glittercowboy/get-shit-done).
