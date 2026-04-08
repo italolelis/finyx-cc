@@ -1,183 +1,168 @@
-# Feature Landscape
+# Feature Landscape: PKV vs GKV Health Insurance Advisor
 
-**Domain:** Financial insights dashboard — `/fin:insights` command for Finyx personal finance CLI
+**Domain:** German health insurance decision advisory (PKV vs GKV)
 **Researched:** 2026-04-06
-**Confidence:** HIGH (financial health scoring patterns are well-established; CLI-specific adaptations are medium confidence based on domain reasoning)
+**Milestone:** v1.2 — `/finyx:insurance` command
 
 ---
 
-## Feature Landscape
+## Table Stakes
 
-### Table Stakes (Users Expect These)
+Features a PKV vs GKV decision tool must have. Missing any = advice is incomplete or wrong.
 
-Features a "financial health" or "insights" command must have. Missing these = output feels like a status dump, not an advisor.
+| Feature | Why Expected | Complexity | Profile Data Used |
+|---------|--------------|------------|-------------------|
+| Versicherungspflichtgrenze eligibility gate | First question: "can I even choose?" — 2026 threshold is €77,400 gross/year. Below it: stop, GKV is mandatory. | Low | `income.gross_annual` |
+| GKV cost calculation | Income × (14.6% + Zusatzbeitrag ~2.9%) / 2, capped at BBG (€69,750/yr in 2026). Employer pays half for employees. Self-employed pay full rate. | Low | `income.gross_annual`, `employment.type` |
+| PKV indicative cost range | Age + health status → base tariff estimate. Cannot be exact without insurer underwriting, but ballpark is required. Flag as estimate. | Medium | `personal.age`, `health.pre_existing_conditions` |
+| Break-even income point | At what gross income does PKV become net-cheaper than GKV after tax deduction? Critical for near-threshold earners. | Low | derived from above |
+| Family impact analysis | Familienversicherung: non-working spouse + children covered free in GKV. In PKV each person needs a separate contract. Families with one earner almost always better in GKV. | Medium | `family.partner_employed`, `family.children_count` |
+| Long-term cost projection | PKV premiums tied to age and medical inflation (avg +3.1%/yr historically). GKV tied to income + BBG growth (avg +3.8%/yr). 20–40 year horizon often reverses the answer. | High | `personal.age`, `personal.retirement_age` |
+| Tax deduction netting for PKV | Basisabsicherung portion is fully deductible as Sonderausgaben with no cap. 2026 change: insurers now transmit data to tax office via ELStAM. Net PKV cost materially lower than gross premium. | Medium | `tax.steuerklasse`, `income.gross_annual` |
+| Age-out lock-in warning | After 55, returning to GKV as an employee is nearly impossible by law. Users 50+ must see this risk prominently. | Low | `personal.age` |
+| Altersrückstellungen explanation | Mandatory PKV old-age reserves partially offset premium growth at retirement. Without this context, users systematically overestimate PKV retirement cost risk. | Low | narrative only |
+| Employer Arbeitgeberzuschuss cap | Employer subsidizes PKV up to the GKV equivalent contribution — not half the actual PKV premium. For expensive tariffs, the employer contribution gap matters. | Low | `employment.type` |
+| Beamter redirect | Civil servants use the Beihilfe system (state pays 50–80%) making PKV standard for them. Completely different decision logic. | Low | `employment.type` |
+| Pflegeversicherung inclusion | Long-term care insurance is mandatory and often omitted. GKV members pay ~3.4% of income; PKV members pay a separate private Pflegeversicherung tariff. | Low | add to both cost models |
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| Income allocation snapshot | Users expect to see how their income is distributed (needs/savings/investments/debt) vs a benchmark like 50/30/20 | LOW | Read from `profile.json`; no new data required; compare to configurable benchmark |
-| Tax efficiency summary | Show used vs unused tax allowances (Sparerpauschbetrag, PGBL 12% limit) with explicit gap and action | LOW | All data already in profile + tax advisor outputs; pure synthesis |
-| Net worth snapshot | Current assets minus liabilities — the single most important financial health number | LOW | Profile already captures assets/liabilities; computation is arithmetic |
-| Top-N actionable recommendations | Must end with a ranked list of concrete next steps, not just observations | LOW | Synthesis across all advisor domains; ranking by financial impact |
-| Goal pace indicator | "At current savings rate, you reach €X target in Y months/years" | MEDIUM | Requires savings rate + target from profile; simple compound projection |
-| Emergency fund check | 3–6 months expenses check is a universal table-stakes insight; users expect it | LOW | Profile has monthly expenses + liquid savings |
-| Debt-to-income ratio | Benchmark against the <35% healthy threshold; flag if over | LOW | Profile already has debt obligations and income |
+---
 
-### Differentiators (Competitive Advantage)
+## Differentiators
 
-Features that make `/fin:insights` meaningfully better than generic finance dashboards — enabled by Finyx's cross-domain knowledge and shared profile.
+Features that make `/finyx:insurance` better than a generic web calculator, enabled by Finyx's existing profile data and cross-advisor architecture.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| Cross-advisor intelligence synthesis | Surfaces interactions between domains: "pension gap means you're under-utilizing Rürup deduction which would also reduce your marginal tax rate on investments" — no siloed tool does this | HIGH | Must read outputs from tax + pension + invest advisors and reason across them |
-| Country-aware benchmarks | 50/30/20 breaks down in Germany (52%+ mandatory deductions); use country-specific benchmarks based on net income, not gross | MEDIUM | German benchmark: 30% savings feasible on net, not gross. Brazilian benchmark: different due to previdência and cost of living |
-| Tax optimization gap score | Express unused German/Brazilian tax allowances as a single "X% of potential tax savings unrealized" metric | MEDIUM | Aggregate Sparerpauschbetrag unused + Rürup under-contribution + PGBL under-contribution into one score |
-| Net worth forward projection | "At current rate: €X in 5 years, €Y in 10 years" — uses actual savings rate and risk-adjusted return from profile | MEDIUM | Not just current snapshot; show trajectory with current behavior vs optimized behavior |
-| Portfolio-vs-pension gap warning | Compare total projected retirement income (statutory + private pension) against a replacement income target | HIGH | Requires pension planning data + investment data; unique because Finyx has both |
-| DE/BR interaction flag | Warn if Brazilian PGBL deduction is not being declared in German Anlage AUS / vice versa when relevant for expats | HIGH | Cross-border advisory is core Finyx differentiator; insights must surface the cross-country tax interactions |
-| Recommendation impact ranking | Each recommendation shows estimated annual financial impact in € (or BRL) — e.g., "Using full Sparerpauschbetrag saves ~€263/year at 26.375% Abgeltungssteuer" | MEDIUM | Makes prioritization concrete; forces advisor to quantify, not just flag |
-| Year-end tax action list | Insight run in Q4 triggers "actions to take before Dec 31" section: harvest losses, top up Rürup, check Vorabpauschale cash position | MEDIUM | Date-aware output; very high value for annual planning context |
+| Health questionnaire (simplified) | PKV underwriting applies Risikozuschlag (10–50%+ surcharge) or Risikoausschluss (coverage exclusion) for pre-existing conditions. Without this, PKV cost estimates are wrong. | Medium | Collect: chronic conditions flag, mental health treatment in last 5 years flag, BMI range, ongoing medications. Binary flags only — do NOT collect diagnoses. Always recommend Anonyme Risikovoranfrage via licensed broker. |
+| Beitragsrückerstattung modeling | PKV refunds 1–4 months of premiums if no claims filed. Healthy low-utilization users recover €500–2,000/yr. GKV has no equivalent. Directly affects effective PKV cost. | Low | Ask: healthcare usage (low/medium/high). Show premium with and without estimated refund. |
+| Selbstbeteiligung scenarios | Annual deductible options (€300–€2,000+) reduce PKV premiums 10–30%. Users willing to self-fund routine costs can substantially close the GKV/PKV price gap. | Low | Show delta: premium at €0 / €500 / €1,000 / €2,000 deductible. |
+| Anwartschaft advisory for expats | Users temporarily abroad can keep PKV dormant for ~€30–80/month (Anwartschaft) without new underwriting on return. GKV re-entry abroad requires qualifying income again. Critical for the DE+BR expat profile. | Medium | Trigger when `residence.primary_country != DE` or `profile.expat_status = true`. |
+| Cross-advisor tax integration | PKV Basisabsicherung deduction reduces taxable income → links to Finyx tax analysis (Sonderausgaben gap) and pension planning (headroom recalculation). | Medium | Reads existing `.finyx/profile.json`; no new data required. Pass finding to `/finyx:insights` as actionable item. |
+| Provider research agent | Web-search current tariffs from major providers (AXA, Allianz, Debeka, Ottonova, HUK-Coburg). Return indicative premium ranges, Beitragsrückerstattung terms, digital service quality. | High | Spawns sub-agent with web search. Mandatory disclaimer: not binding quotes. Recommend Anonyme Risikovoranfrage. |
 
-### Anti-Features (Commonly Requested, Often Problematic)
+---
 
-| Feature | Why Requested | Why Problematic | Alternative |
-|---------|---------------|-----------------|-------------|
-| Budget tracking / expense categorization | "Show me where my money goes" sounds like insights | Different product (transaction-level tracking); requires bank feed or manual entry; dilutes the advisory focus | Acknowledge the gap; direct to YNAB/MoneyMoney; insights work from declared income allocation, not transaction history |
-| Historical trend charts / graphs | "Show me my net worth over time" is a natural ask | CLI has no charting capability; storing historical snapshots adds state management complexity; v1.1 is a point-in-time advisor | Give a projected forward trend instead; historical tracking is a v2 feature after persistent state is validated |
-| Financial health score as a single number | Score feels objective and gameable (users want to "hit 100") | A single number hides the composition; users optimize the score, not their finances; creates false precision | Show component ratings (emergency fund: GOOD, savings rate: NEEDS IMPROVEMENT) without aggregating to one number |
-| Comparison to other users / benchmarks by age | "Am I doing better than average for my age?" is compelling | Demographic benchmarking requires maintaining population data; DE/BR datasets differ; creates envy, not action | Compare to standards (e.g., "3–6 months emergency fund") not to "people like you"; avoids data maintenance burden |
-| Spending advice / frugality tips | Generic "cut your coffee" advice feels like insights | Patronizing for a user who hasn't declared spending; Finyx has no transaction data to base this on | Only recommend reducing a category if profile data explicitly shows it above benchmark; never speculate |
-| Insurance recommendations | Insurance is part of financial health; users will expect it | Explicitly deferred to v2 in PROJECT.md; data sourcing is unsolved | Flag insurance as "not assessed — run `/fin:insurance` when available" |
-| Auto-refresh / scheduled runs | "Run weekly insights automatically" sounds useful | Requires a daemon/scheduler; CLI tool, not a service; outside architecture constraints | Users run `/fin:insights` on demand; document recommended cadence (monthly, or before major decisions) |
+## Anti-Features
+
+| Anti-Feature | Why Avoid | What to Do Instead |
+|--------------|-----------|-------------------|
+| Binding PKV premium quotes | Underwriting requires full Gesundheitsprüfung by a licensed broker. Presenting estimates as quotes creates liability and erodes trust. | Label all numbers as indicative ranges. Recommend Anonyme Risikovoranfrage via broker before any switch. |
+| PKV provider ranking / "best PKV" list | Highly context-dependent (age, health, region, tariff structure). Ranking implies claims processing quality assessment we cannot do. | Show 3–5 representative providers with key differentiators. No ranking. |
+| Check24-style full comparison table | Full insurance marketplace is explicitly out of scope (PROJECT.md). Requires live data feeds we do not have. | Single decision: GKV or PKV verdict + conditions + top 3 action items. |
+| Unqualified "switch to PKV" recommendation | Age-out lock-in, pre-existing condition exclusions, and family scenarios can make a PKV switch financially catastrophic. An unqualified recommendation creates real user harm. | Always qualify verdict with explicit conditions. Always recommend licensed broker consultation for final decision. |
+| GKV provider comparison | Zusatzbeitrag variance (2.18%–3.4% in 2026) is small; statutory benefits are identical by law. Comparison adds noise. | Mention Zusatzbeitrag range; link to GKV-Zusatzbeitrag.de for current rates. |
+| §204 VVG in-PKV tariff switching guidance | Complex broker-assisted process. Out of scope for v1.2. | Mention that in-PKV tariff optimization via §204 VVG exists; recommend broker. |
+| Manual premium quotes for specific conditions | Asking users to input their actual PKV quote creates liability when our model diverges. | Use age-bracket ranges. Acknowledge the estimate nature explicitly. |
 
 ---
 
 ## Feature Dependencies
 
 ```
-/fin:insights (synthesis command)
-    └──reads──> .finyx/profile.json (income, goals, assets, liabilities, emergency fund, debt)
-    └──reads──> last tax advisor output or re-derives from profile (tax allowances used/available)
-    └──reads──> last investment advisor output or re-derives (portfolio allocation, risk profile)
-    └──reads──> last pension advisor output or re-derives (pension gap estimate, contribution levels)
+income.gross_annual
+    → Versicherungspflichtgrenze gate (hard stop if below €77,400)
+    → GKV cost calculation (× combined rate, capped at BBG)
+    → Tax deduction value (marginal rate × Basisabsicherung portion)
 
-Income Allocation Analysis
-    └──requires──> net income from profile.json
-    └──requires──> expense breakdown from profile.json (housing, savings %, debt payments)
+employment.type
+    → Beamter? → redirect to Beihilfe explanation (different system)
+    → Selbständig? → full GKV rate (no employer split), different GKV entry rules
+    → Employee? → employer Arbeitgeberzuschuss applies
 
-Tax Efficiency Score
-    └──requires──> German: Sparerpauschbetrag used/limit, Rürup contribution vs max, Vorabpauschale status
-    └──requires──> Brazilian: PGBL contribution vs 12% limit, DARF compliance flag
-    └──requires──> Both from profile.json (present without running individual advisors)
+personal.age
+    → PKV indicative premium (age-rated)
+    → Long-term projection (years to retirement)
+    → Age-out lock-in warning trigger (50+)
+    → Altersrückstellungen accumulation estimate
 
-Net Worth Snapshot + Projection
-    └──requires──> Assets list from profile.json
-    └──requires──> Liabilities list from profile.json
-    └──requires──> Monthly savings rate from profile.json
-    └──enhances with──> Expected return assumption (from investment advisor risk profile)
+health.pre_existing_conditions / health.chronic_medication
+    → Risikozuschlag flag → adjust PKV estimate upward
+    → Severe cases: recommend checking PKV feasibility via Anonyme Risikovoranfrage before analysis
 
-Goal Pace Tracking
-    └──requires──> Financial goals with target amount + date from profile.json
-    └──requires──> Current monthly savings rate
-    └──depends on──> Net worth snapshot (baseline)
+family.partner_employed + family.children_count
+    → Familienversicherung benefit calculation (per non-working dependent: ~€300–500/month saved in GKV vs PKV)
 
-Cross-Advisor Intelligence
-    └──requires──> All domain outputs above computed first
-    └──surfaces──> Interactions: pension gap → under-utilized Rürup → higher tax bill on investments
-    └──surfaces──> DE/BR cross-border: PGBL foreign income declaration in German Anlage AUS
+residence.primary_country / expat_status
+    → Anwartschaft advisory (expat edge case)
 
-Recommendation Ranking
-    └──requires──> All analysis sections completed
-    └──requires──> Impact quantification in € or BRL
-    └──outputs──> Ranked list sorted by estimated annual financial impact
+health.healthcare_usage
+    → Beitragsrückerstattung estimate
+    → Selbstbeteiligung recommendation
+
+Basisabsicherung deduction (output)
+    → feeds /finyx:tax (Sonderausgaben unused gap)
+    → feeds /finyx:insights (net insurance cost after tax)
 ```
 
-### Dependency Notes
+---
 
-- **All features require `profile.json` to be populated:** `/fin:insights` must gate on profile completeness. If profile is missing key fields (income, goals, assets), prompt user to run `/fin:profile` first.
-- **Tax efficiency is derivable from profile alone:** The tax advisor outputs are helpful context but insights can re-derive allowance gaps directly from profile data — no hard dependency on prior advisor runs.
-- **Cross-advisor intelligence is the hardest feature:** It requires reasoning across 3+ domains simultaneously. Implemented as a late synthesis step after all individual analyses are computed in the same command run.
-- **Projection accuracy depends on assumptions:** Net worth forward projection uses declared savings rate + risk-adjusted return from profile. Must show assumptions inline so users can validate, not treat as oracle output.
+## New Profile Fields Required
+
+Confirm existence of these fields in `.finyx/profile.json`; collect missing ones at command start.
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `health.current_insurance` | enum: `GKV` / `PKV` | Are they already in PKV? Changes the advice direction. |
+| `health.pre_existing_conditions` | boolean | Binary only. Do not collect diagnoses. |
+| `health.chronic_medication` | boolean | Proxy for underwriting risk. |
+| `health.healthcare_usage` | enum: `low` / `medium` / `high` | For Beitragsrückerstattung estimate. |
+| `employment.type` | enum: `employee` / `self_employed` / `beamter` / `student` | Beamter is a completely separate path. |
+| `family.partner_employed` | boolean | Familienversicherung gate. |
+| `family.children_count` | integer | Per-child PKV cost multiplier vs GKV zero marginal cost. |
+| `personal.retirement_age` | integer | Long-term projection endpoint. |
 
 ---
 
-## MVP Definition
+## MVP Build Order for v1.2
 
-### Launch With (v1.1)
+1. Eligibility gate — Versicherungspflichtgrenze with 2026 threshold (€77,400)
+2. GKV cost calculation — BBG cap, Zusatzbeitrag, employer split, Pflegeversicherung included
+3. PKV indicative range — age-bracket base with health-flag surcharge
+4. Family impact — Familienversicherung zero-cost vs per-head PKV premium
+5. Tax deduction netting — Basisabsicherung as Sonderausgaben; show gross vs net PKV cost
+6. Long-term projection — 10/20/30-year cost trajectory
+7. Beamter detection — immediately redirect to Beihilfe explanation
 
-Minimum viable `/fin:insights` command that delivers real value.
-
-- [ ] Income allocation vs benchmark — read net income + expense breakdown from profile; compare to 50/30/20 adjusted for German net income reality
-- [ ] Tax efficiency gaps — unused Sparerpauschbetrag, under-utilized Rürup, PGBL under-contribution; show in € terms
-- [ ] Net worth snapshot — current assets minus liabilities from profile; no projection yet
-- [ ] Emergency fund check — months covered vs 3–6 target
-- [ ] Goal pace indicator — for each declared goal: "on track / off track / months to target at current rate"
-- [ ] Top-5 ranked recommendations — each with estimated annual financial impact in € or BRL
-- [ ] Cross-advisor intelligence — at least flag the most impactful cross-domain interaction detected
-
-### Add After Validation (v1.x)
-
-- [ ] Net worth forward projection (5-year + 10-year) — needs validated savings rate data from real user runs
-- [ ] Year-end tax action list — date-aware section; add when seasonal utility is confirmed
-- [ ] Recommendation impact quantification refinement — initial estimates will be rough; calibrate from user feedback
-- [ ] DE/BR cross-border interaction detection — complex logic; validate single-country flow first
-
-### Future Consideration (v2+)
-
-- [ ] Historical net worth tracking — requires persistent state beyond current profile.json
-- [ ] Portfolio-vs-pension gap warning — needs pension projection model to be solid
-- [ ] Insurance gap detection — blocked on insurance advisor (v2 scope per PROJECT.md)
+Defer to future milestone:
+- Provider research agent (web search freshness risk, high complexity)
+- Anwartschaft advisory (expat edge case, lower frequency)
+- §204 in-PKV tariff optimization
 
 ---
 
-## Feature Prioritization Matrix
+## German Insurance Terminology Reference
 
-| Feature | User Value | Implementation Cost | Priority |
-|---------|------------|---------------------|----------|
-| Income allocation vs benchmark | HIGH | LOW | P1 |
-| Tax efficiency gaps (DE + BR) | HIGH | LOW | P1 |
-| Net worth snapshot | HIGH | LOW | P1 |
-| Emergency fund check | HIGH | LOW | P1 |
-| Goal pace indicator | HIGH | MEDIUM | P1 |
-| Top-N ranked recommendations | HIGH | MEDIUM | P1 |
-| Cross-advisor intelligence (basic) | HIGH | HIGH | P1 |
-| Net worth forward projection | HIGH | MEDIUM | P2 |
-| Year-end tax action list | MEDIUM | MEDIUM | P2 |
-| Recommendation impact in € | MEDIUM | MEDIUM | P2 |
-| DE/BR cross-border interactions | MEDIUM | HIGH | P2 |
-| Portfolio-vs-pension gap | HIGH | HIGH | P3 |
-
-**Priority key:**
-- P1: Must have for v1.1 launch
-- P2: Should have, add in v1.1 or v1.2
-- P3: Future milestone
-
----
-
-## Competitor Feature Analysis
-
-| Feature | Mint / YNAB | Finanzguru (DE) | PortfolioPilot | Our Approach |
-|---------|-------------|-----------------|----------------|--------------|
-| Income allocation | Transaction-derived, automatic | Transaction-derived via bank sync | Not applicable | Declared income + manual allocation from profile; no bank sync needed |
-| Tax efficiency | None (US-only Mint) | German tax tips (generic) | Portfolio-level only | Country-specific gap calculation with exact € amounts |
-| Net worth | Tracked over time via account sync | Tracked via bank sync | Investment accounts only | Point-in-time from profile; forward projection without sync |
-| Cross-domain advice | None | None | None | Core differentiator — pension gap → tax gap → investment gap |
-| Goal pacing | Basic (savings goal trackers) | None | None | Profile-declared goals with projection |
-| CLI / no sync | None (UI-only, requires sync) | None (UI-only, requires sync) | None | Privacy-first; no external data required; all derived from profile |
+| Term | Meaning | 2026 Value |
+|------|---------|------------|
+| Versicherungspflichtgrenze / JAEG | Income threshold above which employees may choose PKV | €77,400 gross/yr |
+| Beitragsbemessungsgrenze (BBG) | GKV contribution calculated on income up to this cap | €69,750/yr |
+| Allgemeiner Beitragssatz | Statutory GKV rate split equally between employee and employer | 14.6% |
+| Zusatzbeitrag | Provider-specific GKV surcharge; varies by fund | Avg 2.9%, range 2.18%–3.4% |
+| Familienversicherung | Free GKV co-insurance for non-working spouse and children | Zero marginal cost in GKV |
+| Altersrückstellungen | Mandatory PKV reserves accumulating during working years to subsidize retirement premiums | Structural PKV advantage |
+| Beitragsrückerstattung | PKV premium refund for claim-free years | Typically 1–4 months |
+| Selbstbeteiligung | Annual deductible; reduces premium 10–30% | €300–€2,000+ options |
+| Risikozuschlag | Premium surcharge for pre-existing conditions | Typically 10–50%+ |
+| Risikoausschluss | Coverage exclusion for a specific condition | Eliminates PKV benefit for that condition |
+| Anwartschaft | Dormant PKV policy preserving underwriting status during absence from Germany | ~€30–80/month |
+| Gesundheitsprüfung | Health questionnaire required for PKV enrollment | Mandatory underwriting |
+| Anonyme Risikovoranfrage | Anonymous pre-check with insurer to assess underwriting outcome without creating an official record | Risk mitigation strategy |
+| Beihilfe | State subsidy for civil servants covering 50–80% of healthcare costs | Separate system entirely |
+| Pflegeversicherung | Mandatory long-term care insurance | GKV ~3.4% of income |
+| §204 VVG | Legal right to switch to comparable tariff within same PKV insurer without new health check | In-PKV optimization |
 
 ---
 
 ## Sources
 
-- [Financial Health Pulse 2025 U.S. Trends Report — Financial Health Network](https://finhealthnetwork.org/research/financial-health-pulse-2025-u-s-trends-report/)
-- [Top Personal Finance Metrics 2025 — The Gild Group](https://thegildgroup.com/financial-health-metrics/)
-- [Financial Health Score components — FasterCapital](https://fastercapital.com/content/Harnessing-the-Power-of-the-Financial-Health-Score.html)
-- [50/30/20 Rule — Chase](https://www.chase.com/personal/banking/education/budgeting-saving/50-20-30-budget-rule)
-- [8 Personal Finance Ratios — U.S. News](https://money.usnews.com/money/personal-finance/family-finance/articles/personal-finance-ratios-to-know-at-all-times)
-- [Net Worth Projection — ProjectionLab](https://projectionlab.com/net-worth)
-- [AI Financial Advisor cross-domain patterns — useorigin.com](https://useorigin.com/resources/blog/technical-overview)
-- [AI Financial Advisors with built-in tax features — Oreate AI](https://www.oreateai.com/blog/ai-financial-advisors-with-builtin-tax-features/77c9bbfb2ad31e873e507e3bcb1a0edb)
-- [Financial Dashboard Customization for Advisors 2025 — RightCapital](https://www.rightcapital.com/blog/financial-dashboard/)
-
----
-*Feature research for: Finyx /fin:insights command*
-*Researched: 2026-04-06*
+- Versicherungspflichtgrenze 2026: https://www.myhealthcarebroker.com/blog/jahresarbeitsentgeltgrenze-2026-private-health-insurance
+- BBG / Zusatzbeitrag 2026: https://www.thegoodbroker.de/post/changes-in-gkv-contributions-2026
+- Familienversicherung impact: https://www.how-to-germany.com/health-insurance/private-health-insurance/families-children/
+- PKV long-term cost trajectory: https://germanpedia.com/private-health-insurance-cost-development/
+- Altersrückstellungen mechanics: https://www.ottonova.de/en/v/private-health-insurance/private-health-insurance-premiums-in-old-age
+- Tax deductibility 2026 ELStAM change: https://die-finanzpruefer.de/steuern/steuererleichterung-pkv-arbeitnehmer/
+- Risikozuschlag / Gesundheitsprüfung: https://pkv-welt.de/risikozuschlag/
+- Anwartschaft for expats: https://www.privat-patienten.de/lexikon/begriff/auslandsaufenthalt-dauerhaft/
+- Beitragsrückerstattung: https://www.versicherungsantrag24.de/pkv-beitragsrueckerstattung-fluch-oder-segen/
+- Age-out lock-in risk: https://financeforexpats.de/news/why-you-should-not-switch-to-private-health-insurance-in-germany
+- Is PKV worth it 2026: https://feather-insurance.com/blog/private-health-worth-it

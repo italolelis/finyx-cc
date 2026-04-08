@@ -1,320 +1,239 @@
-# Architecture Research
+# Architecture Patterns — v1.2 Health Insurance Advisor
 
-**Domain:** Financial insights command — `/fin:insights` integration into Finyx slash-command architecture
+**Domain:** `/finyx:insurance` command integration into existing Finyx slash-command architecture
 **Researched:** 2026-04-06
-**Confidence:** HIGH (based on direct codebase inspection)
+**Confidence:** HIGH (existing codebase reviewed directly; domain rules verified via web search)
 
 ---
 
-## Standard Architecture
+## Integration Pattern
 
-### System Overview
+The health insurance command follows the same orchestrator-agent pattern as `/finyx:insights`: the command reads profile data, gates on completeness, spawns specialist agents via `Task`, synthesizes results, and outputs advisory text. No new architectural patterns are needed.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    User: /fin:insights                        │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-┌──────────────────────────▼──────────────────────────────────┐
-│              commands/finyx/insights.md                      │
-│  Orchestrator: validates profile, loads refs, spawns agents  │
-│                                                              │
-│  <execution_context>                                         │
-│    @.finyx/profile.json                                      │
-│    @~/.claude/finyx/references/insights/benchmarks.md        │
-│    @~/.claude/finyx/references/insights/scoring-rules.md     │
-│    @~/.claude/finyx/references/disclaimer.md                 │
-│  </execution_context>                                        │
-└──────────────────────────┬──────────────────────────────────┘
-                           │  Task tool (parallel)
-        ┌──────────────────┼──────────────────┐
-        │                  │                  │
-┌───────▼───────┐ ┌────────▼──────┐ ┌────────▼──────────┐
-│ insights-     │ │ insights-     │ │ insights-          │
-│ allocation-   │ │ tax-scoring-  │ │ projection-        │
-│ agent.md      │ │ agent.md      │ │ agent.md           │
-│               │ │               │ │                    │
-│ Income split  │ │ Unused allow- │ │ Net worth snap-    │
-│ needs/wants/  │ │ ances, gaps   │ │ shot, goal pace,   │
-│ savings bench │ │ across DE+BR  │ │ forward model      │
-└───────┬───────┘ └────────┬──────┘ └────────┬──────────┘
-        │                  │                  │
-        └──────────────────▼──────────────────┘
-                           │
-        ┌──────────────────▼──────────────────┐
-        │  insights.md synthesis phase         │
-        │  - Merge FLAGS from all agents       │
-        │  - Sort RECOMMENDATIONS by EUR impact│
-        │  - Surface cross-domain links        │
-        │  - Emit unified report               │
-        └─────────────────────────────────────┘
-```
+### Command Entry Point
 
-### Component Responsibilities
+`commands/finyx/insurance.md`
 
-| Component | Responsibility | Implementation |
-|-----------|----------------|----------------|
-| `commands/finyx/insights.md` | Orchestrator — validate profile, spawn 3 agents in parallel, synthesize unified report | Slash-command `.md`, `Task` in `allowed-tools` |
-| `agents/insights-allocation-agent.md` | Classify income into needs/wants/savings/investments/debt; benchmark against country-aware norms | Agent `.md`, reads profile + benchmarks ref via injected context |
-| `agents/insights-tax-scoring-agent.md` | Score tax efficiency 0-100; identify unused Sparerpauschbetrag, missed Riester/Rürup windows, BR DARF gaps | Agent `.md`, reads profile + existing DE/BR tax refs via injected context |
-| `agents/insights-projection-agent.md` | Net worth snapshot; compound savings/investment rate to goal targets; calculate months-to-target | Agent `.md`, reads profile + scoring-rules ref via injected context |
-| `finyx/references/insights/benchmarks.md` | Country-aware allocation benchmarks (50/30/20 adapted for DE/BR tax burden); net worth targets by age bracket | New reference doc, versioned with `tax_year` header |
-| `finyx/references/insights/scoring-rules.md` | Tax efficiency rubric (0-100); allocation health scoring; goal pace thresholds; recommendation ranking formulas | New reference doc, versioned |
+- `name: finyx:insurance`
+- `allowed-tools: Read, Bash, Write, Task, AskUserQuestion`
+- `execution_context`: loads `disclaimer.md`, `germany/health-insurance.md`, `profile.json`
+- Outputs to terminal only (no file persistence by default); optionally saves summary to `.finyx/insurance-report.md` on user consent
 
 ---
 
-## Recommended Project Structure
+## Component Boundaries
 
-New files only — no modifications to existing commands or agents.
+| Component | File | Responsibility | Communicates With |
+|-----------|------|---------------|-------------------|
+| Insurance command | `commands/finyx/insurance.md` | Orchestration, questionnaire, synthesis | Profile, agents, reference docs |
+| PKV Provider Research agent | `agents/finyx-pkv-research-agent.md` | Live tariff and provider research | WebSearch, Read |
+| Insurance advisor agent | `agents/finyx-insurance-advisor-agent.md` | GKV vs PKV cost comparison, tax calc, family impact, long-term projection | Read only (profile + ref docs) |
+| Health insurance reference | `finyx/references/germany/health-insurance.md` | GKV/PKV rules, thresholds, Basisabsicherung deduction limits | Loaded by command and both agents |
 
-```
-commands/finyx/
-└── insights.md                          # new orchestrator command
-
-agents/
-├── insights-allocation-agent.md         # new
-├── insights-tax-scoring-agent.md        # new
-└── insights-projection-agent.md         # new
-
-finyx/references/
-└── insights/
-    ├── benchmarks.md                    # new — allocation benchmarks DE+BR
-    └── scoring-rules.md                 # new — scoring thresholds and ranking logic
-```
-
-Existing files untouched: `tax.md`, `invest.md`, `pension.md`, `broker.md`, all existing agents, all existing reference docs.
+Two agents, not one. The split is forced by tool scope: the PKV research agent needs `WebSearch` to fetch live tariffs; the insurance advisor agent must be stateless (no WebSearch) to produce deterministic, auditable calculations. This mirrors the separation between `finyx-allocation-agent` (deterministic math) and how research concerns are isolated in the real estate pipeline.
 
 ---
 
-## Architectural Patterns
+## Health Data Handling
 
-### Pattern 1: Profile-Only Data Sourcing
+**Decision: ephemeral by default, optional non-sensitive persistence with explicit consent.**
 
-**What:** `insights` reads `.finyx/profile.json` directly. It does not invoke or parse output from `tax`, `invest`, `pension`, or `broker`.
+The health questionnaire collects pre-existing conditions, chronic diseases, and age/health flags for PKV risk surcharge estimation. This is the most sensitive data in the system.
 
-**When to use:** Always for `insights`. The advisor commands are interactive — they ask questions and fetch live data. `insights` must be non-interactive to produce a complete snapshot in one shot. The profile already contains the structured inputs all advisors use.
+| Option | Problem |
+|--------|---------|
+| Store in `profile.json` | Profile is read by all agents. Health conditions would leak into tax, pension, and investment contexts where they are irrelevant and create a privacy surface. |
+| Separate `health-profile.json` | Adds a new read path to every agent that might need it; increases maintenance burden. |
+| Ephemeral (in-session only) | No persistence risk. User re-enters if they re-run. Acceptable because the questionnaire is short (6-8 questions) and the command produces a durable output report. |
 
-**Trade-offs:** Profile data may lag a fresh `/fin:invest` run. This is acceptable — `insights` is a health dashboard, not a live feed. If holdings are missing, emit a callout rather than failing.
+**Use ephemeral.** The command collects health data via `AskUserQuestion` in Phase 2, holds answers in working memory for the duration of the command, passes a sanitized summary to agents (see Structured Agent Input pattern below), and never writes raw health answers to disk.
 
-**Key profile fields consumed by agents:**
-```json
-identity.cross_border
-identity.family_status
-countries.germany.gross_income
-countries.germany.marginal_rate
-countries.germany.tax_class
-countries.germany.brokers[].holdings[]
-countries.brazil.gross_income
-countries.brazil.ir_regime
-investor.liquidAssets
-investor.monthlyCommitments
-goals.risk_tolerance
-goals.investment_horizon
-goals.primary_goals
-```
-
-Holdings (`brokers[].holdings[]`) and pension contribution fields must be present for full insights. When absent, agents emit `FLAGS: INCOMPLETE — run /fin:invest to add holdings` and proceed with partial analysis.
-
-### Pattern 2: Parallel Agent Decomposition
-
-**What:** Three analytic concerns — allocation, tax efficiency, projection — are independently solvable from the same profile data. Spawn them in parallel via `Task`, collect structured outputs, synthesize in the orchestrator.
-
-**When to use:** When agents have no inter-agent dependency and can work from the same inputs. All three insights agents qualify.
-
-**Trade-offs:** Adds 3 agent files to maintain. The alternative (monolithic `insights.md`) degrades analysis quality as the prompt becomes too long. This split mirrors how `analyze.md` delegates to `finyx-analyzer-agent.md`.
-
-**Synthesis contract — each agent returns this structure:**
-```
-SECTION: allocation|tax|projection
-SCORE: 0-100 or N/A
-FLAGS:
-- [issue description] | IMPACT: €X/year | PRIORITY: high|medium|low
-RECOMMENDATIONS:
-1. [Action] | IMPACT: €X/year | EFFORT: low|medium|high
-```
-The orchestrator merges all FLAGS, sorts RECOMMENDATIONS descending by EUR impact, and surfaces cross-domain links where one recommendation affects multiple sections.
-
-### Pattern 3: Reference Doc Injection via execution_context
-
-**What:** Benchmarks and scoring rules live in versioned reference docs loaded via `@` includes in `<execution_context>`. Agents receive them as injected context from the orchestrator — they do not use `@` includes themselves.
-
-**When to use:** Any knowledge that is country-specific, time-varying, or needs versioning. Tax benchmarks (Sparerpauschbetrag amount, pension contribution limits) change yearly.
-
-**Trade-offs:** Docs must be kept current. Use same `tax_year: YYYY` metadata pattern as `germany/tax-investment.md` so commands can surface staleness warnings.
+**Optional non-sensitive persistence:** On completion, offer to save a `~/.finyx/insurance-config.json` with only non-sensitive questionnaire answers: `age`, `currently_insured_as` (GKV/PKV/none), `employment_type`, `family_members_to_cover`. Pre-existing conditions and chronic disease details stay ephemeral in all cases.
 
 ---
 
 ## Data Flow
 
-### Request Flow
-
 ```
-User: /fin:insights
+/finyx:insurance
     |
-    v
-Phase 1: Validate .finyx/profile.json exists
-    bash: [ -f .finyx/profile.json ] || abort with "Run /fin:profile first"
+    Phase 1: Validation
+    |   Read .finyx/profile.json
+    |   Extract: gross_income, tax_class, marginal_rate, family_status, children
+    |   Gate: Germany active? (gross_income > 0 AND tax_class present)
+    |   Gate: income above Versicherungspflichtgrenze? (PKV eligibility gate)
+    |   Emit disclaimer before proceeding
     |
-    v
-Phase 2: Detect active countries
-    Germany active if: countries.germany.tax_class != null
-    Brazil active if:  countries.brazil.ir_regime != null
-    Cross-border if:   identity.cross_border == true
+    Phase 2: Health Questionnaire (AskUserQuestion — ephemeral)
+    |   Current insurance status (GKV / PKV / none)
+    |   Employment type (employee / freelance / civil servant / student)
+    |   Age (and partner age if family_status == married)
+    |   Family members to cover (co-insurance needed?)
+    |   Pre-existing conditions / chronic diseases (HIGH SENSITIVITY — never written to disk)
+    |   Desired coverage level (basic GKV-equivalent / comprehensive / premium)
     |
-    v
-Phase 3: Spawn agents in parallel via Task
-    Task(insights-allocation-agent)  ─┐
-    Task(insights-tax-scoring-agent) ─┼─ parallel, same profile context
-    Task(insights-projection-agent)  ─┘
+    Phase 3: Parallel agent spawn (Task)
     |
-    v
-Phase 4: Collect agent outputs
-    Parse SECTION / SCORE / FLAGS / RECOMMENDATIONS from each
+    |-- finyx-insurance-advisor-agent
+    |   Tools: Read only
+    |   Input: profile fields + sanitized questionnaire summary (no raw health details)
+    |   Reads: germany/health-insurance.md ref doc
+    |   Output: GKV annual cost, PKV base cost estimate, employer share, Basisabsicherung
+    |           tax deduction, Familienversicherung vs per-head PKV cost, 10yr + 30yr
+    |           cost projection, eligibility flags (Anwartschaft if cross_border)
     |
-    v
-Phase 5: Cross-advisor synthesis
-    - Merge all FLAGS into unified list
-    - Sort all RECOMMENDATIONS by EUR impact descending
-    - Identify cross-domain links:
-        e.g., "Increasing Rürup saves €X in tax AND closes pension gap"
-        e.g., "Equity overweight increases risk beyond risk_tolerance"
-    - Compute composite Financial Health Score (weighted average of agent scores)
+    |-- finyx-pkv-research-agent
+    |   Tools: WebSearch + Read
+    |   Input: age, employment type, coverage level (no health details)
+    |   Output: 3-5 PKV provider tariff ranges, Beitragsrückerstattung notes,
+    |           Selbstbeteiligung tradeoffs, current Zusatzbeitrag comparisons
     |
-    v
-Phase 6: Emit unified report
-    ┌─────────────────────────────────────┐
-    │  FINYX ► FINANCIAL INSIGHTS         │
-    ├─────────────────────────────────────┤
-    │  Financial Health Score: XX/100     │
-    │  Income Allocation breakdown        │
-    │  Tax Efficiency: XX/100 + gaps      │
-    │  Net Worth: €X → Goal in Y months   │
-    │  ─────────────────────────────────  │
-    │  Top Recommendations (ranked)       │
-    │  1. [action] | €X/year impact       │
-    │  2. ...                             │
-    ├─────────────────────────────────────┤
-    │  [legal disclaimer]                 │
-    └─────────────────────────────────────┘
+    Phase 4: Synthesis
+        Combine both agent outputs
+        Produce GKV vs PKV comparison table
+        Produce long-term cost projection table (10yr, 20yr, retirement age)
+        Surface tax implication (Basisabsicherung deduction x marginal_rate = annual saving)
+        Surface family impact (Familienversicherung free riders vs PKV per-head cost)
+        Produce ranked recommendation with confidence level + disclaimer
+        Offer to save non-sensitive config to .finyx/insurance-config.json
 ```
-
-### Key Data Flows
-
-1. **Profile → Agents.** Profile is passed as context when spawning each Task. Agents do not issue Bash reads of `.finyx/profile.json` autonomously — they receive the full profile via the orchestrator's injected context. This is how `finyx-analyzer-agent` and `finyx-reporter-agent` already work.
-
-2. **Recommendations ranking.** Each agent emits recommendations with estimated EUR impact. Orchestrator sorts the merged list descending by impact. Cross-domain links are identified by the orchestrator in Phase 5 — not by individual agents — because agents lack visibility into each other's output.
-
-3. **Missing data path.** When a profile section is absent (no holdings, no pension data), the relevant agent emits `FLAGS: INCOMPLETE`. Orchestrator converts this to a callout block in the report: "Add your holdings by running `/fin:invest` for full portfolio analysis." Analysis proceeds with available data; the report clearly marks which sections are partial.
-
-4. **Country scoping.** Tax-scoring agent runs DE logic only if Germany active, BR logic only if Brazil active, both if `cross_border: true`. Same pattern used by `tax.md`, `invest.md`, `pension.md`.
 
 ---
 
-## Integration Points
+## Reference Doc: `finyx/references/germany/health-insurance.md`
 
-### Existing Commands — No Modification Required
+Single file covering all rules the advisor agent needs. Sections:
 
-| Command | Data Available in Profile | What insights Consumes |
-|---------|--------------------------|------------------------|
-| `finyx:tax` | `countries.*.marginal_rate`, `countries.*.tax_class` | Tax efficiency scoring inputs |
-| `finyx:invest` | `countries.*.brokers[].holdings[]`, `goals.risk_tolerance` | Allocation analysis, rebalancing gap detection |
-| `finyx:pension` | Pension contributions (if written back to profile on consent) | Pension gap in projection |
-| `finyx:broker` | `countries.*.brokers[]` | Tax-reporting quality contribution to score |
-| `finyx:profile` | Writes `.finyx/profile.json` | Primary data source for all three agents |
+| Section | Content |
+|---------|---------|
+| 1. Eligibility thresholds | Versicherungspflichtgrenze by year (2025: €73,800; 2026: €77,400); Beitragsbemessungsgrenze (2025: €66,150); freelance and civil servant special rules |
+| 2. GKV cost formula | Base rate 14.6% (7.3% employee + 7.3% employer), Zusatzbeitrag range and current average, income cap, Familienversicherung rules |
+| 3. PKV cost structure | Age/health-based pricing, Altersrückstellungen mechanics, historical avg increase rate (PKV ~3.1%/yr; GKV ~3.8%/yr), Beitragsrückerstattung, Selbstbeteiligung tradeoff |
+| 4. Tax deductibility | Basisabsicherung portion fully deductible (Sonderausgabe); limits: €1,900 employees, €2,800 freelancers; Beitragsrückerstattung reduces deductible amount |
+| 5. Family rules | Familienversicherung: free co-insurance for non-working spouse + children in GKV; PKV charges per person regardless of dependency status |
+| 6. Expat rules | Anwartschaft (re-entry guarantee after time abroad), EU portability, re-entry conditions after GKV period |
+| 7. Civil servant (Beihilfe) | State employer subsidizes 43-50% of premium; PKV strongly favored for Beamte regardless of income |
+| 8. Tax year metadata | `tax_year: 2025` header for staleness detection — same pattern as `germany/tax-investment.md` |
 
-No existing command needs modification. `insights` is purely additive.
+No Brazil health insurance reference for v1.2. Brazil's SUS/plano de saúde landscape is structurally different (employer-provided plans dominate; individual PKV-equivalent rarely applies). Gate the command to Germany only with an explicit "Brazil health insurance advisory not yet available — coming in a future release" message.
 
-### New Reference Docs Needed
+---
 
-| File | Content | Versioning |
-|------|---------|------------|
-| `finyx/references/insights/benchmarks.md` | Income split benchmarks by country + family status; net worth targets by age/income bracket; savings rate norms; ETF allocation targets | `tax_year: 2025` header |
-| `finyx/references/insights/scoring-rules.md` | Tax efficiency score rubric; allocation health scoring; goal pace thresholds (on-track/at-risk/off-track); cross-domain link detection rules; recommendation impact estimation guidance | `version: 1.0` header |
+## Profile Integration
 
-### Internal Boundaries
+The command reads from `profile.json` but writes nothing to it.
 
-| Boundary | Communication | Notes |
-|----------|---------------|-------|
-| `insights.md` ↔ agents | Task tool with injected profile + refs | Same pattern as `analyze.md` ↔ `finyx-analyzer-agent` |
-| Agents ↔ reference docs | Injected via orchestrator's `<execution_context>` | Agents do not issue `@` includes directly |
-| `insights.md` ↔ `.finyx/profile.json` | Bash existence check + Claude context load | Read-only — `insights` never writes to profile |
-| `insights-tax-scoring-agent` ↔ existing tax refs | Reuse `germany/tax-investment.md` and `brazil/tax-investment.md` via context injection | No duplication needed; these docs already have the allowance/rate data |
+| Field | Used For |
+|-------|----------|
+| `countries.germany.gross_income` | GKV contribution calculation, Versicherungspflichtgrenze eligibility gate |
+| `countries.germany.tax_class` | Gate: Germany active? |
+| `countries.germany.marginal_rate` | Tax savings from Basisabsicherung deduction |
+| `identity.family_status` | Familienversicherung vs PKV per-head cost |
+| `identity.children` | Family coverage count |
+| `identity.cross_border` | Trigger Anwartschaft notice for expats |
+| `investor.income.total` | Cross-check against eligibility threshold |
+
+Optional persistence: `.finyx/insurance-config.json` (non-sensitive fields only).
 
 ---
 
 ## Build Order
 
-Dependencies drive this order. Each step unblocks the next.
+Each step unblocks the next. Reference doc is the hard dependency for both agents.
 
-1. **`finyx/references/insights/benchmarks.md`**
-   - No dependencies. Define DE+BR income allocation benchmarks and net worth targets.
-   - Unblocks allocation agent and sets reference baseline for scoring agent.
+### Step 1 — Reference doc
+`finyx/references/germany/health-insurance.md`
 
-2. **`finyx/references/insights/scoring-rules.md`**
-   - Depends on benchmarks existing (scoring references benchmark thresholds).
-   - Defines rubrics used by all three agents.
+All rules, thresholds, formulas. Both agents load it via `@` include. Write this first; every downstream file references it. Getting thresholds wrong here propagates to all outputs.
 
-3. **`agents/insights-allocation-agent.md`**
-   - Depends on benchmarks ref. Independently testable: feed profile + benchmarks, verify SECTION/SCORE/FLAGS/RECOMMENDATIONS output format.
+### Step 2 — Calculation agent
+`agents/finyx-insurance-advisor-agent.md`
 
-4. **`agents/insights-tax-scoring-agent.md`**
-   - Depends on scoring-rules ref. Reuses existing `germany/tax-investment.md` and `brazil/tax-investment.md` — no new tax refs needed.
-   - Independently testable with a profile that has `marginal_rate` and `tax_class`.
+Deterministic GKV vs PKV math, tax deduction, family impact, long-term projection. No WebSearch. Can be tested independently by feeding a profile snapshot and verifying the cost comparison output.
 
-5. **`agents/insights-projection-agent.md`**
-   - Depends on scoring-rules ref for on-track/at-risk thresholds. Can run with minimal profile (income + liquidAssets + goals).
+### Step 3 — Research agent
+`agents/finyx-pkv-research-agent.md`
 
-6. **`commands/finyx/insights.md`**
-   - Depends on all three agents and both reference docs existing.
-   - Wire agents, define synthesis logic, add to `bin/install.js` copy paths.
-   - This is the only file that touches `bin/install.js` (to ensure `finyx/references/insights/` gets copied on install).
+Live tariff research via WebSearch. Receives age, employment type, coverage level — no health conditions. Depends on Step 1 ref doc for framing context but not for calculations.
+
+### Step 4 — Command
+`commands/finyx/insurance.md`
+
+Orchestrates Steps 2 + 3 agents. Owns the health questionnaire flow. Handles synthesis and disclaimer placement.
+
+### Step 5 — Profile schema note (non-breaking)
+Document the optional `insurance-config.json` shape in a comment in `immo/templates/config.json` or in the reference doc. No structural change to `profile.json` itself.
 
 ---
 
-## Anti-Patterns
+## Patterns to Follow
 
-### Anti-Pattern 1: Calling Other Commands from insights
+### Structured agent input (no raw health data)
+The command passes a sanitized block to each agent, not the raw questionnaire answers. Pre-existing conditions become a boolean flag:
 
-**What people do:** Invoke `/fin:tax`, `/fin:invest` from inside `insights` to get "fresh" data.
+```
+<insurance_context>
+age: 38
+employment: employee
+family_members: spouse_38 child_6
+current_insurance: GKV
+desired_coverage: comprehensive
+pkv_eligible: true
+preexisting_surcharge_applicable: true
+</insurance_context>
+```
 
-**Why it's wrong:** Those commands are interactive — they ask questions and fetch live API data. Chaining them makes `insights` non-deterministic, slow, and unrunnable without a live session. The profile already contains the structured inputs they use.
+The advisor agent applies a surcharge estimate from the reference doc (typically +20-50% on base tariff for pre-existing conditions) without knowing the specific condition. The command holds the raw condition details in working memory only for surfacing relevant caveats in the synthesis phase.
 
-**Do this instead:** Read `.finyx/profile.json` directly. When data is stale or missing, emit a prompt to run the relevant advisor before re-running insights.
+### Disclaimer before questionnaire
+Emit the legal disclaimer at the end of Phase 1 (before Phase 2 health questionnaire). The user must see the disclaimer before providing sensitive health data. This is the existing pattern in all advisor commands.
 
-### Anti-Pattern 2: Monolithic insights.md Without Agents
+### Staleness detection
+Check `tax_year` in the health-insurance.md header. Warn if stale using the same pattern as `pension.md` Phase 1.
 
-**What people do:** Put all three analytic concerns (allocation, tax, projection) in a single prompt with no agent decomposition.
+### No Brazil gate logic beyond notice
+The command checks `identity.cross_border` and emits a one-line notice if true: "Note: Brazil health insurance advisory is not yet available." Then proceeds with Germany analysis. No abort, no complex branching.
 
-**Why it's wrong:** A single prompt covering DE+BR tax rules, allocation benchmarks, scoring rubrics, and projection math will exceed the quality threshold where Claude reasons well. Three distinct analytic frames need focused contexts.
+---
 
-**Do this instead:** Three agents, each with one responsibility. The orchestrator synthesizes — it does not compute.
+## Anti-Patterns to Avoid
 
-### Anti-Pattern 3: Hardcoding Benchmarks in Agent Prompts
+### Do not store pre-existing conditions in any file
+Any file write containing health conditions creates GDPR and liability exposure. Raw health answers are ephemeral only, always.
 
-**What people do:** Embed `50% needs / 30% wants / 20% savings` directly in agent prompt text.
+### Do not ask health questions before showing the disclaimer
+Legal disclaimer must appear before the user provides sensitive health data. Phase 1 ends with the disclaimer; Phase 2 begins the questionnaire.
 
-**Why it's wrong:** Benchmarks are country-specific (DE/BR tax burden shifts the ratios), age-adjusted, and change over time. Hardcoded values are invisible and unversioned.
+### Do not hardcode thresholds or rates
+Versicherungspflichtgrenze, GKV contribution rate, Zusatzbeitrag, Beitragsbemessungsgrenze, and Basisabsicherung deduction limits change annually. All rates live in `health-insurance.md`, never in the command or agents.
 
-**Do this instead:** `finyx/references/insights/benchmarks.md` with `tax_year` metadata, loaded via `<execution_context>`. Same pattern as `germany/tax-investment.md`.
+### Do not attempt Brazil health insurance in v1.2
+Defer to a future milestone. A one-line notice in the command output is the correct handling.
 
-### Anti-Pattern 4: Writing insights Output to Profile
+### Do not create a third agent for tax math
+The Basisabsicherung deduction calculation (premium * deductible_fraction * marginal_rate) is simple enough for the insurance advisor agent to handle inline. A dedicated tax agent for this would over-fragment the architecture.
 
-**What people do:** Have `insights` update `profile.json` with scores or recommendations.
+### Do not give the PKV research agent raw health details
+The research agent needs age and employment type to find realistic tariff ranges. It does not need condition details, and providing them would create a WebSearch query containing sensitive health information.
 
-**Why it's wrong:** Scores are computed artifacts, not source data. Writing them into the profile creates stale computed state that could corrupt future analyses.
+---
 
-**Do this instead:** Output is conversational only — no files written. If users want to save a report, add an optional `Write .finyx/output/INSIGHTS-[DATE].md` with explicit user consent, same pattern as other advisor commands.
+## Scalability Considerations
+
+| Concern | v1.2 | Future |
+|---------|-------|--------|
+| Brazil health insurance | One-line "not yet available" notice | Add `finyx/references/brazil/health-insurance.md` + conditional country block |
+| Civil servant (Beihilfe) path | Covered in ref doc section 7; advisor agent uses conditional branch | No structural change needed |
+| Supplemental insurance (dental, liability, disability) | Out of scope per PROJECT.md | Separate command; `finyx:insurance` stays PKV/GKV focused |
+| PKV provider data freshness | WebSearch in research agent | No architectural change needed |
+| Re-running without re-answering questionnaire | Non-sensitive fields in `insurance-config.json` | On re-run: load config, skip those questions, re-ask health questions only |
 
 ---
 
 ## Sources
 
-- Direct inspection: `commands/finyx/tax.md`, `invest.md`, `pension.md`, `broker.md`, `profile.md`
-- Direct inspection: `agents/finyx-analyzer-agent.md`, `finyx-reporter-agent.md`
-- Direct inspection: `.finyx/profile.json` schema (full field inventory)
-- Direct inspection: `finyx/references/` structure (germany/, brazil/, disclaimer.md)
-- Pattern reference: orchestrator→agent delegation in `analyze.md` → `finyx-analyzer-agent`
-
----
-*Architecture research for: Finyx /fin:insights command — v1.1 milestone*
-*Researched: 2026-04-06*
+- Codebase: `agents/finyx-tax-scoring-agent.md`, `commands/finyx/insights.md`, `commands/finyx/pension.md` — HIGH confidence (direct read)
+- GKV/PKV thresholds 2025/2026: [Feather Insurance](https://feather-insurance.com/blog/private-health-insurance-threshold-yearly-changes), [myhealthcarebroker.com 2026](https://www.myhealthcarebroker.com/blog/jahresarbeitsentgeltgrenze-2026-private-health-insurance), [Ogletree 2026 increases](https://ogletree.com/insights-resources/blog-posts/germany-increases-social-security-contribution-and-compulsory-insurance-ceilings-effective-january-1-2026/) — MEDIUM confidence
+- GKV contribution mechanics: [steuergo.de 2025](https://www.steuergo.de/en/fag/2025/399/how_is_my_contribution_to_statutory_health_insurance_calculated_in_2025), [acciyo.com payroll 2025](https://www.acciyo.com/germany-payroll-taxes-employee-and-employer-contributions-2025-guide/) — MEDIUM confidence
+- PKV cost trends: [germanpedia.com PKV cost development](https://germanpedia.com/private-health-insurance-cost-development/), [Feather — is PKV worth it 2026](https://feather-insurance.com/blog/private-health-worth-it) — MEDIUM confidence
+- Tax deductibility: [germanpedia.com tax-deductible](https://germanpedia.com/tax-deductible-health-insurance-costs-germany/), [germantaxes.de deductions](https://germantaxes.de/deducting-insurance-from-tax/) — MEDIUM confidence
