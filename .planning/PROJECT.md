@@ -43,11 +43,20 @@ A single AI-powered financial advisor that knows your full financial picture —
 
 ### Active
 
-(Next milestone — define via `/gsd:new-milestone`)
+#### v1.2 — Health Insurance Advisor
+- [ ] `/finyx:insurance` command — PKV vs GKV decision advisor with personalized cost projections
+- [ ] Health questionnaire (pre-existing conditions, chronic diseases, age) for PKV risk surcharges
+- [ ] Accurate GKV vs PKV cost comparison (income-based vs age/health-based, employer share)
+- [ ] Family impact analysis (Familienversicherung, children, partner separate policies)
+- [ ] Tax implications (PKV Basisabsicherung deduction, employer contribution limits)
+- [ ] PKV provider research agent with web search for tariffs, Beitragsrückerstattung, Selbstbeteiligung
+- [ ] Expat considerations (Anwartschaft, Versicherungspflichtgrenze, EU portability)
+- [ ] Long-term cost projection (PKV age growth vs GKV income-tracking growth)
+- [ ] Profile integration — reads income, family, tax data from `.finyx/profile.json`
 
 ### Out of Scope
 
-- Insurance comparison (check24-style) — deferred to v2, high complexity and data sourcing challenges
+- Full insurance marketplace comparison (check24-style across all insurance types) — PKV/GKV decision covered in v1.2, broader comparison deferred
 - Automated trading/execution — legal liability, advisory only
 - Tax return filing automation — too risky, advisor guides but user files
 - Real-time portfolio sync with brokers — API complexity, defer to v2
@@ -112,4 +121,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-07 after v1.1 milestone*
+*Last updated: 2026-04-08 after v1.2 milestone start*
