@@ -26,6 +26,13 @@
     "monthlyCommitments": 500
   },
 
+  "insurance": {
+    "type": null,
+    "monthly_cost": null,
+    "employer_share": null,
+    "provider": null
+  },
+
   "strategy": {
     "type": "neubau-rent-sell",
     "horizon": 10,
