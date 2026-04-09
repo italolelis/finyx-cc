@@ -41,18 +41,19 @@ A single AI-powered financial advisor that knows your full financial picture —
 - ✓ Data completeness gate before insights analysis — v1.1
 - ✓ Emergency fund check (6-month threshold for cross-border users) — v1.1
 
+- ✓ `/finyx:insurance` command — PKV vs GKV decision advisor with personalized cost projections — v1.2
+- ✓ Health questionnaire (25 binary flags, session-only, GDPR Art. 9) for PKV risk surcharges — v1.2
+- ✓ Accurate GKV vs PKV cost comparison (income-based vs age/health-based, employer share) — v1.2
+- ✓ Family impact analysis (Familienversicherung vs PKV per-person costs) — v1.2
+- ✓ Tax implications (PKV Basisabsicherung §10 EStG deduction, employer contribution limits) — v1.2
+- ✓ PKV provider research agent with WebSearch for tariffs, Beitragsrückerstattung, Selbstbeteiligung — v1.2
+- ✓ Expat considerations (Anwartschaft, Versicherungspflichtgrenze, EU portability) — v1.2
+- ✓ Long-term cost projection (10/20/30-year scenarios, PKV age growth vs GKV income-tracking) — v1.2
+- ✓ Cross-advisor insurance integration — insights allocation + tax PKV deduction — v1.2
+
 ### Active
 
-#### v1.2 — Health Insurance Advisor
-- [ ] `/finyx:insurance` command — PKV vs GKV decision advisor with personalized cost projections
-- [ ] Health questionnaire (pre-existing conditions, chronic diseases, age) for PKV risk surcharges
-- [ ] Accurate GKV vs PKV cost comparison (income-based vs age/health-based, employer share)
-- [ ] Family impact analysis (Familienversicherung, children, partner separate policies)
-- [ ] Tax implications (PKV Basisabsicherung deduction, employer contribution limits)
-- [ ] PKV provider research agent with web search for tariffs, Beitragsrückerstattung, Selbstbeteiligung
-- [ ] Expat considerations (Anwartschaft, Versicherungspflichtgrenze, EU portability)
-- [ ] Long-term cost projection (PKV age growth vs GKV income-tracking growth)
-- [ ] Profile integration — reads income, family, tax data from `.finyx/profile.json`
+(Next milestone — define via `/gsd:new-milestone`)
 
 ### Out of Scope
 
@@ -67,7 +68,7 @@ A single AI-powered financial advisor that knows your full financial picture —
 
 ## Context
 
-Shipped v1.1 with 6 new files (+6,351 lines) on top of v1.0 (~19,600 LOC, 102 files).
+Shipped v1.2 with 7 new files (+1,932 lines) on top of v1.1. Total ~27,900 LOC across 116 files.
 Tech stack: Claude Code slash-commands (Markdown prompts), Node.js installer, zero runtime dependencies.
 6 specialist commands: `/finyx:profile`, `/finyx:tax`, `/finyx:invest`, `/finyx:broker`, `/finyx:pension`, `/finyx:insights`.
 3 specialist insight agents: allocation, tax-scoring, projection.
@@ -92,7 +93,7 @@ Distributed via npm as `finyx-cc`.
 | CLI skills architecture | Proven pattern from IMMO, low friction, extensible | ✓ Good |
 | Advisory only, no execution | Legal risk of automated trading/filing too high for open source | ✓ Good |
 | APIs + web search for data | Finnhub (EU/US), brapi.dev (B3), Bundesbank SDMX (Basiszins) | ✓ Good |
-| Insurance deferred to v2 | Data sourcing complexity, focus v1 on tax + investments | ✓ Good |
+| Insurance deferred to v2 | Data sourcing complexity, focus v1 on tax + investments | ✓ Shipped in v1.2 |
 | Shared user profile | All agents read same `.finyx/profile.json` — integrated advice | ✓ Good |
 | Hard cut rename (no coexistence) | Clean migration, simpler codebase | ✓ Good |
 | Unconditional country doc loading | Minimal overhead, simplifies command gating logic | ✓ Good |
@@ -102,6 +103,10 @@ Distributed via npm as `finyx-cc`.
 | Per-country scoring only (never combined) | Cross-jurisdiction combined scores are misleading | ✓ Good |
 | Claude inference for cross-advisor links | Fits Markdown-prompt architecture, zero maintenance vs rule engine | ✓ Good |
 | Profile-only data sourcing for insights | Agents read profile.json, never invoke other commands | ✓ Good |
+| Health data session-only (GDPR Art. 9) | Health flags never persisted, only in Task prompt | ✓ Good |
+| Two insurance agents (calc + research) | Deterministic calc separated from live web research | ✓ Good |
+| 3-tier PKV risk model with binary flags | Balances accuracy with GDPR compliance and advisory scope | ✓ Good |
+| Neutral source priority over Check24 | Avoids commercial bias in provider research | ✓ Good |
 
 ## Evolution
 
@@ -121,4 +126,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-08 after v1.2 milestone start*
+*Last updated: 2026-04-10 after v1.2 milestone*

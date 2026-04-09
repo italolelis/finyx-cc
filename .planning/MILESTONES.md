@@ -1,5 +1,19 @@
 # Milestones
 
+## v1.2 Health Insurance Advisor (Shipped: 2026-04-09)
+
+**Phases completed:** 4 phases, 5 plans, 5 tasks
+
+**Key accomplishments:**
+
+- German health insurance reference doc with 2026 GKV/PKV statutory constants, 3-tier risk model (15 binary flags), four calculation paths, and staleness detection — ready for Phase 10 agent @-reference
+- Deterministic GKV vs PKV cost calc agent (533 lines) covering GKV breakdown, PKV age/risk estimate, family Familienversicherung comparison, 10/20/30-year scenario projections with crossover year, and §10 EStG tax netting
+- One-liner:
+- One-liner:
+- Insurance costs wired into /finyx:insights allocation and /finyx:tax PKV Basisabsicherung §10 EStG deduction via profile schema extension with four null-default fields
+
+---
+
 ## v1.1 Financial Insights Dashboard (Shipped: 2026-04-06)
 
 **Phases completed:** 3 phases, 5 plans, 7 tasks
