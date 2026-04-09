@@ -45,12 +45,28 @@ gross_income_bracket: [optional — e.g., "80,000–100,000 EUR/year"]
 current_year: [integer — e.g., 2026]
 ```
 
+**Read baseline context:**
+Read `.finyx/profile.json` to understand the user's full financial picture (income, family, employment details). Also check for `.finyx/insights-config.json` — if it exists, read it for any prior insurance-related preferences or insights that provide baseline context for the research.
+
+Use profile data to refine search queries (e.g., if self-employed, anchor queries to "Selbststaendige" tariffs; if family with children, prioritize family-friendly tariffs).
+
 **Parse and validate these parameters before searching.** If any required field is missing:
 - age missing → output `[LOW CONFIDENCE]` and proceed with age-bracket queries
 - employment_type missing → assume "employee" and flag MEDIUM CONFIDENCE
 - family_status missing → assume "single" and flag MEDIUM CONFIDENCE
 
 Read `health-insurance.md` Section 2.1 (Age-Based Premium Estimation) to orient the expected premium ranges for the user's age bracket. Read Section 2.3 (Beitragsrückerstattung) and Section 2.4 (Selbstbeteiligung) for background on the two cost-reduction mechanisms before searching.
+
+**User preferences (optional):**
+The Task prompt may include a `<user_preferences>` block with:
+- `budget_range` — monthly budget constraint
+- `coverage_priority` — "Lowest premium", "Best coverage depth", "Maximum flexibility", or "Balanced"
+- `lifestyle_needs` — comma-separated list of desired coverage features
+
+Use these to:
+- Filter providers: if budget_range is specified, deprioritize providers whose base tariff exceeds the budget ceiling
+- Rank by priority: if coverage_priority is "Best coverage depth", weight comprehensive tariff tiers higher; if "Lowest premium", weight price competitiveness higher
+- Match lifestyle needs: if user wants Heilpraktiker coverage, check and note which providers include it in their tariff or as add-on; same for Einbettzimmer, Chefarztbehandlung, dental, vision, psychotherapy, international coverage
 
 Determine the user's age bracket for queries:
 - Age 20–29 → "20er" / "Einsteiger" bracket
@@ -69,6 +85,7 @@ Run WebSearch queries anchored to the user's profile. Execute the following quer
 1. `"PKV Testsieger [current_year] Stiftung Warentest"`
 2. `"PKV Vergleich [current_year] Finanztip beste private Krankenversicherung"`
 3. `"PKV Tarife Vergleich [current_year] krankenkasseninfo.de"`
+4. `"PKV [current_year] Kundenzufriedenheit Bewertung DFSI Assekurata MAP-Report"`
 
 These queries target the primary neutral sources. Prioritize results from stiftung-warentest.de, finanztip.de, and krankenkasseninfo.de.
 
@@ -113,6 +130,14 @@ For each provider found with sufficient data, extract the following fields:
 | `premium_trend` | Any available 2024–2026 premium increase history (%) |
 | `source_url` | Direct URL where data was found |
 | `source_date` | Publication or data-freshness date |
+| `tariff_tiers` | Specific tariff tier names with coverage breakdown: ambulant (outpatient), stationaer (inpatient/hospital), Zahn (dental) — e.g., "AM TOP: ambulant 100%, stationaer Einbettzimmer+Chefarzt, Zahn 90%" |
+| `documents_required` | List of documents needed to apply (e.g., Gesundheitsfragen, income proof, ID, last 3 years medical records) |
+| `application_process` | Step-by-step: how to apply (online form, broker, direct agent), typical timeline from application to coverage start |
+| `waiting_periods` | Waiting periods for specific coverage areas (e.g., dental 8 months, psychotherapy 3 months, Entbindung 8 months) |
+| `preexisting_exclusions` | How the provider handles pre-existing conditions: exclusion clauses, surcharge ranges, or acceptance with limitations |
+| `basistarif_fallback` | Whether provider offers Basistarif (legally required) and any noted differences in service quality or acceptance |
+| `customer_satisfaction` | Customer satisfaction ratings, claims processing ratings from neutral sources (DFSI, Assekurata, MAP-Report) |
+| `apply_url` | Direct URL to request a quote or start application |
 
 **Data freshness rule:** Note the publication date of each source. Mark anything older than 12 months as `[STALE SOURCE]`. Mark anything 12–24 months old as MEDIUM CONFIDENCE. Anything within 12 months is HIGH CONFIDENCE for data-freshness purposes.
 
@@ -131,6 +156,7 @@ Per D-03: compare exactly 3 providers — top recommendation + 2 alternatives. A
 | Selbstbeteiligung flexibility | Medium | Range of deductible options; EUR 300–2,000 flexibility preferred |
 | Premium stability | High | Lower recent premium increases (2023–2026) indicate better trajectory |
 | Neutral source endorsement | High | Appearance in Stiftung Warentest or Finanztip top-rated lists |
+| User preference match | High | Alignment with user_preferences: budget_range, coverage_priority, and lifestyle_needs |
 
 **Tie-breaking:** If two providers score equally, prefer the one with better neutral source endorsement.
 
@@ -178,14 +204,26 @@ For each of the 3 providers:
 - Estimated premium reduction per level (EUR or %)
 - Break-even analysis note (e.g., "EUR 600 deductible saves ~€X/month; break-even if ≤ 1 claim/year")
 
-### 5.6 Sources
+### 5.6 Per-Provider Deep Dive
+
+For each of the 3 providers:
+- **Tariff tiers:** [tariff_tiers data]
+- **Documents to apply:** [documents_required]
+- **Application process:** [application_process]
+- **Waiting periods:** [waiting_periods]
+- **Pre-existing condition handling:** [preexisting_exclusions]
+- **Basistarif fallback:** [basistarif_fallback]
+- **Customer satisfaction:** [customer_satisfaction]
+- **Apply URL:** [apply_url]
+
+### 5.7 Sources
 
 List all sources used with URL and publication date. Flag stale sources inline:
 ```
 - [Source name] — [URL] — [date] [STALE SOURCE if > 12 months]
 ```
 
-### 5.7 Confidence and Disclaimer
+### 5.8 Confidence and Disclaimer
 
 Overall confidence level for the research output. Reference disclaimer.
 
@@ -204,6 +242,8 @@ Overall confidence level for the research output. Reference disclaimer.
 - Do NOT present coverage details as legal advice — reference disclaimer.md
 - Do NOT exceed 3 providers — more creates analysis paralysis per D-03
 - Do NOT combine the 3-provider result with the calc agent's cost projection — the orchestrator assembles both
+- Do NOT fabricate tariff tier names, waiting periods, or customer ratings — if not found via WebSearch, state "not found" with [LOW CONFIDENCE]
+- Do NOT skip the deep dive section — it is required for every provider in the comparison
 
 </process>
 
@@ -283,6 +323,24 @@ Overall confidence level for the research output. Reference disclaimer.
 **[Provider 2]:** [same table structure]
 
 **[Provider 3]:** [same table structure]
+
+---
+
+### Per-Provider Deep Dive
+
+**[Provider 1]:**
+- Tariff tiers: [tariff_tiers — e.g., "AM TOP: ambulant 100%, stationaer Einbettzimmer+Chefarzt, Zahn 90%"] | [LOW CONFIDENCE] if not found
+- Documents to apply: [documents_required — e.g., "Gesundheitsfragen, ID, last 3 years medical records"] | "not found" if unavailable
+- Application process: [application_process — how to apply, typical timeline] | "not found" if unavailable
+- Waiting periods: [waiting_periods — e.g., "dental 8 months, psychotherapy 3 months"] | "not found" if unavailable
+- Pre-existing condition handling: [preexisting_exclusions] | "not found" if unavailable
+- Basistarif fallback: [basistarif_fallback — yes/no and service quality notes] | "not found" if unavailable
+- Customer satisfaction: [customer_satisfaction — DFSI/Assekurata/MAP-Report ratings] | "not found" if unavailable
+- Apply URL: [apply_url] | "not found" if unavailable
+
+**[Provider 2]:** [same structure]
+
+**[Provider 3]:** [same structure]
 
 ---
 
