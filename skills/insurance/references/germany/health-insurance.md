@@ -368,4 +368,32 @@ German residents temporarily relocating abroad face a gap in both GKV and PKV co
 
 ---
 
+---
+
+## Field Extraction Schema
+
+The document reader agent extracts these fields from health insurance policy PDFs. Field names match `insurance.policies[]` in `.finyx/profile.json`.
+
+| Field | German Label in Policy | Type | Notes |
+|-------|----------------------|------|-------|
+| provider | Versicherer / Krankenversicherung | string | Full company name (e.g., "Debeka Krankenversicherungsverein a.G.") |
+| premium_monthly | Monatsbeitrag / Monatliche Prämie | number | EUR; for PKV convert from annual if only Jahresbeitrag stated |
+| premium_annual | Jahresbeitrag / Jahresprämie | number | EUR; for GKV may need to compute from monthly |
+| coverage_amount | Versicherungssumme | number/null | null for GKV (unlimited statutory coverage); for PKV set to null (service-based, not sum-based) |
+| start_date | Versicherungsbeginn | ISO date | Date coverage started |
+| renewal_date | Hauptfälligkeit / Verlängerungsdatum | ISO date | Annual renewal date |
+| kuendigungsfrist_months | Kündigungsfrist | number | PKV: typically 3 months; GKV: immediate for PKV-eligible earners |
+| coverage_components | Leistungsumfang / Versicherungsschutz | string[] | For PKV: tariff tier names and coverage areas (ambulant, stationär, Zahn). For GKV: "Gesetzlicher Leistungskatalog" |
+| exclusions | Ausschlüsse / Nicht versichert | string[] | PKV-specific: pre-existing condition exclusions, waiting period items |
+
+### Health-Specific Extraction Notes
+
+- GKV policies do not have a traditional "policy document" — extract from Mitgliedsbescheinigung or Beitragsbescheid
+- PKV policies: look for Versicherungsschein (insurance certificate) as primary extraction source
+- Tariff name (e.g., "AM TOP", "EL Bonus") should be extracted into `notes` field
+- Selbstbeteiligung level should be extracted into `notes` field (e.g., "SB EUR 600/year")
+- Beitragsrückerstattung eligibility should be noted in `notes` field
+
+---
+
 *Source: GKV-Spitzenverband (Zusatzbeitrag average, BBG, PV rates), §223 SGB V (BBG), §241 SGB V (base rate), §57 SGB XI (PV rates), §6 SGB V (JAEG thresholds), §257 SGB V (employer KV subsidy), §61 SGB XI (employer PV subsidy), §10 EStG (Basisabsicherung deduction), §6 Abs. 3a SGB V (age-55 lock-in), BaFin (PKV regulation). Verify BBG, JAEG, Zusatzbeitrag average, and PV rates annually via GKV-Spitzenverband publication.*
