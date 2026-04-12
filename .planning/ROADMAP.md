@@ -44,9 +44,9 @@ Phase 9: Reference Foundation, Phase 10: Specialist Agents, Phase 11: Command + 
   1. `.claude-plugin/plugin.json` exists with correct `name` field and passes `claude plugin validate` with zero warnings
   2. `skills/` directory exists with the correct naming convention (`skills/tax/` not `skills/finyx-tax/`) preserving `/finyx:*` command syntax
   3. No `@~/.claude/finyx/references/` path strings exist anywhere in the codebase — all replaced with `${CLAUDE_SKILL_DIR}/references/`
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 Plans:
-- [ ] 13-01-PLAN.md — Plugin manifest + skill directory skeleton with SKILL.md stubs + agent/reference redistribution
+- [x] 13-01-PLAN.md — Plugin manifest + skill directory skeleton with SKILL.md stubs + agent/reference redistribution
 - [ ] 13-02-PLAN.md — Path migration (@~/.claude/ to ${CLAUDE_SKILL_DIR}/) + end-to-end validation
 
 ### Phase 14: Profile Skill
@@ -99,7 +99,7 @@ Plans:
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 13. Plugin Foundation | v2.0 | 0/2 | Planning complete | - |
+| 13. Plugin Foundation | v2.0 | 1/2 | In Progress|  |
 | 14. Profile Skill | v2.0 | 0/? | Not started | - |
 | 15. Pilot Skill | v2.0 | 0/? | Not started | - |
 | 16. Bulk Migration | v2.0 | 0/? | Not started | - |

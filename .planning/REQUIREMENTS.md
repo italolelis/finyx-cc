@@ -9,8 +9,8 @@ Requirements for the Plugin Architecture milestone. Each maps to roadmap phases.
 
 ### Plugin Foundation
 
-- [ ] **PLUG-01**: `.claude-plugin/plugin.json` manifest exists with correct name and metadata for third-party plugin installation
-- [ ] **PLUG-02**: Directory restructured from `commands/finyx/*.md` to `skills/<name>/SKILL.md` format with naming that preserves `/finyx:*` syntax
+- [x] **PLUG-01**: `.claude-plugin/plugin.json` manifest exists with correct name and metadata for third-party plugin installation
+- [x] **PLUG-02**: Directory restructured from `commands/finyx/*.md` to `skills/<name>/SKILL.md` format with naming that preserves `/finyx:*` syntax
 - [ ] **PLUG-03**: All `@~/.claude/finyx/references/` path includes replaced with `${CLAUDE_SKILL_DIR}/references/` across all skills
 
 ### Skill Conversion
@@ -54,8 +54,8 @@ Deferred to future release.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PLUG-01 | Phase 13 | Pending |
-| PLUG-02 | Phase 13 | Pending |
+| PLUG-01 | Phase 13 | Complete |
+| PLUG-02 | Phase 13 | Complete |
 | PLUG-03 | Phase 13 | Pending |
 | INTG-01 | Phase 14 | Pending |
 | SKILL-01 | Phase 15–16 | Pending |
