@@ -56,6 +56,36 @@
     "target_retirement_age": null
   },
 
+  "_insurance_schema": {
+    "description": "Insurance policies held by the user. Each policy in policies[] represents one insurance contract.",
+    "type_values": "Constrained to 11 known slugs: health, haftpflicht, hausrat, kfz, rechtsschutz, zahnzusatz, risikoleben, reise, fahrrad, kfz-schutzbrief, mietkaution",
+    "premium_fields": "premium_monthly and premium_annual are separate fields — annual-pay discounts are common (e.g., 5% discount for annual payment)",
+    "coverage_amount": "null for service-based types where coverage is unlimited or not sum-based (rechtsschutz, reise). For sum-based types (hausrat, haftpflicht, risikoleben) use EUR amount.",
+    "doc_path": "Relative path from project root (e.g., .finyx/docs/hausrat-policy.pdf). null if no document stored.",
+    "coverage_components": "string[] extracted by document reader agent from policy document. Each entry is a coverage line item (e.g., 'Personenschäden', 'Mietsachschäden')."
+  },
+
+  "insurance": {
+    "policies": [
+      {
+        "id": "string — slug like haftpflicht-huk-2024",
+        "type": "one of: health, haftpflicht, hausrat, kfz, rechtsschutz, zahnzusatz, risikoleben, reise, fahrrad, kfz-schutzbrief, mietkaution",
+        "provider": "string",
+        "premium_monthly": 0,
+        "premium_annual": 0,
+        "coverage_amount": null,
+        "start_date": "ISO_DATE",
+        "renewal_date": null,
+        "kuendigungsfrist_months": 3,
+        "sonderkundigungsrecht": false,
+        "doc_path": null,
+        "coverage_components": [],
+        "notes": null,
+        "last_updated": "ISO_DATE"
+      }
+    ]
+  },
+
   "project": {
     "name": "",
     "propertiesFolder": "properties",

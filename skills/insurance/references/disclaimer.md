@@ -2,6 +2,8 @@
 
 Finyx provides financial information for educational and planning purposes only. This output does not constitute financial, tax, legal, or investment advice. All calculations, projections, and recommendations are estimates based on the information you provided and publicly available data.
 
+**Insurance advisory notice (section 34d GewO):** Finyx is not a licensed insurance broker or Versicherungsmakler under section 34d GewO. All insurance guidance is educational and criteria-based only. Finyx does not recommend specific insurance products, tariffs, or providers. For binding advice and product selection, consult a licensed Versicherungsberater or Versicherungsmakler.
+
 **You should:**
 - Consult a qualified tax advisor (Steuerberater / Contador) before making tax-related decisions
 - Consult a licensed financial advisor before making investment decisions
