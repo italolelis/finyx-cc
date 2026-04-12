@@ -29,8 +29,8 @@ Requirements for the Plugin Architecture milestone. Each maps to roadmap phases.
 
 ### Cleanup
 
-- [ ] **CLEAN-01**: Legacy `commands/finyx/` directory removed (skills replace all commands)
-- [ ] **CLEAN-02**: Legacy `agents/` root directory removed (agents redistributed into skills)
+- [x] **CLEAN-01**: Legacy `commands/finyx/` directory removed (skills replace all commands)
+- [x] **CLEAN-02**: Legacy `agents/` root directory removed (agents redistributed into skills)
 - [x] **CLEAN-03**: `bin/install.js` updated or removed to reflect new distribution model
 
 ## v2.1 Requirements
@@ -65,8 +65,8 @@ Deferred to future release.
 | SKILL-05 | Phase 15–16 | Complete |
 | INTG-02 | Phase 17 | Pending |
 | INTG-03 | Phase 17 | Complete |
-| CLEAN-01 | Phase 17 | Pending |
-| CLEAN-02 | Phase 17 | Pending |
+| CLEAN-01 | Phase 17 | Complete |
+| CLEAN-02 | Phase 17 | Complete |
 | CLEAN-03 | Phase 17 | Complete |
 
 **Coverage:**

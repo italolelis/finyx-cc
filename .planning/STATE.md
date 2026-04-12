@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Plugin Architecture
 status: executing
-stopped_at: Completed 17-02-PLAN.md
-last_updated: "2026-04-12T16:27:57.032Z"
+stopped_at: Completed 17-01-PLAN.md
+last_updated: "2026-04-12T16:28:39.646Z"
 last_activity: 2026-04-12
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 13
-  completed_plans: 11
+  completed_plans: 12
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 ## Current Position
 
 Phase: 17 (integration-distribution) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-04-12
 
@@ -62,6 +62,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 16-bulk-migration P01 | 5m | 2 tasks | 1 files |
 | Phase 16-bulk-migration P02 | 5m | 2 tasks | 1 files |
 | Phase 17 P02 | 5 | 2 tasks | 4 files |
+| Phase 17-integration-distribution P01 | 8 | 2 tasks | 50 files |
 
 ## Accumulated Context
 
@@ -91,6 +92,8 @@ Key v2.0 constraints from research:
 - [Phase 16-bulk-migration]: Router/orchestrator pattern in SKILL.md with routing section dispatching to 7 sub-workflows
 - [Phase 17]: Remove bin/install.js entirely — plugin system replaces npm distribution, clean break per REQUIREMENTS.md Out of Scope
 - [Phase 17]: Rename package from finyx-cc to finyx to match plugin.json identity
+- [Phase 17-integration-distribution]: finyx/templates/location-research.md dropped — not referenced by any skill, dead content
+- [Phase 17-integration-distribution]: Legacy commands/finyx/, agents/, finyx/ directories removed — all content migrated to skills/
 
 ### Pending Todos
 
@@ -102,6 +105,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-12T16:27:57.029Z
-Stopped at: Completed 17-02-PLAN.md
+Last session: 2026-04-12T16:28:39.643Z
+Stopped at: Completed 17-01-PLAN.md
 Resume file: None

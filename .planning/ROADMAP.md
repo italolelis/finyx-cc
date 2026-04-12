@@ -104,9 +104,9 @@ Plans:
   3. `commands/finyx/` directory no longer exists in the repository
   4. `agents/` root directory no longer exists in the repository
   5. `bin/install.js` removed — plugin system is the primary distribution mechanism
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 Plans:
-- [ ] 17-01-PLAN.md — Migrate missing templates + remove legacy directories (commands/finyx/, agents/, finyx/)
+- [x] 17-01-PLAN.md — Migrate missing templates + remove legacy directories (commands/finyx/, agents/, finyx/)
 - [x] 17-02-PLAN.md — Remove bin/install.js + update package.json + rewrite README for plugin install
 - [ ] 17-03-PLAN.md — Validate plugin structure + cross-skill insights wiring + final user verification
 
@@ -118,4 +118,4 @@ Plans:
 | 14. Profile Skill | v2.0 | 1/1 | Complete    | 2026-04-12 |
 | 15. Pilot Skill | v2.0 | 1/1 | Complete    | 2026-04-12 |
 | 16. Bulk Migration | v2.0 | 6/6 | Complete    | 2026-04-12 |
-| 17. Integration + Distribution | v2.0 | 1/3 | In Progress|  |
+| 17. Integration + Distribution | v2.0 | 2/3 | In Progress|  |
