@@ -24,9 +24,9 @@ Requirements for the Comprehensive Insurance Advisor milestone.
 ### Architecture
 
 - [x] **ARCH-01**: Insurance skill uses router pattern dispatching to per-type sub-skill prompts
-- [ ] **ARCH-02**: Generic research agent parameterized by insurance type
-- [ ] **ARCH-03**: Portfolio agent for cross-type analysis (gaps, overlaps, total cost)
-- [ ] **ARCH-04**: Document reader agent for PDF policy parsing
+- [x] **ARCH-02**: Generic research agent parameterized by insurance type
+- [x] **ARCH-03**: Portfolio agent for cross-type analysis (gaps, overlaps, total cost)
+- [x] **ARCH-04**: Document reader agent for PDF policy parsing
 - [x] **ARCH-05**: 11 per-type reference docs with coverage benchmarks, legal minimums, and field extraction schemas
 
 ### Insurance Types
@@ -77,9 +77,9 @@ Deferred to future release.
 | OPT-03 | Phase 21 | Pending |
 | OPT-04 | Phase 20 | Pending |
 | ARCH-01 | Phase 18 | Complete |
-| ARCH-02 | Phase 19 | Pending |
-| ARCH-03 | Phase 19 | Pending |
-| ARCH-04 | Phase 19 | Pending |
+| ARCH-02 | Phase 19 | Complete |
+| ARCH-03 | Phase 19 | Complete |
+| ARCH-04 | Phase 19 | Complete |
 | ARCH-05 | Phase 19 | Complete |
 | TYPE-01 | Phase 21 | Pending |
 | TYPE-02 | Phase 21 | Pending |
