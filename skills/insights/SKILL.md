@@ -66,7 +66,8 @@ ${CLAUDE_SKILL_DIR}/references/disclaimer.md
 - `investor.income.total` OR `countries.germany.gross_income` (at least one must be > 0)
 
 **Optional fields — Insurance integration:**
-- `insurance.type` and `insurance.monthly_cost` — if populated, insurance costs are included in allocation analysis as a "needs" line item. If absent or null: skip silently (no error, no warning).
+- `insurance.policies[]` — if array is non-empty, compute total monthly premium by summing `policies[].premium_monthly` across all entries. Include as "Insurance" needs line item with label "Insurance (X policies)" and monthly total. If array is empty or absent: skip silently (no error, no warning).
+- **Gap action items:** Compare the `type` values present in `policies[]` against the essential types list (haftpflicht, hausrat, health). Any essential type NOT represented in policies[] is surfaced as a recommendation action item: "Missing: [type1], [type2]". This is a simple set-difference check — it does NOT require spawning the portfolio agent.
 
 **Cross-border gate:** When checking Brazil fields, only require `countries.brazil.ir_regime` and `countries.brazil.gross_income` if BOTH `identity.cross_border == true` AND `countries.brazil.gross_income > 0`. Do NOT require Brazil fields if `identity.cross_border == false` or if Brazil income is zero or absent.
 
@@ -135,10 +136,13 @@ Profile data is at `.finyx/profile.json`. Reference docs are at ${CLAUDE_SKILL_D
 [If .finyx/insights-config.json exists with allocation_mapping:]
 An existing allocation mapping is already confirmed and stored in `.finyx/insights-config.json` under the `allocation_mapping` key. Read it and use it directly — skip the Phase 2 first-run confirmation flow and do NOT use AskUserQuestion.
 
-If `.finyx/profile.json` contains an `insurance` section with `type` and `monthly_cost` populated:
-- Include the net insurance cost (monthly_cost minus employer_share) as a "needs" category line item labeled "Health Insurance ([type])"
-- If insurance.type is "PKV" and the net cost exceeds what GKV would cost at the user's income level, flag this as a recommendation opportunity: "PKV premium exceeds estimated GKV equivalent — review /finyx:insurance for cost comparison"
-- If insurance section is absent, null, or type is "none": skip — do not include any insurance line in allocation
+If `.finyx/profile.json` contains a non-empty `insurance.policies[]` array:
+- Sum all `policies[].premium_monthly` values to compute total monthly insurance cost
+- Include as a "needs" category line item labeled "Insurance ([N] policies — EUR [total]/month)" where N = count of policies and total = computed sum
+- If any policy has premium_monthly of 0 or null, note "[DATA GAP: premium_monthly missing for [policy.id]]" inline
+- Compare policies[].type values against essential types (haftpflicht, hausrat, health). For each essential type NOT in policies[]: add to recommendation: "Missing insurance: [type] — run /finyx:insurance for details"
+- Do NOT reference insurance.type or insurance.monthly_cost — those fields do not exist in the schema
+- If insurance.policies[] is absent or empty: skip — do not include any insurance line in allocation
 
 Complete all phases of your process and return your output wrapped in <allocation_result> tags.
 ```
@@ -274,7 +278,7 @@ Before ranking recommendations, scan the collected agent outputs for these cross
 - Estimated impact: `pgbl_gap_brl × brazil_marginal_rate` (convert to EUR using stated BRL/EUR assumption)
 
 **Pattern CAL-05: High Insurance Cost — PKV Premium Drag on Savings Rate**
-- Trigger: `insurance.type == "PKV"` AND net insurance cost (monthly_cost - employer_share) exceeds €400/month AND savings rate is below 20%
+- Trigger: A `health` type policy exists in `insurance.policies[]` with `premium_monthly > 400` AND savings rate is below 20%
 - Insight: High PKV premiums reduce disposable income available for savings and investments. The user may benefit from reviewing PKV tariff optimization (Tarifwechsel §204 VVG) or considering GKV return if still eligible.
 - Recommendation: "Review PKV tariff options via /finyx:insurance — Tarifwechsel within same insurer can reduce premiums without losing Altersrückstellungen"
 - Estimated impact: Potential monthly saving from tariff optimization (varies, typically €50–200/month = €600–2,400/year)
@@ -398,7 +402,7 @@ The tax scoring agent (`finyx-tax-scoring-agent`) is shared across skills and li
 
 Insights reads data produced by other skills via the shared `.finyx/profile.json`. Key dependencies:
 - **Tax skill data:** `countries.germany.marginal_rate`, `countries.germany.tax_class`, broker data — used for tax scoring dimension
-- **Insurance skill data:** `insurance.type`, `insurance.monthly_cost`, `insurance.employer_share` — used for allocation and cross-advisor patterns
+- **Insurance skill data:** `insurance.policies[]` array — sum of `premium_monthly` used for allocation; `type` field used for gap detection and CAL-05 pattern
 - **Pension skill data:** pension contribution fields — used for CAL-02 cross-advisor pattern detection
 - **Fallback behavior:** If any cross-skill field is absent or null, the skill skips that dimension silently (no error). Cross-skill integration is additive, not blocking.
 
