@@ -23,7 +23,7 @@ Requirements for the Plugin Architecture milestone. Each maps to roadmap phases.
 
 ### Integration
 
-- [ ] **INTG-01**: `.finyx/profile.json` access works from skill context with `~/.finyx/` global fallback
+- [x] **INTG-01**: `.finyx/profile.json` access works from skill context with `~/.finyx/` global fallback
 - [ ] **INTG-02**: Cross-skill integration for `finyx-insights` works when other finyx skills are co-installed
 - [ ] **INTG-03**: Plugin installable as third-party via GitHub URL (standard `claude plugin install` flow)
 
@@ -57,7 +57,7 @@ Deferred to future release.
 | PLUG-01 | Phase 13 | Complete |
 | PLUG-02 | Phase 13 | Complete |
 | PLUG-03 | Phase 13 | Complete |
-| INTG-01 | Phase 14 | Pending |
+| INTG-01 | Phase 14 | Complete |
 | SKILL-01 | Phase 15–16 | Pending |
 | SKILL-02 | Phase 15–16 | Pending |
 | SKILL-03 | Phase 15–16 | Pending |
