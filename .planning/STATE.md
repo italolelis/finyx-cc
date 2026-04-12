@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v2.1
 milestone_name: Comprehensive Insurance Advisor
-status: verifying
-stopped_at: Completed 22-03-PLAN.md
-last_updated: "2026-04-12T21:22:29.952Z"
+status: milestone_complete
+stopped_at: v2.1 shipped
+last_updated: "2026-04-12T21:25:05.924Z"
 last_activity: 2026-04-12
 progress:
   total_phases: 5
@@ -21,12 +21,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-12)
 
 **Core value:** A single AI-powered financial advisor that knows your full financial picture and gives integrated, country-aware advice
-**Current focus:** Phase 22 — per-type-sub-skills-tier-3-4-doc-reader
+**Current focus:** Milestone v2.1 complete — ready for next milestone
 
 ## Current Position
 
-Phase: 22 (per-type-sub-skills-tier-3-4-doc-reader) — EXECUTING
-Plan: 3 of 3
+Phase: 22
+Plan: Not started
 Status: Phase complete — ready for verification
 Last activity: 2026-04-12
 
