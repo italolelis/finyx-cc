@@ -19,7 +19,7 @@ Requirements for the Comprehensive Insurance Advisor milestone.
 - [ ] **OPT-01**: User can see market comparison per insurance type via WebSearch (criteria-based, not product-specific per §34d GewO)
 - [ ] **OPT-02**: User can have policy documents parsed from PDFs to extract provider, coverage, premium, terms
 - [ ] **OPT-03**: User can see cancellation deadline tracking (Kündigungsfrist + Sonderkündigungsrecht windows)
-- [ ] **OPT-04**: Insurance costs feed into `/finyx:insights` financial health report
+- [x] **OPT-04**: Insurance costs feed into `/finyx:insights` financial health report
 
 ### Architecture
 
@@ -75,7 +75,7 @@ Deferred to future release.
 | OPT-01 | Phase 21 | Pending |
 | OPT-02 | Phase 22 | Pending |
 | OPT-03 | Phase 21 | Pending |
-| OPT-04 | Phase 20 | Pending |
+| OPT-04 | Phase 20 | Complete |
 | ARCH-01 | Phase 18 | Complete |
 | ARCH-02 | Phase 19 | Complete |
 | ARCH-03 | Phase 19 | Complete |
