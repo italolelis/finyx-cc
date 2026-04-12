@@ -1,6 +1,6 @@
 ---
 name: finyx-pension
-description: Pension planning advisor for German (Riester/Rürup/bAV) and Brazilian (PGBL/VGBL/INSS) pension vehicles with cross-country retirement projection and gap analysis
+description: Pension planning advisor for German (Riester/Rürup/bAV) and Brazilian (PGBL/VGBL/INSS) pension vehicles with cross-country retirement projection and gap analysis. Use when the user asks about pensions, retirement, Rente, Altersvorsorge, retirement savings, or retirement planning.
 allowed-tools:
   - Read
   - Bash

@@ -1,6 +1,6 @@
 ---
 name: finyx-help
-description: Finyx help and status utility — list all available commands, check project status and workflow progress, and update Finyx to the latest version from npm
+description: Finyx help and status utility — list all available commands, check project status and workflow progress, and update Finyx to the latest version from npm. Use when the user asks what Finyx can do, needs help with commands, or wants to check status.
 allowed-tools:
   - Read
   - Write

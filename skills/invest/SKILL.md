@@ -1,6 +1,6 @@
 ---
 name: finyx-invest
-description: Investment portfolio advisor — ETF analysis, asset allocation, risk profiling, rebalancing, DCA vs lump sum, broker comparison (Germany + Brazil), tax-aware guidance, and live market data
+description: Investment portfolio advisor — ETF analysis, asset allocation, risk profiling, rebalancing, DCA vs lump sum, broker comparison (Germany + Brazil), tax-aware guidance, and live market data. Use when the user asks about investments, ETFs, portfolio, stocks, broker, rebalancing, or asset allocation.
 allowed-tools:
   - Read
   - Bash

@@ -1,6 +1,6 @@
 ---
 name: finyx-profile
-description: Complete financial profile interview to create .finyx/profile.json — the shared context file read by all Finyx advisors
+description: Complete financial profile interview to create .finyx/profile.json — the shared context file read by all Finyx advisors. Use when the user wants to set up their financial profile, update personal data, or when no .finyx/profile.json exists and another skill needs it.
 allowed-tools:
   - Read
   - Write

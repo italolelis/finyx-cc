@@ -1,6 +1,6 @@
 ---
 name: finyx-tax
-description: Investment tax advisor for German and Brazilian investors — Abgeltungssteuer, Sparerpauschbetrag, Vorabpauschale, DARF, come-cotas, cross-border DBA guidance
+description: Investment tax advisor for German and Brazilian investors — Abgeltungssteuer, Sparerpauschbetrag, Vorabpauschale, DARF, come-cotas, cross-border DBA guidance. Use when the user asks about taxes, tax optimization, Steuererklärung, tax class, deductions, or investment taxation.
 allowed-tools:
   - Read
   - Write

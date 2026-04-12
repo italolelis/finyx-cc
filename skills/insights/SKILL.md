@@ -1,6 +1,6 @@
 ---
 name: finyx-insights
-description: Financial insights dashboard — portfolio scoring, asset allocation analysis, wealth projection, and cross-domain benchmarking for DE/BR investors with ranked top-5 recommendations
+description: Financial insights dashboard — portfolio scoring, asset allocation analysis, wealth projection, and cross-domain benchmarking for DE/BR investors with ranked top-5 recommendations. Use when the user asks about their financial health, overall finances, how they're doing financially, asset allocation, or wants a financial overview.
 allowed-tools:
   - Read
   - Bash

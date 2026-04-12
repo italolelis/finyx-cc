@@ -1,6 +1,6 @@
 ---
 name: finyx-insurance
-description: Insurance advisor for Germany — routes to per-type sub-skills based on insurance type
+description: Insurance advisor for Germany — portfolio overview, gap detection, per-type analysis (Haftpflicht, Hausrat, Kfz, Rechtsschutz, Zahnzusatz, Risikoleben, Reise, Fahrrad, Kfz-Schutzbrief, Mietkaution), PDF policy parsing, and health insurance (GKV vs PKV). Use when the user asks about insurance, Versicherung, coverage, policies, premiums, or any German insurance type.
 allowed-tools:
   - Read
   - Bash

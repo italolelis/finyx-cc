@@ -1,6 +1,6 @@
 ---
 name: finyx-realestate
-description: Real estate investment analysis for Germany — location scouting (Erbpacht, transport), property analysis (yield, Kaufnebenkosten, AfA), filtering, shortlist comparison, stress testing, advisor briefing, and mortgage rate research
+description: Real estate investment analysis for Germany — location scouting (Erbpacht, transport), property analysis (yield, Kaufnebenkosten, AfA), filtering, shortlist comparison, stress testing, advisor briefing, and mortgage rate research. Use when the user asks about real estate, property investment, Immobilien, mortgage, Kaufnebenkosten, rental yield, or location scouting.
 allowed-tools:
   - Read
   - Write
