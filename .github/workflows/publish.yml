@@ -66,12 +66,10 @@ jobs:
           body: |
             ## Installation
 
-            ```bash
-            npx finyx-cc
-            ```
-
-            Or install globally:
+            Finyx is a Claude Code plugin. Install it with:
 
             ```bash
-            npm install -g finyx-cc
+            claude plugin add github:italolelis/finyx
             ```
+
+            Requires [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed on your machine.
