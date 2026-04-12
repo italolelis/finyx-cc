@@ -105,6 +105,6 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 13. Plugin Foundation | v2.0 | 2/2 | Complete    | 2026-04-12 |
 | 14. Profile Skill | v2.0 | 1/1 | Complete    | 2026-04-12 |
-| 15. Pilot Skill | v2.0 | 1/1 | Complete   | 2026-04-12 |
+| 15. Pilot Skill | v2.0 | 1/1 | Complete    | 2026-04-12 |
 | 16. Bulk Migration | v2.0 | 0/? | Not started | - |
 | 17. Integration + Distribution | v2.0 | 0/? | Not started | - |
