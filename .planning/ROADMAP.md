@@ -58,7 +58,9 @@ Plans:
   2. Running `/finyx:profile` from a project directory reads and writes `.finyx/profile.json` correctly
   3. Running `/finyx:profile` from a directory without `.finyx/` falls back to `~/.finyx/profile.json` without error
   4. Profile skill's agent is scoped under `skills/profile/agents/` — not at plugin root
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 14-01-PLAN.md — Convert profile command to skill with bundled references and path fallback strategy
 
 ### Phase 15: Pilot Skill
 **Goal**: `finyx-tax` is converted as a pilot to validate the full skill conversion pattern — SKILL.md frontmatter, scoped agents, bundled reference docs, portable paths — before bulk migration
@@ -100,7 +102,7 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 13. Plugin Foundation | v2.0 | 2/2 | Complete    | 2026-04-12 |
-| 14. Profile Skill | v2.0 | 0/? | Not started | - |
+| 14. Profile Skill | v2.0 | 0/1 | Not started | - |
 | 15. Pilot Skill | v2.0 | 0/? | Not started | - |
 | 16. Bulk Migration | v2.0 | 0/? | Not started | - |
 | 17. Integration + Distribution | v2.0 | 0/? | Not started | - |
