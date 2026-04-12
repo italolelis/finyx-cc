@@ -72,9 +72,9 @@ Plans:
   3. Tax reference docs (germany/tax-rules.md, brazil/tax-rules.md) bundled under `skills/tax/references/` and loaded via `${CLAUDE_SKILL_DIR}/references/`
   4. Running `/finyx:tax` produces correct output with no broken path errors
   5. Conversion pattern documented (checklist or template) so bulk migration in Phase 16 can proceed without re-deriving it
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 Plans:
-- [ ] 15-01-PLAN.md — Convert tax command to full skill + document conversion checklist for Phase 16
+- [x] 15-01-PLAN.md — Convert tax command to full skill + document conversion checklist for Phase 16
 
 ### Phase 16: Bulk Migration
 **Goal**: All remaining 15 commands (profile and tax already done) are converted to skills following the validated pattern — every skill self-contained, every agent scoped, no shared root-level agents remain
@@ -105,6 +105,6 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 13. Plugin Foundation | v2.0 | 2/2 | Complete    | 2026-04-12 |
 | 14. Profile Skill | v2.0 | 1/1 | Complete    | 2026-04-12 |
-| 15. Pilot Skill | v2.0 | 0/1 | Planning    | - |
+| 15. Pilot Skill | v2.0 | 1/1 | Complete   | 2026-04-12 |
 | 16. Bulk Migration | v2.0 | 0/? | Not started | - |
 | 17. Integration + Distribution | v2.0 | 0/? | Not started | - |

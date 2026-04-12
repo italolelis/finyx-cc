@@ -15,11 +15,11 @@ Requirements for the Plugin Architecture milestone. Each maps to roadmap phases.
 
 ### Skill Conversion
 
-- [ ] **SKILL-01**: All 17 commands converted to SKILL.md files with proper frontmatter (name, description, allowed-tools)
-- [ ] **SKILL-02**: Each advisory skill has `disable-model-invocation: true` to prevent finance vocab auto-trigger misfires
-- [ ] **SKILL-03**: Every agent assigned to its owning skill under `skills/<name>/agents/` — no shared root-level agents
-- [ ] **SKILL-04**: Each skill bundles its own reference docs under `skills/<name>/references/`
-- [ ] **SKILL-05**: Skill trigger descriptions written for model detection (front-loaded, specific, 250 char max)
+- [x] **SKILL-01**: All 17 commands converted to SKILL.md files with proper frontmatter (name, description, allowed-tools)
+- [x] **SKILL-02**: Each advisory skill has `disable-model-invocation: true` to prevent finance vocab auto-trigger misfires
+- [x] **SKILL-03**: Every agent assigned to its owning skill under `skills/<name>/agents/` — no shared root-level agents
+- [x] **SKILL-04**: Each skill bundles its own reference docs under `skills/<name>/references/`
+- [x] **SKILL-05**: Skill trigger descriptions written for model detection (front-loaded, specific, 250 char max)
 
 ### Integration
 
@@ -58,11 +58,11 @@ Deferred to future release.
 | PLUG-02 | Phase 13 | Complete |
 | PLUG-03 | Phase 13 | Complete |
 | INTG-01 | Phase 14 | Complete |
-| SKILL-01 | Phase 15–16 | Pending |
-| SKILL-02 | Phase 15–16 | Pending |
-| SKILL-03 | Phase 15–16 | Pending |
-| SKILL-04 | Phase 15–16 | Pending |
-| SKILL-05 | Phase 15–16 | Pending |
+| SKILL-01 | Phase 15–16 | Complete |
+| SKILL-02 | Phase 15–16 | Complete |
+| SKILL-03 | Phase 15–16 | Complete |
+| SKILL-04 | Phase 15–16 | Complete |
+| SKILL-05 | Phase 15–16 | Complete |
 | INTG-02 | Phase 17 | Pending |
 | INTG-03 | Phase 17 | Pending |
 | CLEAN-01 | Phase 17 | Pending |

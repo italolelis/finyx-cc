@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Plugin Architecture
 status: verifying
-stopped_at: Completed 14-01-PLAN.md
-last_updated: "2026-04-12T15:51:25.199Z"
+stopped_at: Completed 15-01-PLAN.md
+last_updated: "2026-04-12T16:01:08.756Z"
 last_activity: 2026-04-12
 progress:
   total_phases: 5
-  completed_phases: 2
-  total_plans: 3
-  completed_plans: 3
+  completed_phases: 3
+  total_plans: 4
+  completed_plans: 4
   percent: 0
 ---
 
@@ -21,12 +21,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-12)
 
 **Core value:** A single AI-powered financial advisor that knows your full financial picture and gives integrated, country-aware advice
-**Current focus:** Phase 14 — profile-skill
+**Current focus:** Phase 15 — pilot-skill
 
 ## Current Position
 
-Phase: 15
-Plan: Not started
+Phase: 15 (pilot-skill) — EXECUTING
+Plan: 1 of 1
 Status: Phase complete — ready for verification
 Last activity: 2026-04-12
 
@@ -54,6 +54,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 13 P01 | 2m | 2 tasks | 37 files |
 | Phase 13 P02 | 1 | 2 tasks | 29 files |
 | Phase 14-profile-skill P01 | 5m | 2 tasks | 5 files |
+| Phase 15 P01 | 5 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,8 @@ Key v2.0 constraints from research:
 - [Phase 13]: All @~/.claude/finyx/templates/ paths mapped to ${CLAUDE_SKILL_DIR}/references/ (templates migrate into skill references)
 - [Phase 14-profile-skill]: Profile skill omits disable-model-invocation (interview-based, not advisory)
 - [Phase 14-profile-skill]: Two-path profile storage: .finyx/ project-local primary, ~/.finyx/ global fallback
+- [Phase 15]: PKV cross-skill reference handled via fallback note — no duplication of health-insurance.md into tax skill
+- [Phase 15]: Task tool removed from tax SKILL.md allowed-tools — advisory done inline, scoring agent not invoked
 
 ### Pending Todos
 
@@ -83,6 +86,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-12T15:49:18.195Z
-Stopped at: Completed 14-01-PLAN.md
+Last session: 2026-04-12T16:01:08.754Z
+Stopped at: Completed 15-01-PLAN.md
 Resume file: None
