@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.1
 milestone_name: Comprehensive Insurance Advisor
 status: executing
-stopped_at: Completed 21-03-PLAN.md
-last_updated: "2026-04-12T20:53:49.264Z"
+stopped_at: Completed 21-02-PLAN.md
+last_updated: "2026-04-12T20:55:01.852Z"
 last_activity: 2026-04-12
 progress:
   total_phases: 5
   completed_phases: 3
   total_plans: 9
-  completed_plans: 7
+  completed_plans: 8
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 ## Current Position
 
 Phase: 21 (per-type-sub-skills-tier-1-2) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-04-12
 
@@ -65,6 +65,9 @@ v2.1 key context:
 - [Phase 20-portfolio-analysis]: Portfolio sub-skill spawns single agent (not parallel) — portfolio agent consolidates all analysis internally
 - [Phase 21-per-type-sub-skills-tier-1-2]: Kfz sub-skill: vehicle age brackets use 4-tier structure from kfz.md (0-3, 3-7, 7-12, 12+) for alignment with reference doc
 - [Phase 21-per-type-sub-skills-tier-1-2]: Kfz sub-skill: 30.11 cancellation deadline is calendar-pinned (1-month Kuendigungsfrist on 01.01 renewal) — documented explicitly as Kfz-unique rule
+- [Phase 21-02]: Staffelung warning unconditional in Zahnzusatz — shown even without immediate dental needs as structural purchase risk
+- [Phase 21-02]: Risikoleben renewal_date = policy END DATE (Vertragsende) — displayed as 'Policy expires', never 'Next renewal'
+- [Phase 21-02]: Gesundheitsprüfung warning placed in 3 locations in Risikoleben (disclaimer, cancellation, recommendation) — intentional due to severity of cancel-before-approval mistake
 
 ### Pending Todos
 
@@ -76,6 +79,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-12T20:53:49.261Z
-Stopped at: Completed 21-03-PLAN.md
+Last session: 2026-04-12T20:55:01.848Z
+Stopped at: Completed 21-02-PLAN.md
 Resume file: None

@@ -35,8 +35,8 @@ Requirements for the Comprehensive Insurance Advisor milestone.
 - [ ] **TYPE-02**: Hausratversicherung (household contents)
 - [x] **TYPE-03**: Kfz-Versicherung (car: Haftpflicht + Teilkasko + Vollkasko)
 - [ ] **TYPE-04**: Rechtsschutzversicherung (legal protection)
-- [ ] **TYPE-05**: Zahnzusatzversicherung (dental supplement)
-- [ ] **TYPE-06**: Risikolebensversicherung (term life)
+- [x] **TYPE-05**: Zahnzusatzversicherung (dental supplement)
+- [x] **TYPE-06**: Risikolebensversicherung (term life)
 - [ ] **TYPE-07**: Reiseversicherung (travel)
 - [ ] **TYPE-08**: Fahrradversicherung (bicycle)
 - [ ] **TYPE-09**: Kfz-Schutzbriefversicherung (roadside assistance)
@@ -85,8 +85,8 @@ Deferred to future release.
 | TYPE-02 | Phase 21 | Pending |
 | TYPE-03 | Phase 21 | Complete |
 | TYPE-04 | Phase 21 | Pending |
-| TYPE-05 | Phase 21 | Pending |
-| TYPE-06 | Phase 21 | Pending |
+| TYPE-05 | Phase 21 | Complete |
+| TYPE-06 | Phase 21 | Complete |
 | TYPE-07 | Phase 22 | Pending |
 | TYPE-08 | Phase 22 | Pending |
 | TYPE-09 | Phase 22 | Pending |
