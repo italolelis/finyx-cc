@@ -95,9 +95,10 @@ Which broker holds your first position — and what is it?
 
 Collect holdings one broker at a time. For each broker:
 1. Ask broker name
-2. Ask for each holding (ticker, ISIN, shares, cost_basis, asset_class, geography)
-3. Ask "Do you have another holding at this broker?" until done
-4. Ask "Do you have another broker account?"
+2. If the broker name is not one of the reference-doc brokers (Trade Republic, Scalable Capital, ING, comdirect, NuInvest, XP Investimentos, BTG Pactual, Trading212, IBKR), note: "I don't have reference data for [broker]. For a full fee comparison including your broker, run /finyx:broker — it can research any broker live."
+3. Ask for each holding (ticker, ISIN, shares, cost_basis, asset_class, geography)
+4. Ask "Do you have another holding at this broker?" until done
+5. Ask "Do you have another broker account?"
 
 After collecting all holdings, offer to save to `.finyx/profile.json`:
 
@@ -410,7 +411,7 @@ Recommend ETFs based on the risk profile from Phase 4 (Conservative / Moderate /
 | Small Cap FII basket | — | FII dividends exempt under Law 8,668/1993 baseline — check Law 15,270/2025 status |
 
 **Important note on ETF availability:**
-Verify current TERs and availability on your broker before investing. Use justETF.com (Germany) or brapi.dev (Brazil) for current metrics. ETF TERs can change.
+ETF availability varies by broker. Verify that your broker offers the recommended ISIN before acting. If a specific ETF is not available on your platform, search for an equivalent ETF using justETF.com (filter by index and domicile) or your broker's own ETF screener. Do not interpret any recommendation here as implying a specific broker carries that ETF. TERs can also change — always verify on the fund provider's website or justETF.com before investing.
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
