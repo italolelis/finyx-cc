@@ -62,7 +62,14 @@ A single AI-powered financial advisor that knows your full financial picture —
 
 ### Active
 
-(Next milestone — define via `/gsd:new-milestone`)
+#### v2.1 — Comprehensive Insurance Advisor
+- [ ] Expand insurance skill to cover all major German insurance types (liability, household, car, legal, dental, life, travel, bicycle, rental deposit)
+- [ ] Read and parse user's actual insurance policy documents from configurable document folder
+- [ ] Per-type coverage assessment + market comparison (Check24, Verivox, Stiftung Warentest)
+- [ ] Insurance portfolio overview (total cost, coverage gaps, over-insurance detection)
+- [ ] Optimization recommendations (cheaper alternatives, better coverage, unnecessary policies)
+- [ ] Profile schema extension for full insurance portfolio
+- [ ] Integration with `/finyx:insights` for insurance costs in financial health report
 
 ### Out of Scope
 
@@ -134,4 +141,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-12 after v2.0 milestone*
+*Last updated: 2026-04-12 after v2.1 milestone start*
