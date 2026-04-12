@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v2.1
 milestone_name: Comprehensive Insurance Advisor
-status: verifying
-stopped_at: Completed 18-01-PLAN.md
-last_updated: "2026-04-12T19:28:11.830Z"
+status: executing
+stopped_at: Completed 19-01-PLAN.md
+last_updated: "2026-04-12T19:49:49.633Z"
 last_activity: 2026-04-12
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
+  total_plans: 4
+  completed_plans: 2
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-12)
 
 **Core value:** A single AI-powered financial advisor that knows your full financial picture and gives integrated, country-aware advice
-**Current focus:** Phase 18 — router-sub-skill-migration
+**Current focus:** Phase 19 — reference-docs-profile-schema-agents
 
 ## Current Position
 
-Phase: 18 (router-sub-skill-migration) — EXECUTING
-Plan: 1 of 1
-Status: Phase complete — ready for verification
+Phase: 19 (reference-docs-profile-schema-agents) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
 Last activity: 2026-04-12
 
 ```
@@ -55,6 +55,7 @@ v2.1 key context:
 - BU (Berufsunfähigkeit) deferred to v2.2 — own milestone due to complexity
 - [Phase 18-router-sub-skill-migration]: Router SKILL.md is a pure dispatcher (~96 lines) with zero health-specific logic; all advisory content lives in sub-skill files
 - [Phase 18-router-sub-skill-migration]: Sub-skill files are plain Markdown (no YAML frontmatter, no execution_context block) loaded by Read tool at dispatch time
+- [Phase 19-01]: Use short slugs (hausrat, haftpflicht, kfz) as type enum for insurance.policies — matches reference doc filenames and enables direct path construction in agents
 
 ### Pending Todos
 
@@ -66,6 +67,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-12T19:28:11.827Z
-Stopped at: Completed 18-01-PLAN.md
+Last session: 2026-04-12T19:49:49.630Z
+Stopped at: Completed 19-01-PLAN.md
 Resume file: None

@@ -44,9 +44,9 @@ Requirements for the Comprehensive Insurance Advisor milestone.
 
 ### Infrastructure
 
-- [ ] **INFRA-01**: Profile schema extended with `insurance.policies[]` array
-- [ ] **INFRA-02**: Legal disclaimer includes §34d GewO advisory-only notice
-- [ ] **INFRA-03**: All output uses criteria-based recommendations, never specific product recommendations
+- [x] **INFRA-01**: Profile schema extended with `insurance.policies[]` array
+- [x] **INFRA-02**: Legal disclaimer includes §34d GewO advisory-only notice
+- [x] **INFRA-03**: All output uses criteria-based recommendations, never specific product recommendations
 
 ## v2.2 Requirements
 
@@ -91,9 +91,9 @@ Deferred to future release.
 | TYPE-08 | Phase 22 | Pending |
 | TYPE-09 | Phase 22 | Pending |
 | TYPE-10 | Phase 22 | Pending |
-| INFRA-01 | Phase 19 | Pending |
-| INFRA-02 | Phase 19 | Pending |
-| INFRA-03 | Phase 19 | Pending |
+| INFRA-01 | Phase 19 | Complete |
+| INFRA-02 | Phase 19 | Complete |
+| INFRA-03 | Phase 19 | Complete |
 
 **Coverage:**
 - v2.1 requirements: 26 total
