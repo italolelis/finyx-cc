@@ -217,6 +217,22 @@ Finyx is an open-source personal finance advisor built as a collection of Claude
 ## Cross-Cutting Concerns
 <!-- GSD:architecture-end -->
 
+## Skill Auto-Routing
+
+When the user asks about a financial topic, automatically invoke the matching Finyx skill using the Skill tool. Do NOT ask "would you like me to run the skill?" — just run it.
+
+| Topic | Skill | Examples |
+|-------|-------|---------|
+| Insurance (any type, portfolio, coverage, gaps) | `finyx:insurance` | "check my insurance", "Haftpflicht analysis", "what insurance am I missing", "parse my policy PDFs" |
+| Tax optimization, tax class, deductions | `finyx:tax` | "optimize my taxes", "should I change tax class" |
+| Investments, ETFs, portfolio, broker | `finyx:invest` | "check my portfolio", "which ETFs should I buy" |
+| Pension, retirement, Riester, bAV | `finyx:pension` | "pension planning", "am I saving enough for retirement" |
+| Real estate, property, mortgage | `finyx:realestate` | "analyze this property", "scout locations" |
+| Financial overview, health check | `finyx:insights` | "financial health check", "how am I doing financially" |
+| Profile setup, update personal data | `finyx:profile` | "update my profile", "set up my financial profile" |
+
+For insurance sub-types, pass the type as argument: `Skill(skill="finyx:insurance", args="haftpflicht")`, `Skill(skill="finyx:insurance", args="portfolio")`, `Skill(skill="finyx:insurance", args="doc")`.
+
 <!-- GSD:workflow-start source:GSD defaults -->
 ## GSD Workflow Enforcement
 
