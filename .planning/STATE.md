@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v2.1
 milestone_name: Comprehensive Insurance Advisor
-status: executing
-stopped_at: Completed 21-02-PLAN.md
-last_updated: "2026-04-12T20:55:01.852Z"
+status: verifying
+stopped_at: Completed 21-01-PLAN.md
+last_updated: "2026-04-12T20:55:51.372Z"
 last_activity: 2026-04-12
 progress:
   total_phases: 5
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 9
-  completed_plans: 8
+  completed_plans: 9
   percent: 0
 ---
 
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 
 Phase: 21 (per-type-sub-skills-tier-1-2) — EXECUTING
 Plan: 3 of 3
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-04-12
 
 ```
@@ -68,6 +68,8 @@ v2.1 key context:
 - [Phase 21-02]: Staffelung warning unconditional in Zahnzusatz — shown even without immediate dental needs as structural purchase risk
 - [Phase 21-02]: Risikoleben renewal_date = policy END DATE (Vertragsende) — displayed as 'Policy expires', never 'Next renewal'
 - [Phase 21-02]: Gesundheitsprüfung warning placed in 3 locations in Risikoleben (disclaimer, cancellation, recommendation) — intentional due to severity of cancel-before-approval mistake
+- [Phase 21-per-type-sub-skills-tier-1-2]: Rechtsschutz coverage_amount is null — Phase 3 uses module-based PASS/MISSING/N/A, never monetary benchmark
+- [Phase 21-per-type-sub-skills-tier-1-2]: Hausrat living_area_sqm uses 3-source priority: Phase 0 user input > profile field lookup > UNKNOWN (never skips benchmark phase)
 
 ### Pending Todos
 
@@ -79,6 +81,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-12T20:55:01.848Z
-Stopped at: Completed 21-02-PLAN.md
+Last session: 2026-04-12T20:55:51.369Z
+Stopped at: Completed 21-01-PLAN.md
 Resume file: None

@@ -31,10 +31,10 @@ Requirements for the Comprehensive Insurance Advisor milestone.
 
 ### Insurance Types
 
-- [ ] **TYPE-01**: Privathaftpflicht (personal liability)
-- [ ] **TYPE-02**: Hausratversicherung (household contents)
+- [x] **TYPE-01**: Privathaftpflicht (personal liability)
+- [x] **TYPE-02**: Hausratversicherung (household contents)
 - [x] **TYPE-03**: Kfz-Versicherung (car: Haftpflicht + Teilkasko + Vollkasko)
-- [ ] **TYPE-04**: Rechtsschutzversicherung (legal protection)
+- [x] **TYPE-04**: Rechtsschutzversicherung (legal protection)
 - [x] **TYPE-05**: Zahnzusatzversicherung (dental supplement)
 - [x] **TYPE-06**: Risikolebensversicherung (term life)
 - [ ] **TYPE-07**: Reiseversicherung (travel)
@@ -81,10 +81,10 @@ Deferred to future release.
 | ARCH-03 | Phase 19 | Complete |
 | ARCH-04 | Phase 19 | Complete |
 | ARCH-05 | Phase 19 | Complete |
-| TYPE-01 | Phase 21 | Pending |
-| TYPE-02 | Phase 21 | Pending |
+| TYPE-01 | Phase 21 | Complete |
+| TYPE-02 | Phase 21 | Complete |
 | TYPE-03 | Phase 21 | Complete |
-| TYPE-04 | Phase 21 | Pending |
+| TYPE-04 | Phase 21 | Complete |
 | TYPE-05 | Phase 21 | Complete |
 | TYPE-06 | Phase 21 | Complete |
 | TYPE-07 | Phase 22 | Pending |
