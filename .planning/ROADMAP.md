@@ -95,16 +95,20 @@ Plans:
 - [x] 16-06-PLAN.md — Convert help + status + update commands to help skill
 
 ### Phase 17: Integration + Distribution
-**Goal**: Cross-skill wiring for `finyx-insights` works, the plugin installs cleanly via GitHub URL, legacy directories are removed, and `bin/install.js` is updated as npm fallback
+**Goal**: Cross-skill wiring for `finyx-insights` works, the plugin installs cleanly via GitHub URL, legacy directories are removed, and `bin/install.js` is removed (plugin replaces npm distribution)
 **Depends on**: Phase 16
 **Requirements**: INTG-02, INTG-03, CLEAN-01, CLEAN-02, CLEAN-03
 **Success Criteria** (what must be TRUE):
-  1. `claude plugin install <github-url>` installs Finyx and all `/finyx:*` commands are available with no errors
+  1. `claude plugin add <github-url>` installs Finyx and all `/finyx:*` commands are available with no errors
   2. `/finyx:insights` produces a complete cross-skill report after plugin install (reads profile, references tax + investment + insurance data)
   3. `commands/finyx/` directory no longer exists in the repository
   4. `agents/` root directory no longer exists in the repository
-  5. `bin/install.js` updated to reflect skills layout as npm fallback, or removed with a documented rationale
-**Plans**: TBD
+  5. `bin/install.js` removed — plugin system is the primary distribution mechanism
+**Plans:** 3 plans
+Plans:
+- [ ] 17-01-PLAN.md — Migrate missing templates + remove legacy directories (commands/finyx/, agents/, finyx/)
+- [ ] 17-02-PLAN.md — Remove bin/install.js + update package.json + rewrite README for plugin install
+- [ ] 17-03-PLAN.md — Validate plugin structure + cross-skill insights wiring + final user verification
 
 ## Progress
 
@@ -114,4 +118,4 @@ Plans:
 | 14. Profile Skill | v2.0 | 1/1 | Complete    | 2026-04-12 |
 | 15. Pilot Skill | v2.0 | 1/1 | Complete    | 2026-04-12 |
 | 16. Bulk Migration | v2.0 | 6/6 | Complete    | 2026-04-12 |
-| 17. Integration + Distribution | v2.0 | 0/? | Not started | - |
+| 17. Integration + Distribution | v2.0 | 0/3 | In progress | - |
