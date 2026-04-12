@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Plugin Architecture
 status: executing
-stopped_at: Completed 16-05-PLAN.md
-last_updated: "2026-04-12T16:12:42.317Z"
+stopped_at: Completed 16-04-PLAN.md
+last_updated: "2026-04-12T16:12:58.889Z"
 last_activity: 2026-04-12
 progress:
   total_phases: 5
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 ## Current Position
 
 Phase: 16 (bulk-migration) — EXECUTING
-Plan: 3 of 6
+Plan: 4 of 6
 Status: Ready to execute
 Last activity: 2026-04-12
 
@@ -57,6 +57,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 15 P01 | 5 | 2 tasks | 2 files |
 | Phase 16 P06 | 3 | 2 tasks | 1 files |
 | Phase 16 P05 | 3 | 2 tasks | 1 files |
+| Phase 16 P04 | 3 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,7 @@ Key v2.0 constraints from research:
 - [Phase 15]: Task tool removed from tax SKILL.md allowed-tools — advisory done inline, scoring agent not invoked
 - [Phase 16]: Help skill omits disable-model-invocation — utility skill, not advisory
 - [Phase 16]: Task tool kept in insights SKILL.md — skill orchestrates 2 parallel specialist agents (allocation + projection)
+- [Phase 16]: Reference paths updated to ${CLAUDE_SKILL_DIR}/references/ for portability — zero @~/.claude/ in insurance SKILL.md
 
 ### Pending Todos
 
@@ -90,6 +92,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-12T16:12:42.314Z
-Stopped at: Completed 16-05-PLAN.md
+Last session: 2026-04-12T16:12:58.886Z
+Stopped at: Completed 16-04-PLAN.md
 Resume file: None
