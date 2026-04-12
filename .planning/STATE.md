@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.2
-milestone_name: Health Insurance Advisor
-status: verifying
-stopped_at: Completed 12-01-PLAN.md
-last_updated: "2026-04-09T22:19:01.530Z"
-last_activity: 2026-04-09
+milestone: v2.0
+milestone_name: Plugin Architecture
+status: defining-requirements
+stopped_at: Defining requirements
+last_updated: "2026-04-12"
+last_activity: 2026-04-12
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 5
-  completed_plans: 5
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
   percent: 0
 ---
 
@@ -18,64 +18,23 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-08)
+See: .planning/PROJECT.md (updated 2026-04-12)
 
 **Core value:** A single AI-powered financial advisor that knows your full financial picture and gives integrated, country-aware advice
-**Current focus:** Phase 12 — cross-advisor-integration
+**Current focus:** v2.0 Plugin Architecture — defining requirements
 
 ## Current Position
 
-Phase: 12
-Plan: Not started
-Status: Phase complete — ready for verification
-Last activity: 2026-04-09
-
-Progress: [░░░░░░░░░░] 0%
-
-## Performance Metrics
-
-**Velocity:**
-
-- Total plans completed: 0
-- Average duration: —
-- Total execution time: 0 hours
-
-**By Phase:**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| - | - | - | - |
-
-*Updated after each plan completion*
-| Phase 09-reference-foundation P01 | 2 | 1 tasks | 1 files |
-| Phase 10-specialist-agents P02 | 94 | 1 tasks | 1 files |
-| Phase 10-specialist-agents P01 | 2 | 1 tasks | 1 files |
-| Phase 11-command-integration P01 | 3 minutes | 2 tasks | 1 files |
-| Phase 12-cross-advisor-integration P01 | 5 minutes | 3 tasks | 3 files |
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-12 — Milestone v2.0 started
 
 ## Accumulated Context
 
 ### Decisions
 
-All v1.0/v1.1 decisions logged in PROJECT.md Key Decisions table.
-
-v1.2 key decisions:
-
-- Health data is session-only, never persisted (GDPR Art. 9 compliance)
-- Two agents: deterministic calc agent + WebSearch research agent
-- Beamter path deferred to v1.3 (BEAM-01) — standard PKV model overstates cost for Beihilfe users
-- Build order: reference doc → agents → command → cross-advisor integration
-- [Phase 09-reference-foundation]: tax_year: 2025 in frontmatter matches existing doc convention; 2026-effective constants published under 2025 rules
-- [Phase 09-reference-foundation]: fallback_rate 2.9% + source_url pattern for GKV Zusatzbeitrag — Phase 10 agent fetches live, falls back to this
-- [Phase 10-specialist-agents]: Neutral source hierarchy: Stiftung Warentest/Finanztip/krankenkasseninfo.de first, Check24 fallback only (D-02)
-- [Phase 10-specialist-agents]: Exactly 3 PKV providers in research output to prevent analysis paralysis (D-03)
-- [Phase 10-specialist-agents]: All GKV/PKV rates read from health-insurance.md at runtime — zero hardcoded constants in calc agent
-- [Phase 10-specialist-agents]: Health flags are session-only: received inline in Task prompt, never written to file (GDPR Art. 9)
-- [Phase 11-command-integration]: Disclaimer emitted in Phase 5 before advisory content per D-10 — matches insights.md disclaimer-first pattern
-- [Phase 11-command-integration]: JAEG threshold read from health-insurance.md Section 4.1 at runtime — not hardcoded
-- [Phase 11-command-integration]: bin/install.js recursive copy confirmed — no changes needed for new command and agent files
-- [Phase 12-cross-advisor-integration]: Insurance fields all default to null in profile template — consistent with existing schema convention
-- [Phase 12-cross-advisor-integration]: Silent skip semantics for insurance sections in both insights and tax commands — absence never blocks report generation
+All v1.0/v1.1/v1.2 decisions logged in PROJECT.md Key Decisions table.
 
 ### Pending Todos
 
@@ -87,6 +46,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-08T22:37:40.805Z
-Stopped at: Completed 12-01-PLAN.md
+Last session: 2026-04-12
+Stopped at: Milestone v2.0 started — defining requirements
 Resume file: None

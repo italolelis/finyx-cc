@@ -53,7 +53,15 @@ A single AI-powered financial advisor that knows your full financial picture —
 
 ### Active
 
-(Next milestone — define via `/gsd:new-milestone`)
+#### v2.0 — Plugin Architecture
+- [ ] `.claude-plugin/plugin.json` manifest for marketplace distribution
+- [ ] Convert all commands into self-contained skills under `skills/`
+- [ ] Each skill bundles its own agents and reference docs
+- [ ] `finyx-profile` foundation skill (shared profile management)
+- [ ] `finyx-insights` cross-skill integration layer
+- [ ] Thin command triggers preserved for `/finyx:*` syntax
+- [ ] `bin/install.js` npm fallback for backward compatibility
+- [ ] Submit to Anthropic plugin directory
 
 ### Out of Scope
 
@@ -126,4 +134,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-10 after v1.2 milestone*
+*Last updated: 2026-04-12 after v2.0 milestone start*
