@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Plugin Architecture
-status: verifying
-stopped_at: Completed 16-02-PLAN.md
-last_updated: "2026-04-12T16:18:45.405Z"
+status: executing
+stopped_at: Completed 17-02-PLAN.md
+last_updated: "2026-04-12T16:27:57.032Z"
 last_activity: 2026-04-12
 progress:
   total_phases: 5
   completed_phases: 4
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 13
+  completed_plans: 11
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-12)
 
 **Core value:** A single AI-powered financial advisor that knows your full financial picture and gives integrated, country-aware advice
-**Current focus:** Phase 16 — bulk-migration
+**Current focus:** Phase 17 — integration-distribution
 
 ## Current Position
 
-Phase: 17
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: 17 (integration-distribution) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
 Last activity: 2026-04-12
 
 Progress: [░░░░░░░░░░] 0%
@@ -61,6 +61,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 16 P03 | 3m | 2 tasks | 1 files |
 | Phase 16-bulk-migration P01 | 5m | 2 tasks | 1 files |
 | Phase 16-bulk-migration P02 | 5m | 2 tasks | 1 files |
+| Phase 17 P02 | 5 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -88,6 +89,8 @@ Key v2.0 constraints from research:
 - [Phase 16-bulk-migration]: Task tool removed from invest SKILL.md — broker advisory handled inline, no agent delegation
 - [Phase 16-bulk-migration]: Realestate skill omits disable-model-invocation per D-07 (action-based, not advisory)
 - [Phase 16-bulk-migration]: Router/orchestrator pattern in SKILL.md with routing section dispatching to 7 sub-workflows
+- [Phase 17]: Remove bin/install.js entirely — plugin system replaces npm distribution, clean break per REQUIREMENTS.md Out of Scope
+- [Phase 17]: Rename package from finyx-cc to finyx to match plugin.json identity
 
 ### Pending Todos
 
@@ -99,6 +102,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-12T16:15:14.086Z
-Stopped at: Completed 16-02-PLAN.md
+Last session: 2026-04-12T16:27:57.029Z
+Stopped at: Completed 17-02-PLAN.md
 Resume file: None

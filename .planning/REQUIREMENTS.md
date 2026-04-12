@@ -25,13 +25,13 @@ Requirements for the Plugin Architecture milestone. Each maps to roadmap phases.
 
 - [x] **INTG-01**: `.finyx/profile.json` access works from skill context with `~/.finyx/` global fallback
 - [ ] **INTG-02**: Cross-skill integration for `finyx-insights` works when other finyx skills are co-installed
-- [ ] **INTG-03**: Plugin installable as third-party via GitHub URL (standard `claude plugin install` flow)
+- [x] **INTG-03**: Plugin installable as third-party via GitHub URL (standard `claude plugin install` flow)
 
 ### Cleanup
 
 - [ ] **CLEAN-01**: Legacy `commands/finyx/` directory removed (skills replace all commands)
 - [ ] **CLEAN-02**: Legacy `agents/` root directory removed (agents redistributed into skills)
-- [ ] **CLEAN-03**: `bin/install.js` updated or removed to reflect new distribution model
+- [x] **CLEAN-03**: `bin/install.js` updated or removed to reflect new distribution model
 
 ## v2.1 Requirements
 
@@ -64,10 +64,10 @@ Deferred to future release.
 | SKILL-04 | Phase 15–16 | Complete |
 | SKILL-05 | Phase 15–16 | Complete |
 | INTG-02 | Phase 17 | Pending |
-| INTG-03 | Phase 17 | Pending |
+| INTG-03 | Phase 17 | Complete |
 | CLEAN-01 | Phase 17 | Pending |
 | CLEAN-02 | Phase 17 | Pending |
-| CLEAN-03 | Phase 17 | Pending |
+| CLEAN-03 | Phase 17 | Complete |
 
 **Coverage:**
 - v2.0 requirements: 14 total
